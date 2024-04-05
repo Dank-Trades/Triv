@@ -4,8 +4,6 @@ import json
 import os
 import sys
 import humanize
-sys.path.append(r'C:\Users\HUAWEI\Desktop\Trivia')
-"""sys.path.append(r'/home/container/')"""
 import pandas as pd
 from cogs.utils import utils
 from cogs.loops import mark_log
