@@ -1,8 +1,6 @@
 import discord
 import json
 import sys
-sys.path.append(r'C:\Users\HUAWEI\Desktop\Trivia\cogs')
-"""sys.path.append(r'/home/container/')"""
 from cogs.loops import mark_log
 from cogs.utils import utils
 import re
