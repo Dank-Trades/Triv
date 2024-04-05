@@ -35,8 +35,6 @@ class Triv(commands.Bot):
         await self.db.execute('CREATE TABLE IF NOT EXISTS leaderboard (guild_id BIGINT NOT NULL, auctioneer TEXT NOT NULL, auctioneer_id BIGINT NOT NULL UNIQUE, auction_count BIGINT NOT NULL)')
         await self.db.execute('CREATE TABLE IF NOT EXISTS weekly_leaderboard (guild_id BIGINT NOT NULL, auctioneer TEXT NOT NULL, auctioneer_id BIGINT NOT NULL UNIQUE, auction_count BIGINT NOT NULL)')
 
-        db = await self.db.fetchrow('SELECT * FROM "guild_config"')
-        print(db)
         self.owner_id = 692994778136313896
         print(self.owner_ids)
 
