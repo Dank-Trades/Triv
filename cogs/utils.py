@@ -11,7 +11,7 @@ class utils(commands.Cog):
 
         async def get_auction_channel(self, arg):
                 num = await self.client.db.fetchrow('SELECT "auction_channel" FROM "guild_config" WHERE "guild_id" = $1', arg.guild.id)
-                channel_id = int(''.join(re.findall(r'\d+', f'{num}')))
+                channel_id = num['auction_channel']
                 return self.client.get_channel(channel_id)
 
         async def get_auctioneer_role(self, arg):
