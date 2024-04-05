@@ -1,10 +1,6 @@
 import discord
 import sys
-sys.path.append(r'C:\Users\HUAWEI\Desktop\Trivia')
-"""sys.path.append(r'/home/container/')"""
 from cogs.utils import utils
-sys.path.append(r'C:\Users\HUAWEI\Desktop\Trivia\cogss')
-"""sys.path.append(r'/home/container/cogs/')"""
 import re
 from discord.ext import commands
 from discord.ext import tasks, commands
