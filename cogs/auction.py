@@ -133,7 +133,7 @@ class auction(commands.Cog):
                 'auction_id' : msg.id,
                 'auctioneer' : interaction.user,
                 'item' : items,
-                'item_amount' : full_int,
+                'item_amount' : item_amount,
                 'seller' : member
             })
 
