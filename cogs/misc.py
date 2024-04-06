@@ -4,7 +4,7 @@ import json
 import os
 import sys
 import humanize
-import pandas as pd
+sys.path.append(r'/home/container/')
 from cogs.utils import utils
 from cogs.loops import mark_log
 from datetime import datetime

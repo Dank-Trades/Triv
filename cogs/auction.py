@@ -1,6 +1,7 @@
 import discord
 import json
 import sys
+sys.path.append(r'/home/container/')
 from cogs.loops import mark_log
 from cogs.utils import utils
 import re
@@ -18,7 +19,6 @@ class auc_buttons(discord.ui.View):
         self.author = author
         super().__init__()
         self.value = None
-
 
     @discord.ui.button(label='Start')
     async def auc_start(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -87,15 +87,14 @@ class auction(commands.Cog):
         self.client.curr_bids = {}
         self.client.first_bid = {}
         self.client.log = {
-
                 'auctioneer' : 0,
                 'item' : '',
                 'item_amount' : '',
                 'seller' : 0,
                 'buyer' : 0,
                 'coins' : 0
-
         }
+        self.utils = utils(self.client)
     
 
     auc_group = Group(name = 'auction', description= 'just a group for auction subcommands')
@@ -106,8 +105,11 @@ class auction(commands.Cog):
     async def auction_host(self, interaction : discord.Interaction, member : discord. Member, items : str, item_amount : int,  starting_price : str):
 
         await interaction.response.defer()
+
+        full_int = self.utils.process_shorthand(starting_price)
+        full_int = int(full_int)
   
-        embed = discord.Embed(title = f'{item_amount} {items} auction', description= f'starting price : {starting_price} \nseller : {member.mention}', color = discord.Color.from_str('0x2F3136'))
+        embed = discord.Embed(title = f'{item_amount} {items} auction', description= f'starting bid : {format(full_int, ",")} \nseller : {member.mention}', color = discord.Color.from_str('0x2F3136'))
         embed.set_footer(text= 'auction will start when there\'s 3 reacts')
 
         ping_role = await utils(interaction.client).get_auction_ping(interaction)
@@ -118,19 +120,6 @@ class auction(commands.Cog):
             await interaction.followup.send('This is not your configured auction channel.', ephemeral= True)
 
         else:
-
-            if "K" in starting_price:
-                the_int = starting_price.replace('K', "")
-                full_int = float(the_int) * 1000
-            elif "k" in starting_price:
-                the_int = starting_price.replace('k', "")
-                full_int = float(the_int) * 1000
-            elif "M" in starting_price:
-                the_int = starting_price.replace("M" , "")
-                full_int = float(the_int) * 1000000
-            elif "m" in starting_price:
-                the_int = starting_price.replace("m" , "")
-                full_int = float(the_int) * 1000000
 
             self.client.start_price[interaction.channel.id] = full_int
             self.client.first_bid[interaction.guild.id] = True
@@ -144,12 +133,13 @@ class auction(commands.Cog):
                 'auction_id' : msg.id,
                 'auctioneer' : interaction.user,
                 'item' : items,
-                'item_amount' : item_amount,
+                'item_amount' : full_int,
                 'seller' : member
             })
 
 
-            await interaction.followup.send(content=f'{ping_role.mention}', embed=embed, view=auc_buttons(interaction.user), allowed_mentions = discord.AllowedMentions(roles=True))
+            await interaction.followup.send(embed=embed, view=auc_buttons(interaction.user))
+            await interaction.channel.send(content=f'{ping_role.mention}', allowed_mentions = discord.AllowedMentions(roles=True))
             await msg.add_reaction('⭐')
 
     @auction_host.autocomplete('items')
@@ -166,71 +156,106 @@ class auction(commands.Cog):
 
         auction_channel = await utils(self.client).get_auction_channel(ctx)
 
-        record = await self.client.db.fetchrow('SELECT min_increment FROM guild_config WHERE guild_id = $1', ctx.guild.id)
+        record = await self.client.db.guild_config.find_one({'guild_id' : ctx.guild.id})
 
         min_increment = record['min_increment']
 
         if ctx.channel != auction_channel:
-
             return
 
         if ctx.author == self.client.log['seller']:
-            
             return
     
         else :
+            await self.utils.bid(ctx, bid, min_increment)
+    
+    @commands.group(name='queue', aliases=['q'], invoke_without_command=True)
+    async def auction_queue(self, ctx, page: str = '1'):
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
 
-            loop_cog = self.client.get_cog('loops')
+        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : ctx.guild.id})
 
-            if loop_cog.auc_count.is_running():
+        if not auction_queue:
+            await self.client.db.auction_queue.insert_one({'guild_id' : ctx.guild.id, 'queue' : []})
+            return await ctx.send('No auctions in queue.')
 
+        # schema = {
+        #     'guild_id' : ctx.guild.id,
+        #     'queue' : []
+        # }
 
-                if "K" in bid:
-                    the_int = bid.replace("K", "")
-                    full_int = float(the_int) * 1000
-                elif "k" in bid:
-                    the_int = bid.replace("k", "")
-                    full_int = float(the_int) * 1000
-                elif "M" in bid:
-                    the_int = bid.replace("M" , "")
-                    full_int = float(the_int) * 1000000
-                elif "m" in bid:
-                    the_int = bid.replace("m" , "")
-                    full_int = float(the_int) * 1000000
+        # the queue is = {
+        #     message_id : str,
+        #     host : str,
+        #     item : str,
+        #     item_amount : int,
+        #     starting_price : int
+        # }
 
-                if self.client.first_bid[ctx.guild.id] == True:
-                    
-                    if full_int < float(self.client.start_price[ctx.channel.id]):
-                        pass
+        # process the page, if it is invalid = 1 if it is out of range = 1
 
-                    elif full_int >= float(self.client.start_price[ctx.channel.id]):
-                        self.client.last_bids[ctx.channel.id] = []
-                        self.client.last_bids[ctx.channel.id].append(bid)
-                        self.client.bidders[ctx.channel.id] = []
-                        self.client.bidders[ctx.channel.id].append(ctx.author.id)
+        if page < 1:
+            page = 1
+        elif page > len(auction_queue['queue']) // 5 + 1:
+            page = len(auction_queue['queue']) // 5 + 1
 
+        auctions = auction_queue['queue']
+        if auctions == []:
+            return await ctx.send('No auctions in queue.')
+        else:
+            pages = len(auctions) // 5 + 1
+            start = (page - 1) * 5
+            end = start + 5
+            embed = discord.Embed(title = 'Auction Queue', color = discord.Color.from_str('0x2F3136'))
 
-                        self.client.curr_bids[ctx.channel.id] = full_int
-                        self.client.first_bid[ctx.guild.id] = False
-                        await ctx.send(f'{ctx.author.mention} bidded **{bid}**')
+            for i in range(start, end):
+                try:
+                    auction = auctions[i]
+                except IndexError:
+                    break
+                embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}', inline = False)
+            embed.set_footer(text = f'Page {page}/{pages}')
+            await ctx.send(embed = embed)
 
-                        loop_cog.auc_count.restart()
+    # this is a subcommand of the queue command
+    @auction_queue.command(name='remove', description = 'Remove an auction from the queue', aliases = ['r'])
+    async def auction_queue_remove(self, ctx, index : str = ""):
+        try:
+            index = int(index) - 1
+        except ValueError:
+            return await ctx.send('Invalid index.')
 
-                if self.client.first_bid[ctx.guild.id] == False:
+        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : ctx.guild.id})
 
-                    if full_int < float(self.client.curr_bids[ctx.channel.id]) + min_increment:
-                            pass
-                    
-                    elif full_int >= float(self.client.curr_bids[ctx.channel.id]) + min_increment:
-                            self.client.last_bids[ctx.channel.id].append(bid)
-                            self.client.bidders[ctx.channel.id].append(ctx.author.id)
-                            self.client.curr_bids[ctx.channel.id] = full_int
-                            await ctx.send(f'{ctx.author.mention} bid **{bid}**')
-                            loop_cog.auc_count.restart()
-            else:
+        if not auction_queue:
+            return await ctx.send('No auctions in queue.')
+        else:
+            auctions = auction_queue['queue']
+            try:
+                auction = auctions.pop(index)
+            except IndexError:
+                return await ctx.send('Invalid index.')
+            await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : auctions}})
+            await ctx.send(f'Removed the auction : {auction["item_amount"]} {auction["item"]} auction hosted by {auction["host"]}')
 
-                await ctx.message.add_reaction('‼')
-           
+    @commands.command(name='test')
+    async def test(self, ctx):
+        embed = discord.Embed(title = 'Action Confirmed', description = 'Are you sure you want to donate your items?\n\n> You will donate **1x :banknote: Bank Note**', color = discord.Color.from_str('0x2F3136'))
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label='Confirm', style=discord.ButtonStyle.green))
+        view.add_item(discord.ui.Button(label='Cancel', style=discord.ButtonStyle.red))
+        await ctx.send(embed=embed, view=view)
+
+    @app_commands.command(name='test')
+    async def test_command(self, interaction : discord.Interaction):
+        embed = discord.Embed(title = 'Action Confirmed', description = 'Are you sure you want to donate your items?\n\n> You will donate **1x <:dank_banknote:831787534820442112> Bank Note**', color = discord.Color.from_str('0x2F3136'))
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label='Confirm', style=discord.ButtonStyle.green))
+        view.add_item(discord.ui.Button(label='Cancel', style=discord.ButtonStyle.red))
+        await interaction.response.send_message(embed=embed, view=view)
 
     @commands.command(name= 'revert', aliases = ['r'])
     async def auction_revert(self, ctx):
@@ -257,23 +282,14 @@ class auction(commands.Cog):
                 self.client.last_bids[ctx.channel.id].pop(-1)
                 reverted_bidder = discord.utils.get(ctx.guild.members, id = int(self.client.bidders[ctx.channel.id][-2]))
                 self.client.bidders[ctx.channel.id].pop(-1)
-                if "K" in reverted_bid:
-                    the_int = reverted_bid.replace('K', "")
-                    full_int = float(the_int) * 1000
-                elif "k" in reverted_bid:
-                    the_int = reverted_bid.replace('k', "")
-                    full_int = float(the_int) * 1000
-                elif "M" in reverted_bid:
-                    the_int = reverted_bid.replace("M" , "")
-                    full_int = float(the_int) * 1000000
-                elif "m" in reverted_bid:
-                    the_int = reverted_bid.replace("m" , "")
-                    full_int = float(the_int) * 1000000
+                
+                reverted_bid = int(reverted_bid)
+                full_int = reverted_bid
 
                 self.client.start_price[ctx.channel.id] = full_int
                 self.client.curr_bids[ctx.channel.id] = full_int
                 
-                await ctx.send(f'{reverted_bidder.mention} bid **{reverted_bid}**')
+                await ctx.send(f'{reverted_bidder.mention} bid **{format(reverted_bid, ",")}**')
             
             else :
 
@@ -303,8 +319,7 @@ class auction(commands.Cog):
                 self.client.first_bid[interaction.guild.id] = True
                 role = await utils(interaction.client).get_auction_access(interaction)
                 await auction_channel.set_permissions(role, overwrite= utils.channel_close(auction_channel, role))
-                await interaction.response.send_message(f'Auction Ended by {interaction.user.mention}. \nChannel locked now.') 
-
+                await interaction.response.send_message(f'Auction Ended by {interaction.user.mention}. \nChannel locked now.')
                 self.client.last_bids  = {}
                 self.client.bidders = {}
                 self.client.start_price = {}
@@ -314,6 +329,86 @@ class auction(commands.Cog):
             else :
 
                 await interaction.response.send_message('There\'s no auction running!', ephemeral= True)
+
+    @commands.Cog.listener()
+    async def on_message(self, msg):
+        queue = 782483247619112991
+        command_name = 'serverevents donate'
+        validate_title = 'Action Confirmed'
+
+        if msg.channel.id != queue or msg.author.bot:
+            return
+        
+        bid_amount = self.utils.process_shorthand(msg.content)
+        bid_amount = int(bid_amount)
+
+        if msg.reference is not None:
+            replied_to_message = await msg.channel.fetch_message(msg.reference.message_id)
+            guild_queue = await self.client.db.auction_queue.find_one({'guild_id' : msg.guild.id})
+
+            if not guild_queue:
+                await self.client.db.auction_queue.insert_one({'guild_id' : msg.guild.id, 'queue' : []})
+                guild_queue = await self.client.db.auction_queue.find_one({'guild_id' : msg.guild.id})
+
+            user_queue = next((item for item in guild_queue['queue'] if item['host'] == msg.author.id), None)\
+            
+            if bid_amount <= 0 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id or user_queue is not None:
+                return await msg.add_reaction('❌')
+            
+            embed = replied_to_message.embeds[0]
+            amount, item_name = self.utils.extract_item_and_amount(embed.description)
+
+            if embed.title != validate_title:
+                return await msg.add_reaction('❌')
+
+            await msg.add_reaction('✅')
+            await self.client.db.auction_queue.update_one({'guild_id' : msg.guild.id}, {'$push' : {'queue' : {'message_id' : replied_to_message.id, 'host' : msg.author.id, 'item' : item_name, 'item_amount' : amount, 'starting_price' : bid_amount}}}, upsert = True)
+
+            return await msg.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
+        else:
+            return await msg.add_reaction('❌')
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, message_before, message_after):
+        queue = 782483247619112991
+        command_name = 'serverevents donate'
+        validate_title = 'Action Confirmed'
+
+        if message_after.channel.id != queue or message_after.author.bot:
+            return
+        
+        bid_amount = self.utils.process_shorthand(message_after.content)
+        bid_amount = int(bid_amount)
+
+        if message_after.reference is not None:
+            replied_to_message = await message_after.channel.fetch_message(message_after.reference.message_id)
+            guild_queue = await self.client.db.auction_queue.find_one({'guild_id' : message_after.guild.id})
+
+            if not guild_queue:
+                await self.client.db.auction_queue.insert_one({'guild_id' : message_after.guild.id, 'queue' : []})
+                guild_queue = await self.client.db.auction_queue.find_one({'guild_id' : message_after.guild.id})
+
+            user_queue = next((item for item in guild_queue['queue'] if item['host'] == message_after.author.id), None)
+            
+            await message_after.clear_reactions()
+            
+            if bid_amount <= 0 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != message_after.author.id or user_queue is None:
+                return await message_after.add_reaction('❌')
+        
+            embed = replied_to_message.embeds[0]
+
+            if embed.title != validate_title:
+                return await message_after.add_reaction('❌')
+            
+            guild_queue['queue'] = [item for item in guild_queue['queue'] if item != user_queue]
+            user_queue['starting_price'] = bid_amount
+            guild_queue['queue'].append(user_queue)
+
+            await message_after.add_reaction('✅')
+            await self.client.db.auction_queue.update_one({'guild_id' : message_after.guild.id}, {'$set' : {'queue' : guild_queue['queue']}}, upsert = True)
+
+            # return await message_after.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
+                
 
 
         

@@ -1,7 +1,8 @@
-asyncpg==0.27.0
-discord.py==2.3.2
+asyncpg==0.29.0
+discord==2.3.2
 humanize==4.9.0
 pandas==2.2.1
 psutil==5.9.5
 requests==2.31.0
 jishaku==2.5.2
+motor==3.4.0
