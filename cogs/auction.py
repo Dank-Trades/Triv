@@ -215,8 +215,8 @@ class auction(commands.Cog):
                     auction = auctions[i]
                 except IndexError:
                     break
-                msg = await ctx.fetch_message(auction['message_id'])
-                msg_link = msg.jump_url
+                message_id = auction['message_id']
+                msg_link = f'https://discord.com/channels/1046123195004113006/1226252036518051940/{message_id}'
                 embed.add_field(name = f'[{auction["item_amount"]} {auction["item"]} (index: {i + 1})]({msg_link})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}', inline = False)
             embed.set_footer(text = f'Page {page}/{pages}')
             await ctx.send(embed = embed)
