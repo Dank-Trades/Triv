@@ -12,6 +12,7 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ext import tasks, commands
 import subprocess
+import pandas as pd
 
 class help_button(discord.ui.View):
     def __init__(self):
@@ -117,9 +118,42 @@ class misc(commands.Cog):
 
             for messages in self.client.payout_msgs[msg.id]:
                 await messages.delete()
-        
-        await ctx.message.delete(delay = 3)
 
+            del self.client.payout_msgs[msg.id]
+        
+        await ctx.message.delete(delay = 2)
+
+
+    @commands.command(name='cancel')
+    async def mark_as_cancelled(self, ctx):
+
+        msg = await ctx.fetch_message(ctx.message.reference.message_id)
+
+        payout_embed = msg.embeds[0]
+        
+        auctioneer_id = int(msg.embeds[0].footer.text.split(' : ')[1])
+
+        if ctx.author.id != auctioneer_id :
+            return
+        
+        else :
+
+            button_url = button_url = msg.components[0].children[0].url
+
+            view = mark_log(self.client)
+            view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
+
+            payout_embed.color = discord.Color.red()
+            payout_embed.title = 'Auctions Log - Cancelled'
+
+            await msg.edit(embed = payout_embed, view=view)
+
+            for messages in self.client.payout_msgs[msg.id]:
+                await messages.delete()
+
+            del self.client.payout_msgs[msg.id]
+
+            await ctx.message.delete(delay = 2)
     
 
 

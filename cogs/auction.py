@@ -32,6 +32,7 @@ class auc_buttons(discord.ui.View):
         await channel.set_permissions(role, overwrite = utils.channel_open(channel, role))
         await interaction.followup.send('Auction Started!')
         await interaction.channel.send('Auction has started! Run `t!bid <amount><unit>` to bid. E.g. `t!bid 700k` | `t!bid 6m`.')
+        await interaction.channel.send('You can bid just by saying the amount, too! E.g. `3m` | `900k`')
         
     async def interaction_check(self, interaction: discord.Interaction):
         return interaction.user.id == self.author.id
@@ -100,8 +101,6 @@ class auction(commands.Cog):
     auc_group = Group(name = 'auction', description= 'just a group for auction subcommands')
 
     @auc_group.command(name = 'host', description = 'Host an auction' )
-    @app_commands.autocomplete()
-
     async def auction_host(self, interaction : discord.Interaction, member : discord. Member, items : str, item_amount : int,  starting_price : str):
 
         await interaction.response.defer()
@@ -216,7 +215,9 @@ class auction(commands.Cog):
                     auction = auctions[i]
                 except IndexError:
                     break
-                embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}', inline = False)
+                msg = await ctx.fetch_message(auction['message_id'])
+                msg_link = msg.jump_url
+                embed.add_field(name = f'[{auction["item_amount"]} {auction["item"]} (index: {i + 1})]({msg_link})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}', inline = False)
             embed.set_footer(text = f'Page {page}/{pages}')
             await ctx.send(embed = embed)
 
@@ -350,7 +351,7 @@ class auction(commands.Cog):
                 await self.client.db.auction_queue.insert_one({'guild_id' : msg.guild.id, 'queue' : []})
                 guild_queue = await self.client.db.auction_queue.find_one({'guild_id' : msg.guild.id})
 
-            user_queue = next((item for item in guild_queue['queue'] if item['host'] == msg.author.id), None)\
+            user_queue = next((item for item in guild_queue['queue'] if item['host'] == msg.author.id), None)
             
             if bid_amount <= 0 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id or user_queue is not None:
                 return await msg.add_reaction('❌')

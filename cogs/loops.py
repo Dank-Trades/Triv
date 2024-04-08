@@ -98,8 +98,13 @@ class loops(commands.Cog):
                 end_embed = discord.Embed(color=discord.Color.from_str('#AC94F4'), title='Auction ended unsuccessfully.')
                 end_embed.description = f'Auction ended without any bidders.'
 
-                await auction_channel.send(embed=end_embed)
-                embed_msg = await auction_log.send(embed=payout_log, view=mark_log(self.client))
+                msg0 = await auction_channel.send(embed=end_embed)
+
+                view = mark_log(client=self.client)
+
+                view.add_item(discord.ui.Button(label='Jump to auction', url=msg0.jump_url))
+
+                embed_msg = await auction_log.send(embed=payout_log, view=view)
                 msg = await auction_log.send(f"/serverevents payout user:{self.client.log['seller'].id} quantity:{self.client.log['item_amount']} item:{self.client.log['item']}")
 
                 self.client.payout_msgs.update({
