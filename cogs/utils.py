@@ -9,7 +9,7 @@ class utils(commands.Cog):
         self.client = client
 
     def extract_item_and_amount(self, text):
-        pattern = r'\*\*(\d+)x <:([a-zA-Z_]+):\d+> ([^\*]+)\*\*'
+        pattern = r'\*\*(\d+)x <a?:(?:[a-zA-Z0-9_]+):[0-9]+> ([^\*]+)\*\*'
         match = re.search(pattern, text)
 
         if match:
