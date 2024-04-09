@@ -8,7 +8,7 @@ class utils(commands.Cog):
         self.client = client
 
     def extract_item_and_amount(self, text):
-        pattern = r'\*\*(\d+)x <:([a-zA-Z_]+):\d+> ([^\*]+)\*\*'
+        pattern = r'\*\*(\d+)x <:(.+):\d+> ([^\*]+)\*\*'
         match = re.search(pattern, text)
 
         if match:
