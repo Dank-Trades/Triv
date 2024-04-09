@@ -11,7 +11,7 @@ import motor.motor_asyncio
 class Triv(commands.Bot):
     def __init__(self):
         super().__init__(
-            command_prefix='t!',
+            command_prefix=['t!', '..'],
             intents=discord.Intents.all(),
             help_command= None
             )
