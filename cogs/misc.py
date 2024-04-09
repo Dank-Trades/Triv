@@ -1,6 +1,7 @@
 import discord
 import psutil
 import json
+import io
 import os
 import sys
 import humanize
@@ -154,7 +155,28 @@ class misc(commands.Cog):
             del self.client.payout_msgs[msg.id]
 
             await ctx.message.delete(delay = 2)
+
     
+    @app_commands.command(name='update_values')
+    @app_commands.checks.has_any_role(719197064193638402)
+    async def update_values(self, interaction : discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        if interaction.data['options'][0]['type'] != 3:
+            await interaction.followup.send('Please attach a `.csv` file.')
+        else :
+            attached_file = interaction.data['options'][0]['value']
+
+            file = discord.File(io.BytesIO(attached_file), filename='item_values.csv')
+            
+            if os.path.exists('item_values.csv'):
+                os.remove('item_values.csv')
+
+            with open('item_values.csv', 'w') as f:
+                f.write(attached_file)
+
+        await interaction.followup.send('Updated successfully!' , ephemeral=True)
+
+            
 
 
         
