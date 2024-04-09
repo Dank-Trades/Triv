@@ -224,7 +224,7 @@ class auction(commands.Cog):
 
     # this is a subcommand of the queue command
     @auction_queue.command(name='remove', description = 'Remove an auction from the queue', aliases = ['r'])
-    @commands.has_role(750117211087044679)
+    @commands.has_any_role(750117211087044679)
     async def auction_queue_remove(self, ctx, index : str = ""):
         try:
             index = int(index) - 1
@@ -245,7 +245,7 @@ class auction(commands.Cog):
             await ctx.send(f'Removed the auction : {auction["item_amount"]} {auction["item"]} auction hosted by {auction["host"]}')
 
     @auction_queue.command(name='ra')
-    @commands.has_role(750117211087044679)
+    @commands.has_any_role(750117211087044679)
     async def auction_queue_remove_all(self, ctx):
         
 
@@ -254,10 +254,7 @@ class auction(commands.Cog):
         if not auction_queue:
             return
         else:
-            auctions = auction_queue['queue']
-            for auction in auctions:
-                auctions.remove(auction)
-            await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : auctions}})
+            await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : [] }})
             await ctx.send(f'Removed all auctions from the queue!')
 
     @commands.command(name='test')
@@ -348,6 +345,55 @@ class auction(commands.Cog):
             else :
 
                 await interaction.response.send_message('There\'s no auction running!', ephemeral= True)
+
+    @commands.command()
+    @commands.has_any_role(750117211087044679)
+    async def ato(self, ctx, member : discord.Member):
+        tradeout_channel = self.utils.get_tradeout_channel(ctx)
+
+        permissions = tradeout_channel.permissions_for(member)
+
+        if permissions.send_messages:
+            await tradeout_channel.set_permissions(member, send_messages = None)
+        else :
+            await tradeout_channel.set_permissions(member, send_messages = True)
+        
+        await ctx.message.add_reaction('✅')
+        
+
+    @commands.command()
+    @commands.has_any_role(750117211087044679)
+    async def adump(self, ctx):
+        members = ''
+
+        tradeout_channel = self.utils.get_tradeout_channel(ctx)
+
+        for overwrite in tradeout_channel.overwrites:
+            if isinstance(overwrite, discord.Member) and overwrite.permissions_in(tradeout_channel).send_messages:
+            
+                members = members + f'{overwrite.display_name}({overwrite.id})\n'
+        
+        await ctx.send(members)
+
+
+    @commands.command()
+    @commands.has_any_role(750117211087044679)
+    async def aclear(self, ctx):
+
+        tradeout_channel = self.utils.get_tradeout_channel(ctx)
+
+        for overwrite in tradeout_channel.overwrites:
+            if isinstance(overwrite, discord.Member) and overwrite.permissions_in(tradeout_channel).send_messages:
+                await tradeout_channel.set_permissions(overwrite, send_messages = None)
+        
+        await ctx.message.add_reaction('✅')
+            
+
+        
+
+
+
+        
 
     @commands.Cog.listener()
     async def on_message(self, msg):

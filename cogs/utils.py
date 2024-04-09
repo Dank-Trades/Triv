@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import requests
 import re
+import pandas as pd
 
 class utils(commands.Cog):
     def __init__(self, client):
@@ -52,6 +53,34 @@ class utils(commands.Cog):
                 return 0
 
         return numeric_value
+    
+    def check_start_price(item, price ):
+
+        file = pd.read_csv('items.csv')
+
+        avg_price = file.loc[ file['name'] == item, 'value'].values[0]
+
+        if avg_price <= 1e7:
+            max_price = avg_price * 0.6
+        
+        elif avg_price <= 3e7:
+            max_price = avg_price * 0.55
+        
+        elif avg_price <= 7e7:
+            max_price = avg_price * 5
+        
+        elif avg_price <= 12e7:
+            max_price = avg_price * 0.45
+        
+        elif avg_price <= 2e8:
+            max_price = avg_price * 0.4
+
+        if price > max_price:
+            return False
+        else :
+            return True
+    
+
 
     async def bid(self, ctx, bid, min_increment):
         loop_cog = self.client.get_cog('loops')
@@ -145,9 +174,9 @@ class utils(commands.Cog):
         return overwrites
 
     @staticmethod
-    def tradeout_access(channel, member):
+    def tradeout_access(channel, member, set : bool):
         overwrites = channel.overwrites_for(member)
-        overwrites.send_messages = True
+        overwrites.send_messages = set
         return overwrites
 
     @staticmethod

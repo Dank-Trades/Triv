@@ -59,7 +59,7 @@ class loops(commands.Cog):
 
                 await auction_channel.send('Sold!')
                 msg = await auction_channel.send(embed=winner_embed)
-                await tradeout_channel.set_permissions(winner, overwrite=utils.tradeout_access(tradeout_channel, winner))
+                await tradeout_channel.set_permissions(winner, overwrite=utils.tradeout_access(tradeout_channel, winner, set=True))
 
                 payout_log = discord.Embed(color=discord.Color.blue(), title='Auction Logs')
                 payout_log.description = (
