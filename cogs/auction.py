@@ -348,6 +348,10 @@ class auction(commands.Cog):
     @commands.command()
     @commands.has_any_role(750117211087044679,1051128651929882695)
     async def ato(self, ctx, member : discord.Member):
+
+        if member.bot:
+            return
+
         tradeout_channel = await self.utils.get_tradeout_channel(ctx)
 
         permissions = tradeout_channel.permissions_for(member)
