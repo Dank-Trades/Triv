@@ -354,7 +354,7 @@ class auction(commands.Cog):
         permissions = tradeout_channel.permissions_for(member)
 
         if permissions.send_messages:
-            await tradeout_channel.set_permissions(member, send_messages = None)
+            await tradeout_channel.set_permissions(member, overwrite = None)
         else :
             await tradeout_channel.set_permissions(member, send_messages = True)
         
@@ -368,10 +368,12 @@ class auction(commands.Cog):
 
         tradeout_channel = await self.utils.get_tradeout_channel(ctx)
 
-        for overwrite in tradeout_channel.overwrites:
-            if isinstance(overwrite, discord.Member) and overwrite.permissions_in(tradeout_channel).send_messages:
+
+
+        for member in tradeout_channel.overwrites:
+            if isinstance(member, discord.Member) and tradeout_channel.overwrites_for(member).send_messages:
             
-                members = members + f'{overwrite.display_name}({overwrite.id})\n'
+                members = members + f'{member.display_name}({member.id})\n'
         
         await ctx.send(members)
 
@@ -382,9 +384,9 @@ class auction(commands.Cog):
 
         tradeout_channel = await self.utils.get_tradeout_channel(ctx)
 
-        for overwrite in tradeout_channel.overwrites:
-            if isinstance(overwrite, discord.Member) and overwrite.permissions_in(tradeout_channel).send_messages:
-                await tradeout_channel.set_permissions(overwrite, send_messages = None)
+        for member in tradeout_channel.overwrites:
+            if isinstance(member, discord.Member) and tradeout_channel.overwrites_for(member).send_messages:
+                await tradeout_channel.set_permissions(member, overwrite = None)
         
         await ctx.message.add_reaction('✅')
             
