@@ -349,7 +349,7 @@ class auction(commands.Cog):
     @commands.command()
     @commands.has_any_role(750117211087044679)
     async def ato(self, ctx, member : discord.Member):
-        tradeout_channel = self.utils.get_tradeout_channel(ctx)
+        tradeout_channel = await self.utils.get_tradeout_channel(ctx)
 
         permissions = tradeout_channel.permissions_for(member)
 
@@ -366,7 +366,7 @@ class auction(commands.Cog):
     async def adump(self, ctx):
         members = ''
 
-        tradeout_channel = self.utils.get_tradeout_channel(ctx)
+        tradeout_channel = await self.utils.get_tradeout_channel(ctx)
 
         for overwrite in tradeout_channel.overwrites:
             if isinstance(overwrite, discord.Member) and overwrite.permissions_in(tradeout_channel).send_messages:
@@ -380,7 +380,7 @@ class auction(commands.Cog):
     @commands.has_any_role(750117211087044679)
     async def aclear(self, ctx):
 
-        tradeout_channel = self.utils.get_tradeout_channel(ctx)
+        tradeout_channel = await self.utils.get_tradeout_channel(ctx)
 
         for overwrite in tradeout_channel.overwrites:
             if isinstance(overwrite, discord.Member) and overwrite.permissions_in(tradeout_channel).send_messages:
