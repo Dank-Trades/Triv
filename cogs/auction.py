@@ -169,6 +169,7 @@ class auction(commands.Cog):
             await self.utils.bid(ctx, bid, min_increment)
     
     @commands.group(name='queue', aliases=['q'], invoke_without_command=True)
+    @commands.has_role(750117211087044679)
     async def auction_queue(self, ctx, page: str = '1'):
         try:
             page = int(page)
@@ -216,13 +217,14 @@ class auction(commands.Cog):
                 except IndexError:
                     break
                 message_id = auction['message_id']
-                msg_link = f'https://discord.com/channels/1046123195004113006/1226252036518051940/{message_id}'
-                embed.add_field(name = f'[{auction["item_amount"]} {auction["item"]} (index: {i + 1})]({msg_link})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}', inline = False)
+                msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{message_id}'
+                embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : [{format(auction["starting_price"], ",")}]({msg_link})', inline = False)
             embed.set_footer(text = f'Page {page}/{pages}')
             await ctx.send(embed = embed)
 
     # this is a subcommand of the queue command
     @auction_queue.command(name='remove', description = 'Remove an auction from the queue', aliases = ['r'])
+    @commands.has_role(750117211087044679)
     async def auction_queue_remove(self, ctx, index : str = ""):
         try:
             index = int(index) - 1
@@ -241,6 +243,22 @@ class auction(commands.Cog):
                 return await ctx.send('Invalid index.')
             await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : auctions}})
             await ctx.send(f'Removed the auction : {auction["item_amount"]} {auction["item"]} auction hosted by {auction["host"]}')
+
+    @auction_queue.command(name='ra')
+    @commands.has_role(750117211087044679)
+    async def auction_queue_remove_all(self, ctx):
+        
+
+        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : ctx.guild.id})
+
+        if not auction_queue:
+            return
+        else:
+            auctions = auction_queue['queue']
+            for auction in auctions:
+                auctions.remove(auction)
+            await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : auctions}})
+            await ctx.send(f'Removed all auctions from the queue!')
 
     @commands.command(name='test')
     async def test(self, ctx):
