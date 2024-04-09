@@ -144,7 +144,7 @@ class auction(commands.Cog):
     @auction_host.autocomplete('items')
     async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
         
-        items = pd.read_csv('DonoList.csv')
+        items = pd.read_csv('Item_Pricing_v2_-_IMPORT_1.csv')
 
         item_list = [item for item in items['name']]
 
