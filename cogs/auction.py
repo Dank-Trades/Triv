@@ -345,15 +345,14 @@ class auction(commands.Cog):
             else :
 
                 await interaction.response.send_message('There\'s no auction running!', ephemeral= True)
-
     @commands.command()
-    @commands.has_any_role(750117211087044679)
+    @commands.has_any_role(750117211087044679,1051128651929882695)
     async def ato(self, ctx, member : discord.Member):
         tradeout_channel = await self.utils.get_tradeout_channel(ctx)
 
         permissions = tradeout_channel.permissions_for(member)
 
-        if permissions.send_messages:
+        if tradeout_channel.overwrites_for(member).send_messages:
             await tradeout_channel.set_permissions(member, overwrite = None)
         else :
             await tradeout_channel.set_permissions(member, send_messages = True)
@@ -362,7 +361,7 @@ class auction(commands.Cog):
         
 
     @commands.command()
-    @commands.has_any_role(750117211087044679)
+    @commands.has_any_role(750117211087044679,1051128651929882695)
     async def adump(self, ctx):
         members = ''
 
@@ -371,26 +370,28 @@ class auction(commands.Cog):
 
 
         for member in tradeout_channel.overwrites:
-            if isinstance(member, discord.Member) and tradeout_channel.overwrites_for(member).send_messages:
+            if isinstance(member, discord.Member) and tradeout_channel.overwrites_for(member).send_messages and not member.bot:
             
-                members = members + f'{member.display_name}({member.id})\n'
-        
+                members = members + f'{member.display_name} ({member.id})\n'
+
+        if members == '':
+            await ctx.send('No one in tradeout.')
+            return
         await ctx.send(members)
 
 
     @commands.command()
-    @commands.has_any_role(750117211087044679)
+    @commands.has_any_role(750117211087044679,1051128651929882695)
     async def aclear(self, ctx):
 
         tradeout_channel = await self.utils.get_tradeout_channel(ctx)
 
         for member in tradeout_channel.overwrites:
-            if isinstance(member, discord.Member) and tradeout_channel.overwrites_for(member).send_messages:
+            if isinstance(member, discord.Member) and tradeout_channel.overwrites_for(member).send_messages and not member.bot:
                 await tradeout_channel.set_permissions(member, overwrite = None)
         
         await ctx.message.add_reaction('✅')
-            
-
+ 
         
 
 
