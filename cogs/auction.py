@@ -254,10 +254,7 @@ class auction(commands.Cog):
         if not auction_queue:
             return
         else:
-            auctions = auction_queue['queue']
-            for auction in auctions:
-                auctions.remove(auction)
-            await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : auctions}})
+            await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : [] }})
             await ctx.send(f'Removed all auctions from the queue!')
 
     @commands.command(name='test')
