@@ -161,15 +161,16 @@ class misc(commands.Cog):
     @app_commands.checks.has_any_role(719197064193638402, 1220040168992411820)
     async def update_values(self, interaction : discord.Interaction, file : discord.Attachment):
         await interaction.response.defer(ephemeral=True)
-        if not file.filename.endswith('.csv')
+        if not file.filename.endswith('.csv'):
             await interaction.followup.send('Please attach a `.csv` file.')
         else :
 
             if os.path.exists('item_values.csv'):
                 os.remove('item_values.csv')
 
-            file.filename = 'item_values.csv'
-            file.save(io.BytesIO)
+            
+            with open(file.filename, 'wb') as f:
+                await file.save(f, filename='avg_values.csv')
             
 
         await interaction.followup.send('Updated successfully!' , ephemeral=True)
