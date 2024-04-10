@@ -423,12 +423,13 @@ class auction(commands.Cog):
                 guild_queue = await self.client.db.auction_queue.find_one({'guild_id' : msg.guild.id})
 
             user_queue = next((item for item in guild_queue['queue'] if item['host'] == msg.author.id), None)
+
+            amount, item_name = self.utils.extract_item_and_amount(embed.description)
             
-            if bid_amount <= 0 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id or user_queue is not None:
+            if bid_amount < 5e5 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id or user_queue is not None or not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
                 return await msg.add_reaction('❌')
             
             embed = replied_to_message.embeds[0]
-            amount, item_name = self.utils.extract_item_and_amount(embed.description)
 
             if embed.title != validate_title:
                 return await msg.add_reaction('❌')
@@ -464,10 +465,12 @@ class auction(commands.Cog):
             
             await message_after.clear_reactions()
             
-            if bid_amount <= 0 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != message_after.author.id or user_queue is None:
+            embed = replied_to_message.embeds[0]
+            amount, item_name = self.utils.extract_item_and_amount(embed.description)
+            
+            if bid_amount < 5e5 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != message_after.author.id or user_queue is None or not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
                 return await message_after.add_reaction('❌')
         
-            embed = replied_to_message.embeds[0]
 
             if embed.title != validate_title:
                 return await message_after.add_reaction('❌')

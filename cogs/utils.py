@@ -54,11 +54,14 @@ class utils(commands.Cog):
 
         return numeric_value
     
-    def check_start_price(item, price ):
+    def check_start_price(self, item : str, item_amount : int, price : int):
 
-        file = pd.read_csv('items.csv')
+        file = pd.read_csv('auctions.csv')
 
-        avg_price = file.loc[ file['name'] == item, 'value'].values[0]
+        avg_price = int(file.loc[ file['name'] == item, 'value'].values[0]) * item_amount
+
+        if avg_price < 5e5:
+            return False
 
         if avg_price <= 1e7:
             max_price = avg_price * 0.6
