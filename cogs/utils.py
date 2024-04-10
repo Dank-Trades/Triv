@@ -58,7 +58,7 @@ class utils(commands.Cog):
 
         file = pd.read_csv('auctions.csv')
 
-        avg_price = int(file.loc[ file['name'] == item, 'value'].values[0]) * item_amount
+        avg_price = int(file.loc[ file['name'] == item, 'price'].values[0]) * item_amount
 
         if avg_price < 5e5:
             return False

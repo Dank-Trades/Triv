@@ -169,7 +169,7 @@ class auction(commands.Cog):
             await self.utils.bid(ctx, bid, min_increment)
     
     @commands.group(name='queue', aliases=['q'], invoke_without_command=True)
-    @commands.has_role(750117211087044679)
+    @commands.has_any_role(750117211087044679, 1051128651929882695)
     async def auction_queue(self, ctx, page: str = '1'):
         try:
             page = int(page)
@@ -224,7 +224,7 @@ class auction(commands.Cog):
 
     # this is a subcommand of the queue command
     @auction_queue.command(name='remove', description = 'Remove an auction from the queue', aliases = ['r'])
-    @commands.has_any_role(750117211087044679)
+    @commands.has_any_role(750117211087044679, 1051128651929882695)
     async def auction_queue_remove(self, ctx, index : str = ""):
         try:
             index = int(index) - 1
@@ -424,12 +424,14 @@ class auction(commands.Cog):
 
             user_queue = next((item for item in guild_queue['queue'] if item['host'] == msg.author.id), None)
 
+            embed = replied_to_message.embeds[0]
+
             amount, item_name = self.utils.extract_item_and_amount(embed.description)
             
             if bid_amount < 5e5 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id or user_queue is not None or not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
                 return await msg.add_reaction('❌')
             
-            embed = replied_to_message.embeds[0]
+            
 
             if embed.title != validate_title:
                 return await msg.add_reaction('❌')
