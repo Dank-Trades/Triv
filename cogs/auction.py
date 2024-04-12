@@ -267,6 +267,8 @@ class auction(commands.Cog):
     @commands.has_any_role(750117211087044679,1051128651929882695)
     async def insert_queue(self, interaction : discord.Interaction, seller : discord.Member, items : str, item_amount : int, starting_price : str ):
 
+        starting_price = int(self.utils.process_shorthand(starting_price))
+
         await self.client.db.auction_queue.update_one({'guild_id' : interaction.guild.id}, {'$push' : {'queue' : {'message_id' : None, 'host' : seller.id, 'item' : items, 'item_amount' : item_amount, 'starting_price' : starting_price, 'msg_id' : None}}}, upsert = True)
         await interaction.response.send_message('✅')
 
