@@ -102,7 +102,10 @@ class misc(commands.Cog):
         
         auctioneer_id = int(msg.embeds[0].footer.text.split(' : ')[1])
 
-        if ctx.author.id != auctioneer_id :
+        sman_role = ctx.guild.get_role(719197064193638402)
+
+        if ctx.author.id != auctioneer_id or sman_role not in ctx.author.roles:
+            
             return
         
         else :
@@ -113,7 +116,7 @@ class misc(commands.Cog):
             view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
 
             payout_embed.color = discord.Color.green()
-            payout_embed.title = 'Auctions Log - Paid'
+            payout_embed.title = 'Auction Logs - Paid'
 
             await msg.edit(embed = payout_embed, view=view)
 
@@ -145,7 +148,7 @@ class misc(commands.Cog):
             view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
 
             payout_embed.color = discord.Color.red()
-            payout_embed.title = 'Auctions Log - Cancelled'
+            payout_embed.title = 'Auction Logs - Cancelled'
 
             await msg.edit(embed = payout_embed, view=view)
 
@@ -165,12 +168,11 @@ class misc(commands.Cog):
             await interaction.followup.send('Please attach a `.csv` file.')
         else :
 
-            if os.path.exists('item_values.csv'):
-                os.remove('item_values.csv')
-
+            if os.path.exists('auctions.csv'):
+                os.remove('auctions.csv')
             
             with open(file.filename, 'wb') as f:
-                await file.save(f, filename='avg_values.csv')
+                await file.save(f, filename='auctions.csv')
             
 
         await interaction.followup.send('Updated successfully!' , ephemeral=True)

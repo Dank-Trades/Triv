@@ -216,9 +216,9 @@ class auction(commands.Cog):
                     auction = auctions[i]
                 except IndexError:
                     break
-                message_id = auction['message_id']
-                msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{message_id}'
-                embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : [{format(auction["starting_price"], ",")}]({msg_link})', inline = False)
+                item_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction['message_id']}'
+                price_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction['msg_id']}'
+                embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}\nLinks : [Items]({item_msg_link}) | [Price]({price_msg_link})', inline = False)
             embed.set_footer(text = f'Page {page}/{pages}')
             await ctx.send(embed = embed)
 
@@ -244,8 +244,8 @@ class auction(commands.Cog):
             await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : auctions}})
             await ctx.send(f'Removed the auction : {auction["item_amount"]} {auction["item"]} auction hosted by {auction["host"]}')
 
-    @auction_queue.command(name='ra')
-    @commands.has_any_role(750117211087044679)
+    @auction_queue.command(name='ra', aliases = ['clear'])
+    @commands.has_any_role(750117211087044679,1051128651929882695 )
     async def auction_queue_remove_all(self, ctx):
         
 
@@ -256,6 +256,31 @@ class auction(commands.Cog):
         else:
             await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : [] }})
             await ctx.send(f'Removed all auctions from the queue!')
+
+    @auction_queue.command(name='edit', aliases=['e'])
+    @commands.has_any_role(750117211087044679,1051128651929882695 )
+    async def auction_queue_edit(self, ctx, index : str , starting_price):
+        try:
+            index = int(index) - 1
+        except ValueError:
+            return await ctx.send('Invalid index.')
+        
+        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : ctx.guild.id})
+
+        if not auction_queue:
+            return await ctx.send('No auctions in queue.')
+        
+        else :
+            
+            starting_price = self.utils.process_shorthand(starting_price)
+
+            queue = auction_queue['queue']
+            target_request = queue[index]
+            target_request['starting_price'] = starting_price
+
+            await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : queue}})
+            await ctx.message.add_reaction('✅')
+            
 
     @commands.command(name='test')
     async def test(self, ctx):
@@ -437,7 +462,7 @@ class auction(commands.Cog):
                 return await msg.add_reaction('❌')
 
             await msg.add_reaction('✅')
-            await self.client.db.auction_queue.update_one({'guild_id' : msg.guild.id}, {'$push' : {'queue' : {'message_id' : replied_to_message.id, 'host' : msg.author.id, 'item' : item_name, 'item_amount' : amount, 'starting_price' : bid_amount}}}, upsert = True)
+            await self.client.db.auction_queue.update_one({'guild_id' : msg.guild.id}, {'$push' : {'queue' : {'message_id' : replied_to_message.id, 'host' : msg.author.id, 'item' : item_name, 'item_amount' : amount, 'starting_price' : bid_amount, 'msg_id' : msg.id}}}, upsert = True)
 
             return await msg.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
         else:

@@ -106,7 +106,7 @@ class utils(commands.Cog):
 
                     self.client.curr_bids[ctx.channel.id] = full_int
                     self.client.first_bid[ctx.guild.id] = False
-                    await ctx.channel.send(f'{ctx.author.mention} bidded **{format(full_int, ",")}**')
+                    await ctx.channel.send(f'{ctx.author.mention} bid **{format(full_int, ",")}**')
 
                     loop_cog.auc_count.restart()
 
