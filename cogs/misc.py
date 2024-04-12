@@ -104,7 +104,7 @@ class misc(commands.Cog):
 
         sman_role = ctx.guild.get_role(719197064193638402)
 
-        if ctx.author.id != auctioneer_id or sman_role not in ctx.author.roles:
+        if ctx.author.id != auctioneer_id and sman_role not in ctx.author.roles:
             
             return
         
