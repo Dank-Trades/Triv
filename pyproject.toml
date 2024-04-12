@@ -1,0 +1,5 @@
+[tool.poetry]
+name = "Triv"
+version = "1.1.0"  # Increment this version number
+description = ""
+authors = ["Your Name <you@example.com>"]
