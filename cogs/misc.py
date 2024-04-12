@@ -170,6 +170,18 @@ class misc(commands.Cog):
 
             del self.client.payout_msgs[msg.id]
 
+            auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : ctx.guild.id})
+            auction_queue = auction_queue['queue']
+
+            index = next((index for index, auction in enumerate(auction_queue) if auction['queue_message_id'] == msg.id), None)
+
+            if index == None:
+                print('WARNING : Request in queue not found.')
+
+            else :
+                auction_queue.pop(index)
+                await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : auction_queue}})
+
             await ctx.message.delete(delay = 2)
 
     
@@ -184,8 +196,8 @@ class misc(commands.Cog):
             if os.path.exists('auctions.csv'):
                 os.remove('auctions.csv')
             
-            with open(file.filename, 'wb') as f:
-                await file.save(f, filename='auctions.csv')
+            with open('auctions.csv', 'wb') as f:
+                await file.save(f)
             
 
         await interaction.followup.send('Updated successfully!' , ephemeral=True)
