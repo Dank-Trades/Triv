@@ -124,6 +124,19 @@ class misc(commands.Cog):
                 await messages.delete()
 
             del self.client.payout_msgs[msg.id]
+
+            auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : ctx.guild.id})
+            auction_queue = auction_queue['queue']
+
+            index = next((index for index, auction in enumerate(auction_queue) if auction['queue_message_id'] == msg.id), None)
+
+            if index == None:
+                print('WARNING : Request in queue not found.')
+
+            else :
+                auction_queue.pop(index)
+                await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'queue' : auction_queue})
+
         
         await ctx.message.delete(delay = 2)
 

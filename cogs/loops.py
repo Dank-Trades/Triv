@@ -79,6 +79,19 @@ class loops(commands.Cog):
                 msg1 = await auction_log.send(f"/serverevents payout user:{self.client.log['seller'].id} quantity:{int(self.client.log['coins'])}")
                 msg2 = await auction_log.send(f"/serverevents payout user:{self.client.log['buyer'].id} quantity:{self.client.log['item_amount']} item:{self.client.log['item']}")
 
+                auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : msg.guild.id})
+
+                if auction_queue:
+                    auctions = auction_queue['queue']
+                    index = next((index for index, auction in enumerate(auctions) if auction['host'] == self.client.log['seller'].id), None)
+                    if index is None:
+                        print('WARNING: Auction not found in queue.')
+                    else:
+                        auction = auctions.pop(index)
+                        auction['queue_message_id'] = embed_msg.id
+                        auctions.append(auction)
+                        await self.client.db.auction_queue.update_one({'guild_id' : msg.guild.id}, {'$set' : {'queue' : auctions}})
+
                 self.client.payout_msgs.update({
                     embed_msg.id: [msg1, msg2]
                 })
