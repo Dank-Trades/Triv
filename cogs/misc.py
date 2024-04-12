@@ -135,7 +135,7 @@ class misc(commands.Cog):
 
             else :
                 auction_queue.pop(index)
-                await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'queue' : auction_queue})
+                await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : auction_queue}})
 
         
         await ctx.message.delete(delay = 2)

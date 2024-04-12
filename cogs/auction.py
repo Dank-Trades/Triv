@@ -144,7 +144,7 @@ class auction(commands.Cog):
     @auction_host.autocomplete('items')
     async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
         
-        items = pd.read_csv('Item_Pricing_v2_-_IMPORT_1.csv')
+        items = pd.read_csv('auctions.csv')
 
         item_list = [item for item in items['name']]
 
@@ -168,19 +168,22 @@ class auction(commands.Cog):
         else :
             await self.utils.bid(ctx, bid, min_increment)
     
-    @commands.group(name='queue', aliases=['q'], invoke_without_command=True)
-    @commands.has_any_role(750117211087044679, 1051128651929882695)
-    async def auction_queue(self, ctx, page: str = '1'):
+    queue_group = Group(name='queue', description='just a group for queue subcommands')
+
+    @queue_group.command(name='list')
+    @app_commands.checks.has_any_role(750117211087044679, 1051128651929882695)
+    async def auction_queue(self, interaction: discord.Interaction, page: str = '1'):
+        await interaction.response.defer()
         try:
             page = int(page)
         except ValueError:
             page = 1
 
-        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : ctx.guild.id})
+        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : interaction.guild.id})
 
         if not auction_queue:
-            await self.client.db.auction_queue.insert_one({'guild_id' : ctx.guild.id, 'queue' : []})
-            return await ctx.send('No auctions in queue.')
+            await self.client.db.auction_queue.insert_one({'guild_id' : interaction.guild.id, 'queue' : []})
+            return await interaction.followup.send('No auctions in queue.', ephemeral=True)
 
         # schema = {
         #     'guild_id' : ctx.guild.id,
@@ -204,7 +207,7 @@ class auction(commands.Cog):
 
         auctions = auction_queue['queue']
         if auctions == []:
-            return await ctx.send('No auctions in queue.')
+            return await interaction.followup.send('No auctions in queue.', ephemeral= True)
         else:
             pages = len(auctions) // 5 + 1
             start = (page - 1) * 5
@@ -220,66 +223,62 @@ class auction(commands.Cog):
                 price_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["msg_id"]}'
                 embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}\nLinks : [Items]({item_msg_link}) | [Price]({price_msg_link})', inline = False)
             embed.set_footer(text = f'Page {page}/{pages}')
-            await ctx.send(embed = embed)
+            await interaction.followup.send(embed = embed, ephemeral=True)
 
     # this is a subcommand of the queue command
-    @auction_queue.command(name='remove', description = 'Remove an auction from the queue', aliases = ['r'])
-    @commands.has_any_role(750117211087044679, 1051128651929882695)
-    async def auction_queue_remove(self, ctx, index : str = ""):
+    @queue_group.command(name='remove', description = 'Remove an auction from the queue')
+    @app_commands.checks.has_any_role(750117211087044679, 1051128651929882695)
+    async def auction_queue_remove(self, interaction: discord.Interaction, index : str = ""):
+        await interaction.response.defer()
         try:
             index = int(index) - 1
         except ValueError:
-            return await ctx.send('Invalid index.')
+            return await interaction.followup.send('Invalid index.')
 
-        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : ctx.guild.id})
+        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : interaction.guild.id})
 
         if not auction_queue:
-            return await ctx.send('No auctions in queue.')
+            return await interaction.followup.send('No auctions in queue.')
         else:
             auctions = auction_queue['queue']
             try:
                 auction = auctions.pop(index)
             except IndexError:
-                return await ctx.send('Invalid index.')
-            await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : auctions}})
-            await ctx.send(f'Removed the auction : {auction["item_amount"]} {auction["item"]} auction hosted by {auction["host"]}')
+                return await interaction.followup.send('Invalid index.')
+            await self.client.db.auction_queue.update_one({'guild_id' : interaction.guild.id}, {'$set' : {'queue' : auctions}})
+            await interaction.followup.send(f'Removed the auction : {auction["item_amount"]} {auction["item"]} auction hosted by {auction["host"]}')
 
-    @auction_queue.command(name='ra', aliases = ['clear'])
+    @queue_group.command(name='clear')
     @commands.has_any_role(750117211087044679,1051128651929882695 )
-    async def auction_queue_remove_all(self, ctx):
+    async def auction_queue_remove_all(self, interaction : discord.Interaction):
+
+        await interaction.response.defer()
         
 
-        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : ctx.guild.id})
+        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : interaction.guild.id})
 
         if not auction_queue:
             return
         else:
-            await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : [] }})
-            await ctx.send(f'Removed all auctions from the queue!')
+            await self.client.db.auction_queue.update_one({'guild_id' : interaction.guild.id}, {'$set' : {'queue' : [] }})
+            await interaction.followup.send(f'Removed all auctions from the queue!')
 
-    @auction_queue.command(name='edit', aliases=['e'])
-    @commands.has_any_role(750117211087044679,1051128651929882695 )
-    async def auction_queue_edit(self, ctx, index : str , starting_price):
-        try:
-            index = int(index) - 1
-        except ValueError:
-            return await ctx.send('Invalid index.')
+    @queue_group.command(name='insert')
+    @commands.has_any_role(750117211087044679,1051128651929882695)
+    async def insert_queue(self, interaction : discord.Interaction, seller : discord.Member, items : str, item_amount : int, starting_price ):
+
+        await self.client.db.auction_queue.update_one({'guild_id' : interaction.guild.id}, {'$push' : {'queue' : {'message_id' : None, 'host' : seller.id, 'item' : items, 'item_amount' : item_amount, 'starting_price' : starting_price, 'msg_id' : None}}}, upsert = True)
+        await interaction.response.send_message('✅')
+
+    
+    @insert_queue.autocomplete('items')
+    async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
         
-        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : ctx.guild.id})
+        items = pd.read_csv('auctions.csv')
 
-        if not auction_queue:
-            return await ctx.send('No auctions in queue.')
-        
-        else :
-            
-            starting_price = self.utils.process_shorthand(starting_price)
+        item_list = [item for item in items['name']]
 
-            queue = auction_queue['queue']
-            target_request = queue[index]
-            target_request['starting_price'] = starting_price
-
-            await self.client.db.auction_queue.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue' : queue}})
-            await ctx.message.add_reaction('✅')
+        return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in item_list if current.lower() in suggestion.lower()]
             
 
     @commands.command(name='test')
