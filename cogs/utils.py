@@ -3,10 +3,24 @@ from discord.ext import commands
 import requests
 import re
 import pandas as pd
+from discord.components import Button, ButtonStyle
 
 class utils(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+    
+    async def send_error_message(self, msg, error_message):
+        jump_url = msg.jump_url
+        content = msg.content
+        message = f"> {content}\n\n{error_message}"
+        view = discord.ui.View()
+        button = discord.ui.Button(label='Jump to message', url=jump_url, style=ButtonStyle.url)
+        view.add_item(button)
+        try:
+            await msg.author.send(message, view=view)
+        except discord.Forbidden:
+            await msg.add_reaction('⚠')
 
     def extract_item_and_amount(self, text):
         pattern = r'\*\*(\d+)x <a?:(?:[a-zA-Z0-9_]+):[0-9]+> ([^\*]+)\*\*'

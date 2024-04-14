@@ -12,7 +12,7 @@ from discord.app_commands import Group, command
 from discord.ext import tasks, commands
 import pandas as pd
 
-
+MIN_BID_AMOUNT = 5e5
 
 class auc_buttons(discord.ui.View):
     def __init__(self, author):
@@ -100,55 +100,116 @@ class auction(commands.Cog):
 
     auc_group = Group(name = 'auction', description= 'just a group for auction subcommands')
 
-    @auc_group.command(name = 'host', description = 'Host an auction' )
-    async def auction_host(self, interaction : discord.Interaction, member : discord. Member, items : str, item_amount : int,  starting_price : str):
+    # @auc_group.command(name = 'host', description = 'Host an auction' )
+    # async def auction_host(self, interaction : discord.Interaction, member : discord. Member, items : str, item_amount : int,  starting_price : str):
 
+        # await interaction.response.defer()
+
+        # full_int = self.utils.process_shorthand(starting_price)
+        # full_int = int(full_int)
+  
+        # embed = discord.Embed(title = f'{item_amount} {items} auction', description= f'starting bid : {format(full_int, ",")} \nseller : {member.mention}', color = discord.Color.from_str('0x2F3136'))
+        # embed.set_footer(text= 'auction will start when there\'s 3 reacts')
+
+        # ping_role = await utils(interaction.client).get_auction_ping(interaction)
+        # auction_channel = await utils(interaction.client).get_auction_channel(interaction)
+
+        # if interaction.channel != auction_channel:
+
+        #     await interaction.followup.send('This is not your configured auction channel.', ephemeral= True)
+
+        # else:
+
+        #     self.client.start_price[interaction.channel.id] = full_int
+        #     self.client.first_bid[interaction.guild.id] = True
+        #     self.client.last_bids[interaction.channel.id] = []
+        #     self.client.bidders[interaction.channel.id] = []
+        #     self.client.curr_bids[interaction.channel.id] = []
+
+        #     msg = await interaction.original_response()
+
+        #     self.client.log.update({ 
+        #         'auction_id' : msg.id,
+        #         'auctioneer' : interaction.user,
+        #         'item' : items,
+        #         'item_amount' : item_amount,
+        #         'seller' : member
+        #     })
+
+
+        #     await interaction.followup.send(embed=embed, view=auc_buttons(interaction.user))
+        #     await interaction.channel.send(content=f'{ping_role.mention}', allowed_mentions = discord.AllowedMentions(roles=True))
+        #     await msg.add_reaction('⭐')
+
+    # we want to change it so that it only take in index for the host
+    @auc_group.command(name = 'host', description = 'Host an auction')
+    async def auction_host(self, interaction : discord.Interaction, index : str):
         await interaction.response.defer()
 
-        full_int = self.utils.process_shorthand(starting_price)
-        full_int = int(full_int)
-  
-        embed = discord.Embed(title = f'{item_amount} {items} auction', description= f'starting bid : {format(full_int, ",")} \nseller : {member.mention}', color = discord.Color.from_str('0x2F3136'))
-        embed.set_footer(text= 'auction will start when there\'s 3 reacts')
-
-        ping_role = await utils(interaction.client).get_auction_ping(interaction)
-        auction_channel = await utils(interaction.client).get_auction_channel(interaction)
-
-        if interaction.channel != auction_channel:
-
-            await interaction.followup.send('This is not your configured auction channel.', ephemeral= True)
-
-        else:
-
-            self.client.start_price[interaction.channel.id] = full_int
-            self.client.first_bid[interaction.guild.id] = True
-            self.client.last_bids[interaction.channel.id] = []
-            self.client.bidders[interaction.channel.id] = []
-            self.client.curr_bids[interaction.channel.id] = []
-
-            msg = await interaction.original_response()
-
-            self.client.log.update({ 
-                'auction_id' : msg.id,
-                'auctioneer' : interaction.user,
-                'item' : items,
-                'item_amount' : item_amount,
-                'seller' : member
-            })
-
-
-            await interaction.followup.send(embed=embed, view=auc_buttons(interaction.user))
-            await interaction.channel.send(content=f'{ping_role.mention}', allowed_mentions = discord.AllowedMentions(roles=True))
-            await msg.add_reaction('⭐')
-
-    @auction_host.autocomplete('items')
-    async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
+        try:
+            index = int(index) - 1
+        except ValueError:
+            return await interaction.followup.send('Invalid index.')
         
-        items = pd.read_csv('auctions.csv')
+        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : interaction.guild.id})
 
-        item_list = [item for item in items['name']]
+        if not auction_queue:
+            return await interaction.followup.send('No auctions in queue.')
+        else:
+            auctions = auction_queue['queue']
+            try:
+                auction = auctions.pop(index)
+            except IndexError:
+                return await interaction.followup.send('Invalid index.')
 
-        return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in item_list if current.lower() in suggestion.lower()]
+            items = auction['item']
+            item_amount = auction['item_amount']
+            full_int = auction['starting_price']
+            host = interaction.guild.get_member(auction['host'])
+
+  
+            embed = discord.Embed(title = f'{item_amount} {items} auction', description= f'starting bid : {format(full_int, ",")} \nseller : {host.mention}', color = discord.Color.from_str('0x2F3136'))
+            embed.set_footer(text= 'auction will start when there\'s 3 reacts')
+
+            ping_role = await utils(interaction.client).get_auction_ping(interaction)
+            auction_channel = await utils(interaction.client).get_auction_channel(interaction)
+
+            if interaction.channel != auction_channel:
+
+                await interaction.followup.send('This is not your configured auction channel.', ephemeral= True)
+
+            else:
+
+                self.client.start_price[interaction.channel.id] = full_int
+                self.client.first_bid[interaction.guild.id] = True
+                self.client.last_bids[interaction.channel.id] = []
+                self.client.bidders[interaction.channel.id] = []
+                self.client.curr_bids[interaction.channel.id] = []
+
+                msg = await interaction.original_response()
+
+                self.client.log.update({ 
+                    'auction_id' : msg.id,
+                    'auctioneer' : interaction.user,
+                    'item' : items,
+                    'item_amount' : item_amount,
+                    'seller' : host
+                })
+
+
+                await interaction.followup.send(embed=embed, view=auc_buttons(interaction.user))
+                await interaction.channel.send(content=f'{ping_role.mention}', allowed_mentions = discord.AllowedMentions(roles=True))
+                await msg.add_reaction('⭐')
+
+            
+    # @auction_host.autocomplete('items')
+    # async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
+        
+    #     items = pd.read_csv('auctions.csv')
+
+    #     item_list = [item for item in items['name']]
+
+    #     return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in item_list if current.lower() in suggestion.lower()]
 
     @commands.command(name='bid', aliases = ['b'])
     async def auction_bid(self, ctx, bid : str):
@@ -293,7 +354,7 @@ class auction(commands.Cog):
 
     @app_commands.command(name='test')
     async def test_command(self, interaction : discord.Interaction):
-        embed = discord.Embed(title = 'Action Confirmed', description = 'Are you sure you want to donate your items?\n\n> You will donate **1x <:dank_banknote:831787534820442112> Bank Note**', color = discord.Color.from_str('0x2F3136'))
+        embed = discord.Embed(title = 'Action Confirmed', description = 'Are you sure you want to donate your items?\n\n> You will donate **10x <:dank_banknote:831787534820442112> Bank Note**', color = discord.Color.from_str('0x2F3136'))
         view = discord.ui.View()
         view.add_item(discord.ui.Button(label='Confirm', style=discord.ButtonStyle.green))
         view.add_item(discord.ui.Button(label='Cancel', style=discord.ButtonStyle.red))
@@ -422,16 +483,15 @@ class auction(commands.Cog):
         
         await ctx.message.add_reaction('✅')
  
-        
-
-
-
-        
-
     @commands.Cog.listener()
     async def on_message(self, msg):
-        queue = 782483247619112991
-        command_name = 'serverevents donate'
+        # if msg.content == 'e':
+        #     return await msg.channel.send('<@729643700455604266>')
+        # elif msg.content == 'r':
+        #     return await msg.channel.send('<@692994778136313896>')
+
+        queue = 1226252036518051940
+        command_name = 'test'
         validate_title = 'Action Confirmed'
 
         if msg.channel.id != queue or msg.author.bot:
@@ -450,16 +510,35 @@ class auction(commands.Cog):
 
             user_queue = next((item for item in guild_queue['queue'] if item['host'] == msg.author.id), None)
 
-            embed = replied_to_message.embeds[0]
+            try:
+                embed = replied_to_message.embeds[0]
+            except IndexError:
+                await self.utils.send_error_message(msg, 'You have responded to the wrong message. Please try again.')
+                return await msg.add_reaction('❌')
 
             amount, item_name = self.utils.extract_item_and_amount(embed.description)
             
-            if bid_amount < 5e5 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id or user_queue is not None or not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
+            # if bid_amount < 5e5 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id or user_queue is not None or not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
+            #     return await msg.add_reaction('❌')
+
+            if bid_amount < MIN_BID_AMOUNT:
+                await self.utils.send_error_message(msg, f'Your starting price must be more than {format(int(MIN_BID_AMOUNT), ",")}.\nYou can edit your message to change the starting price')
                 return await msg.add_reaction('❌')
-            
-            
+
+            if replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id:
+                await self.utils.send_error_message(msg, 'You have responded to the wrong message. Please try again.')
+                return await msg.add_reaction('❌')
+
+            if user_queue is not None:
+                await self.utils.send_error_message(msg, 'Failed to register your starting bid to queue. You can only have one item in the queue at a time.')
+                return await msg.add_reaction('❌')
+
+            if not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
+                await self.utils.send_error_message(msg, "Your staring price does not meet the start price for the item.\nYou can edit your message to change the starting price")
+                return await msg.add_reaction('❌')
 
             if embed.title != validate_title:
+                await self.utils.send_error_message(msg, "Please click the confirm button on the embed to ensure the item has been sent to serverpool.")
                 return await msg.add_reaction('❌')
 
             await msg.add_reaction('✅')
@@ -467,12 +546,13 @@ class auction(commands.Cog):
 
             return await msg.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
         else:
+            await self.utils.send_error_message(msg, "You must reply to the correct embed, please try again.")
             return await msg.add_reaction('❌')
 
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
-        queue = 782483247619112991
-        command_name = 'serverevents donate'
+        queue = 1226252036518051940
+        command_name = 'test'
         validate_title = 'Action Confirmed'
 
         if message_after.channel.id != queue or message_after.author.bot:
@@ -496,29 +576,40 @@ class auction(commands.Cog):
             embed = replied_to_message.embeds[0]
             amount, item_name = self.utils.extract_item_and_amount(embed.description)
             
-            if bid_amount < 5e5 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != message_after.author.id or user_queue is None or not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
-                return await message_after.add_reaction('❌')
-        
+            # if bid_amount < 5e5 or replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != message_after.author.id or user_queue is None or not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
+            #     return await message_after.add_reaction('❌')
 
-            if embed.title != validate_title:
+            if bid_amount < MIN_BID_AMOUNT:
+                await self.utils.send_error_message(message_after, f'Your starting price must be more than {format(int(MIN_BID_AMOUNT), ",")}.\nYou can edit your message to change the starting price')
                 return await message_after.add_reaction('❌')
             
-            guild_queue['queue'] = [item for item in guild_queue['queue'] if item != user_queue]
-            user_queue['starting_price'] = bid_amount
-            guild_queue['queue'].append(user_queue)
+            if replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != message_after.author.id:
+                await self.utils.send_error_message(message_after, 'You have responded to the wrong message. Please try again.')
+                return await message_after.add_reaction('❌')
+            
+            # if user_queue is None:
+            #     await self.utils.send_error_message(message_after, 'Failed to register your starting bid to queue. You must have an item in the queue to edit.')
+            #     return await message_after.add_reaction('❌')
+            
+            if not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
+                await self.utils.send_error_message(message_after, "Your staring price does not meet the start price for the item.\nYou can edit your message to change the starting price")
+                return await message_after.add_reaction('❌')
+            
+            if embed.title != validate_title:
+                await self.utils.send_error_message(message_after, "Please click the confirm button on the embed to ensure the item has been sent to serverpool.")
+                return await message_after.add_reaction('❌')
+            
+            if user_queue is not None:
+                guild_queue['queue'] = [item for item in guild_queue['queue'] if item != user_queue]
+                user_queue['starting_price'] = bid_amount
+                guild_queue['queue'].append(user_queue)
+            else:
+                guild_queue['queue'].append({'message_id' : replied_to_message.id, 'host' : message_after.author.id, 'item' : item_name, 'item_amount' : amount, 'starting_price' : bid_amount, 'msg_id' : message_after.id})
 
             await message_after.add_reaction('✅')
             await self.client.db.auction_queue.update_one({'guild_id' : message_after.guild.id}, {'$set' : {'queue' : guild_queue['queue']}}, upsert = True)
 
             # return await message_after.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
-                
-
-
-        
-
-    
-
-
 
 async def setup(client):
     await client.add_cog(auction(client))
