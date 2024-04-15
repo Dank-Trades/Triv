@@ -513,7 +513,7 @@ class auction(commands.Cog):
             try:
                 embed = replied_to_message.embeds[0]
             except IndexError:
-                await self.utils.send_error_message(msg, 'You have responded to the wrong message. Please try again.')
+                await self.utils.send_error_message(msg, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1053243317732786217/1229523687938592838/image.png?ex=662ffe2a&is=661d892a&hm=ec9b6a49e871ede4a6c480eb5659ba907017b93ca9b22a999e68d9e68ec2eab6&) to add a starting price.')
                 return await msg.add_reaction('❌')
 
             amount, item_name = self.utils.extract_item_and_amount(embed.description)
@@ -522,11 +522,11 @@ class auction(commands.Cog):
             #     return await msg.add_reaction('❌')
 
             if bid_amount < MIN_BID_AMOUNT:
-                await self.utils.send_error_message(msg, f'Your starting price must be more than {format(int(MIN_BID_AMOUNT), ",")}.\nYou can edit your message to change the starting price')
+                await self.utils.send_error_message(msg, f'The starting price for all auctions must be more than {format(int(MIN_BID_AMOUNT), ",")}.\n- Please edit your message to change the starting price')
                 return await msg.add_reaction('❌')
 
             if replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id:
-                await self.utils.send_error_message(msg, 'You have responded to the wrong message. Please try again.')
+                await self.utils.send_error_message(msg, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1053243317732786217/1229523687938592838/image.png?ex=662ffe2a&is=661d892a&hm=ec9b6a49e871ede4a6c480eb5659ba907017b93ca9b22a999e68d9e68ec2eab6&) to add a starting price.')
                 return await msg.add_reaction('❌')
 
             if user_queue is not None:
@@ -534,7 +534,7 @@ class auction(commands.Cog):
                 return await msg.add_reaction('❌')
 
             if not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
-                await self.utils.send_error_message(msg, "Your staring price does not meet the start price for the item.\nYou can edit your message to change the starting price")
+                await self.utils.send_error_message(msg, "Your starting price is **too high**.\n1. The starting price for all auctions must be **below 200 mil**.\n2. Make sure your item(s)' starting price is **below the maximum price stated in** `[item <item>`. (If you donated 2 or more items, multiply the price in `[item <item>` with the item amount)\n3. Please edit your message to change the starting price.")
                 return await msg.add_reaction('❌')
 
             if embed.title != validate_title:
@@ -546,7 +546,7 @@ class auction(commands.Cog):
 
             return await msg.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
         else:
-            await self.utils.send_error_message(msg, "You must reply to the correct embed, please try again.")
+            await self.utils.send_error_message(msg, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1053243317732786217/1229523687938592838/image.png?ex=662ffe2a&is=661d892a&hm=ec9b6a49e871ede4a6c480eb5659ba907017b93ca9b22a999e68d9e68ec2eab6&) to add a starting price.')
             return await msg.add_reaction('❌')
 
     @commands.Cog.listener()
@@ -580,11 +580,11 @@ class auction(commands.Cog):
             #     return await message_after.add_reaction('❌')
 
             if bid_amount < MIN_BID_AMOUNT:
-                await self.utils.send_error_message(message_after, f'Your starting price must be more than {format(int(MIN_BID_AMOUNT), ",")}.\nYou can edit your message to change the starting price')
+                await self.utils.send_error_message(message_after, f'The starting price for all auctions must be more than {format(int(MIN_BID_AMOUNT), ",")}.\n- Please edit your message to change the starting price')
                 return await message_after.add_reaction('❌')
             
             if replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != message_after.author.id:
-                await self.utils.send_error_message(message_after, 'You have responded to the wrong message. Please try again.')
+                await self.utils.send_error_message(message_after, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1053243317732786217/1229523687938592838/image.png?ex=662ffe2a&is=661d892a&hm=ec9b6a49e871ede4a6c480eb5659ba907017b93ca9b22a999e68d9e68ec2eab6&) to add a starting price.')
                 return await message_after.add_reaction('❌')
             
             # if user_queue is None:
@@ -592,7 +592,7 @@ class auction(commands.Cog):
             #     return await message_after.add_reaction('❌')
             
             if not self.utils.check_start_price(price=bid_amount, item=item_name, item_amount=amount):
-                await self.utils.send_error_message(message_after, "Your staring price does not meet the start price for the item.\nYou can edit your message to change the starting price")
+                await self.utils.send_error_message(message_after, "Your starting price is **too high**.\n1. The starting price for all auctions must be **below 200 mil**.\n2. Make sure your item(s)' starting price is **below the maximum price stated in** `[item <item>`. (If you donated 2 or more items, multiply the price in `[item <item>` with the item amount)\n3. Please edit your message to change the starting price.")
                 return await message_after.add_reaction('❌')
             
             if embed.title != validate_title:
