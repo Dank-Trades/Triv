@@ -513,7 +513,7 @@ class auction(commands.Cog):
             try:
                 embed = replied_to_message.embeds[0]
             except IndexError:
-                await self.utils.send_error_message(msg, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1053243317732786217/1229523687938592838/image.png?ex=662ffe2a&is=661d892a&hm=ec9b6a49e871ede4a6c480eb5659ba907017b93ca9b22a999e68d9e68ec2eab6&) to add a starting price.')
+                await self.utils.send_error_message(msg, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) to add a starting price.')
                 return await msg.add_reaction('❌')
 
             amount, item_name = self.utils.extract_item_and_amount(embed.description)
@@ -526,7 +526,7 @@ class auction(commands.Cog):
                 return await msg.add_reaction('❌')
 
             if replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id:
-                await self.utils.send_error_message(msg, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1053243317732786217/1229523687938592838/image.png?ex=662ffe2a&is=661d892a&hm=ec9b6a49e871ede4a6c480eb5659ba907017b93ca9b22a999e68d9e68ec2eab6&) to add a starting price.')
+                await self.utils.send_error_message(msg, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) to add a starting price.')
                 return await msg.add_reaction('❌')
 
             if user_queue is not None:
@@ -546,7 +546,7 @@ class auction(commands.Cog):
 
             return await msg.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
         else:
-            await self.utils.send_error_message(msg, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1053243317732786217/1229523687938592838/image.png?ex=662ffe2a&is=661d892a&hm=ec9b6a49e871ede4a6c480eb5659ba907017b93ca9b22a999e68d9e68ec2eab6&) to add a starting price.')
+            await self.utils.send_error_message(msg, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) to add a starting price.')
             return await msg.add_reaction('❌')
 
     @commands.Cog.listener()
@@ -584,7 +584,7 @@ class auction(commands.Cog):
                 return await message_after.add_reaction('❌')
             
             if replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != message_after.author.id:
-                await self.utils.send_error_message(message_after, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1053243317732786217/1229523687938592838/image.png?ex=662ffe2a&is=661d892a&hm=ec9b6a49e871ede4a6c480eb5659ba907017b93ca9b22a999e68d9e68ec2eab6&) to add a starting price.')
+                await self.utils.send_error_message(message_after, 'You must reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) to add a starting price.')
                 return await message_after.add_reaction('❌')
             
             # if user_queue is None:
