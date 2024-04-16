@@ -68,36 +68,34 @@ class utils(commands.Cog):
 
         return numeric_value
     
-    def check_start_price(self, item : str, item_amount : int, price : int):
-
-        file = pd.read_csv('auctions.csv')
-
-        avg_price = int(file.loc[ file['name'] == item, 'price'].values[0]) * item_amount
-
+    def check_start_price(self, item: str, item_amount: int, price: int):
+        data = pd.read_csv('auctions.csv')
+        matching_items = data.loc[data['name'].str.lower().str.strip().str.match('^' + re.escape(item.strip().lower()) + '$'), 'price']
+        
+        if matching_items.empty:
+            return 0  # or some other value or action if there are no matching items
+        
+        avg_price = int(matching_items.values[0]) * item_amount
         if avg_price < 5e5:
-            return False
+            return 5e5
 
         if avg_price <= 1e7:
             max_price = avg_price * 0.6
-        
         elif avg_price <= 3e7:
             max_price = avg_price * 0.55
-        
         elif avg_price <= 7e7:
-            max_price = avg_price * 5
-        
+            max_price = avg_price * 0.5
         elif avg_price <= 12e7:
             max_price = avg_price * 0.45
-        
         elif avg_price <= 2e8:
             max_price = avg_price * 0.4
+        else:
+            max_price = avg_price * 0.35  # Adding an extra case for prices over 200 million
 
         if price > max_price:
-            return False
-        else :
-            return True
-    
-
+            return max_price
+        else:
+            return 0
 
     async def bid(self, ctx, bid, min_increment):
         loop_cog = self.client.get_cog('loops')
@@ -180,14 +178,14 @@ class utils(commands.Cog):
     def channel_open(channel, role):
         overwrites = channel.overwrites_for(role)
         overwrites.send_messages = True
-        overwrites.read_messages = True
+        # overwrites.read_messages = True
         return overwrites
 
     @staticmethod
     def channel_close(channel, role):
         overwrites = channel.overwrites_for(role)
         overwrites.send_messages = False
-        overwrites.read_messages = True
+        # overwrites.read_messages = True
         return overwrites
 
     @staticmethod
