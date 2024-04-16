@@ -13,7 +13,7 @@ class mark_log(discord.ui.View):
 class loops(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.client.auction_guild_id = 1046123195004113006
+        self.client.auction_guild_id = 719180744311701505
         self.client.payout_msgs = {}
         self.utils = utils(self.client)
 
