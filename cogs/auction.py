@@ -490,8 +490,8 @@ class auction(commands.Cog):
         # elif msg.content == 'r':
         #     return await msg.channel.send('<@692994778136313896>')
 
-        queue = 1226252036518051940
-        command_name = 'test'
+        queue = 782483247619112991
+        command_name = 'serverevents donate'
         validate_title = 'Action Confirmed'
 
         if msg.channel.id != queue or msg.author.bot:
@@ -551,8 +551,8 @@ class auction(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
-        queue = 1226252036518051940
-        command_name = 'test'
+        queue = 782483247619112991
+        command_name = 'serverevents donate'
         validate_title = 'Action Confirmed'
 
         if message_after.channel.id != queue or message_after.author.bot:
