@@ -144,10 +144,11 @@ class loops(commands.Cog):
         auction_channel = guild.get_channel(config["auction_channel"])
         auctioneer_role = guild.get_role(config["auctioneer_role"])
         min_increment = config['min_increment']
+        seller = self.client.logs['seller']
 
         await self.utils.bid(msg ,msg.content, min_increment)
         
-        if msg.author == self.client.user or auctioneer_role in msg.author.roles or msg.channel != auction_channel:
+        if msg.author == self.client.user or auctioneer_role in msg.author.roles or msg.channel != auction_channel or msg.author.id == seller:
             return
         
         else:            
