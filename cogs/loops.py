@@ -87,9 +87,8 @@ class loops(commands.Cog):
                     if index is None:
                         print('WARNING: Auction not found in queue.')
                     else:
-                        auction = auctions.pop(index)
+                        auction = auctions[index]
                         auction['queue_message_id'] = embed_msg.id
-                        auctions.append(auction)
                         await self.client.db.auction_queue.update_one({'guild_id' : msg.guild.id}, {'$set' : {'queue' : auctions}})
 
                 self.client.payout_msgs.update({
