@@ -432,6 +432,7 @@ class auction(commands.Cog):
             else :
 
                 await interaction.response.send_message('There\'s no auction running!', ephemeral= True)
+
     @commands.command()
     @commands.has_any_role(750117211087044679,1051128651929882695)
     async def ato(self, ctx, member : discord.Member):
