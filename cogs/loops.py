@@ -54,13 +54,20 @@ class loops(commands.Cog):
                     'coins': self.client.curr_bids[channel_id]
                 })
 
+                bidders = list(set(self.client.bidders[channel_id]))
+
+                for bidder in bidders:
+                    await self.client.db.profile.update_one({'user_id': int(bidder), 'guild_id': guild.id}, {'$inc': {'auction_joined': 1}}, upsert=True)
+
                 self.client.last_bids.clear()
                 self.client.bidders.clear()
 
                 await auction_channel.send('Sold!')
                 msg = await auction_channel.send(embed=winner_embed)
                 await tradeout_channel.set_permissions(winner, overwrite=utils.tradeout_access(tradeout_channel, winner, set=True))
-
+                await self.client.db.profile.update_one({'user_id': winner.id, 'guild_id': guild.id}, {'$inc': {'auction_won': 1, 'total_amount_bid': self.client.curr_bids[channel_id]}}, upsert=True)
+                await self.client.db.profile.update_one({'user_id': self.client.log['seller'].id, 'guild_id': guild.id}, {'$inc': {'total_amount_sold': self.client.curr_bids[channel_id]}}, upsert=True)
+                
                 payout_log = discord.Embed(color=discord.Color.blue(), title='Auction Logs')
                 payout_log.description = (
                     f"Buyer : {self.client.log['buyer'].mention}\n"
@@ -148,6 +155,9 @@ class loops(commands.Cog):
         min_increment = config['min_increment']
 
         if msg.author == self.client.user or msg.channel != auction_channel:
+            return
+        
+        if msg.author == self.client.log['seller']:
             return
         
         await self.utils.bid(msg ,msg.content, min_increment)

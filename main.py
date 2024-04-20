@@ -32,8 +32,9 @@ class Triv(commands.Bot):
         self.db = mongoclient['TrivDB']
         self.db.guild_config = self.db['guild_config']
         self.db.auction_queue = self.db['auction_queue']
+        self.db.profile = self.db['profile']
 
-        self.owner_id = 692994778136313896
+        self.owner_id = 422967413295022080
         
 
 

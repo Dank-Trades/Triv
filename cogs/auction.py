@@ -15,8 +15,9 @@ import pandas as pd
 MIN_BID_AMOUNT = 5e5
 
 class auc_buttons(discord.ui.View):
-    def __init__(self, author):
+    def __init__(self, author, client):
         self.author = author
+        self.client = client
         super().__init__()
         self.value = None
 
@@ -30,6 +31,7 @@ class auc_buttons(discord.ui.View):
         await interaction.message.edit(view=self)
         auction_cog.auc_count.start()
         await channel.set_permissions(role, overwrite = utils.channel_open(channel, role))
+        await self.client.db.profile.update_one({'user_id' : interaction.user.id, 'guild_id' : interaction.guild.id}, {'$inc' : {'auction_hosted' : 1}}, upsert = True)
         await interaction.followup.send('Auction Started!')
         await interaction.channel.send('Auction has started! Run `t!bid <amount><unit>` to bid. E.g. `t!bid 700k` | `t!bid 6m`.')
         await interaction.channel.send('You can bid just by saying the amount, too! E.g. `3m` | `900k`')
@@ -77,7 +79,6 @@ class auc_buttons(discord.ui.View):
     
     async def interaction_check(self, interaction: discord.Interaction):
         return interaction.user.id == self.author.id
-
 
 class auction(commands.Cog):
     def __init__(self, client):
@@ -197,7 +198,7 @@ class auction(commands.Cog):
                 })
 
 
-                await interaction.followup.send(embed=embed, view=auc_buttons(interaction.user))
+                await interaction.followup.send(embed=embed, view=auc_buttons(interaction.user, self.client))
                 await interaction.channel.send(content=f'{ping_role.mention}', allowed_mentions = discord.AllowedMentions(roles=True))
                 await msg.add_reaction('⭐')
 
@@ -629,5 +630,31 @@ class auction(commands.Cog):
 
             # return await message_after.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
 
+    @commands.command(name='profile')
+    async def profile(self, ctx, user: discord.Member = None):
+        if user is None:
+            user = ctx.author
+    
+        profile = await self.client.db.profile.find_one({'user_id' : user.id, 'guild_id' : ctx.guild.id})
+    
+        if not profile:
+            await self.client.db.profile.insert_one({'user_id' : user.id, 'guild_id' : ctx.guild.id, 'auction_hosted' : 0, 'total_amount_bid' : 0, 'total_amount_sold' : 0, 'auction_won': 0, 'auction_joined' : 0})
+            profile = await self.client.db.profile.find_one({'user_id' : user.id, 'guild_id' : ctx.guild.id})
+
+        auction_hosted = profile.get('auction_hosted', 0)
+        total_amount_bid = profile.get('total_amount_bid', 0)
+        total_amount_sold = profile.get('total_amount_sold', 0)
+        auction_won = profile.get('auction_won', 0)
+        auction_joined = profile.get('auction_joined', 0)
+    
+        embed = discord.Embed(title = 'Profile', color = discord.Color.from_str('0x2F3136'))
+        embed.set_author(name=str(user), icon_url=user.avatar.url)
+        embed.add_field(name = 'Auctions Hosted', value = format(int(auction_hosted), ","))
+        embed.add_field(name = 'Total Amount Bid', value = format(int(total_amount_bid), ","))
+        embed.add_field(name = 'Total Amount Sold', value = format(int(total_amount_sold), ","))
+        embed.add_field(name = 'Auctions Won', value = format(int(auction_won), ","))
+        embed.add_field(name = 'Auctions Joined', value = format(int(auction_joined), ","))
+    
+        await ctx.send(embed=embed)
 async def setup(client):
     await client.add_cog(auction(client))
