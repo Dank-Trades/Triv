@@ -207,6 +207,37 @@ class log_button(discord.ui.View):
             else:
                 auction_queue.pop(index)
                 await self.client.db.auction_queue.update_one({'guild_id': interaction.guild.id}, {'$set': {'queue': auction_queue}})
+
+    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.red, custom_id='cancel_payout')
+    async def cancel_payout(self, interaction: discord.Interaction, button : discord.ui.Button):
+        await interaction.response.defer()
+
+        payout_embed = interaction.message.embeds[0]
+        auctioneer_id = int(interaction.message.embeds[0].footer.text.split(' : ')[1])
+        sman_role = interaction.guild.get_role(719197064193638402)
+
+        if interaction.user.id != auctioneer_id and sman_role not in interaction.user.roles:
+            return interaction.author.send('You are not authorized to mark this auction as paid.')
+        
+        else :
+            button_url = interaction.message.components[0].children[0].url
+            view = mark_log(self.client)
+            view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
+            payout_embed.color = discord.Color.green()
+            payout_embed.title = 'Auction Logs - Cancelled'
+            await interaction.message.edit(embed=payout_embed, view=view)
+            for messages in self.client.payout_msgs[interaction.message.id]:
+                await messages.delete()
+            del self.client.payout_msgs[interaction.message.id]
+            auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
+            auction_queue = auction_queue['queue']
+            index = next((index for index, auction in enumerate(auction_queue) if auction['queue_message_id'] == interaction.message.id), None)
+            if index == None:
+                print('WARNING : Request in queue not found.')
+            else:
+                auction_queue.pop(index)
+                await self.client.db.auction_queue.update_one({'guild_id': interaction.guild.id}, {'$set': {'queue': auction_queue}})
+
         
 async def setup(client):
     await client.add_cog(loops(client))
