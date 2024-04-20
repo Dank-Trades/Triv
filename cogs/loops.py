@@ -74,8 +74,9 @@ class loops(commands.Cog):
                 view = mark_log(client=self.client)
 
                 view.add_item(discord.ui.Button(label='Jump to auction', url=msg.jump_url))
+                view.add_item(discord.ui.Button(label='Confirm Payout', style=discord.ButtonStyle.green, custom_id='confirm_payout'))
 
-                embed_msg = await auction_log.send(embed=payout_log, view=view)
+                embed_msg = await auction_log.send(embed=payout_log, view=log_button(self.client).add_item(discord.ui.Button(label='Jump to auction', url=msg.jump_url)))
                 msg1 = await auction_log.send(f"/serverevents payout user:{self.client.log['seller'].id} quantity:{int(self.client.log['coins'])}")
                 msg2 = await auction_log.send(f"/serverevents payout user:{self.client.log['buyer'].id} quantity:{self.client.log['item_amount']} item:{self.client.log['item']}")
 
@@ -115,8 +116,9 @@ class loops(commands.Cog):
                 view = mark_log(client=self.client)
 
                 view.add_item(discord.ui.Button(label='Jump to auction', url=msg0.jump_url))
+                view.add_item(discord.ui.Button(label='Confirm Payout', style=discord.ButtonStyle.green, custom_id='confirm_payout'))
 
-                embed_msg = await auction_log.send(embed=payout_log, view=view)
+                embed_msg = await auction_log.send(embed=payout_log, view=log_button(self.client).add_item(discord.ui.Button(label='Jump to auction', url=msg0.jump_url)))
                 msg = await auction_log.send(f"/serverevents payout user:{self.client.log['seller'].id} quantity:{self.client.log['item_amount']} item:{self.client.log['item']}")
 
                 self.client.payout_msgs.update({
@@ -159,8 +161,42 @@ class loops(commands.Cog):
             
             elif auctioneer_role not in msg.author.roles:
                 await msg.delete(delay=3)
-                
-        
 
+class log_button(discord.ui.View):
+    def __init__(self, client):
+        self.client = client
+        super().__init__()
+        self.value = None
+
+    @discord.ui.button(label='Confirm Payout', style=discord.ButtonStyle.green, custom_id='confirm_payout')
+    async def confirm_payout(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
+        # implement the mark_as_paid function here as it was for the message to reply but now this button is directly on that message
+        payout_embed = interaction.message.embeds[0]
+        auctioneer_id = int(interaction.message.embeds[0].footer.text.split(' : ')[1])
+        sman_role = interaction.guild.get_role(719197064193638402)
+
+        if interaction.user.id != auctioneer_id and sman_role not in interaction.user.roles:
+            return interaction.author.send('You are not authorized to mark this auction as paid.')
+        
+        else:
+            button_url = interaction.message.components[0].children[0].url
+            view = mark_log(self.client)
+            view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
+            payout_embed.color = discord.Color.green()
+            payout_embed.title = 'Auction Logs - Paid'
+            await interaction.message.edit(embed=payout_embed, view=view)
+            for messages in self.client.payout_msgs[interaction.message.id]:
+                await messages.delete()
+            del self.client.payout_msgs[interaction.message.id]
+            auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
+            auction_queue = auction_queue['queue']
+            index = next((index for index, auction in enumerate(auction_queue) if auction['queue_message_id'] == interaction.message.id), None)
+            if index == None:
+                print('WARNING : Request in queue not found.')
+            else:
+                auction_queue.pop(index)
+                await self.client.db.auction_queue.update_one({'guild_id': interaction.guild.id}, {'$set': {'queue': auction_queue}})
+        
 async def setup(client):
     await client.add_cog(loops(client))
