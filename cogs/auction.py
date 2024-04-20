@@ -673,32 +673,38 @@ class auction(commands.Cog):
         sorted_profiles_sold = sorted(profiles, key=lambda x: x.get('total_amount_sold', 0), reverse=True)[:10]
         sorted_profiles_won = sorted(profiles, key=lambda x: x.get('auction_won', 0), reverse=True)[:10]
         sorted_profiles_joined = sorted(profiles, key=lambda x: x.get('auction_joined', 0), reverse=True)[:10]
+        sorted_profiles_requested = sorted(profiles, key=lambda x: x.get('total_auction_requested', 0), reverse=True)[:10]
 
         # Create embed message
         
 
         # Add fields for each stat leaderboard
         table = table.lower()
+
         if table == 'auctions hosted':
             embed = discord.Embed(title='Auctions Hosted', color=discord.Color.from_str('0x2F3136'))
-            embed.add_field(name='Auctions Hosted', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {profile['auction_hosted']}" for index, profile in enumerate(sorted_profiles_hosted)]), inline=False)
+            embed.add_field(name='Auctions Hosted', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile.get('auction_hosted', 0)), ',')}" for index, profile in enumerate(sorted_profiles_hosted)]), inline=False)
         
         elif table == 'bid amount':
             embed = discord.Embed(title='Bid Amount', color=discord.Color.from_str('0x2F3136'))
-            embed.add_field(name='Total Amount Bid', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {profile['total_amount_bid']}" for index, profile in enumerate(sorted_profiles_bid)]), inline=False)
+            embed.add_field(name='Total Amount Bid', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile['total_amount_bid']), ',')}" for index, profile in enumerate(sorted_profiles_bid)]), inline=False)
         
         elif table == 'sold amount':
             embed = discord.Embed(title='Amount Sold', color=discord.Color.from_str('0x2F3136'))
-            embed.add_field(name='Total Amount Sold', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {profile['total_amount_sold']}" for index, profile in enumerate(sorted_profiles_sold)]), inline=False)
+            embed.add_field(name='Total Amount Sold', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile['total_amount_sold']), ',')}" for index, profile in enumerate(sorted_profiles_sold)]), inline=False)
         
         elif table == 'auctions won':
             embed = discord.Embed(title='Auctions Won', color=discord.Color.from_str('0x2F3136'))
-            embed.add_field(name='Auctions Won', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {profile['auction_won']}" for index, profile in enumerate(sorted_profiles_won)]), inline=False)
+            embed.add_field(name='Auctions Won', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile['auction_won']), ',')}" for index, profile in enumerate(sorted_profiles_won)]), inline=False)
         
         elif table == 'auctions joined':
             embed = discord.Embed(title='Auctions Joined', color=discord.Color.from_str('0x2F3136'))
-            embed.add_field(name='Auctions Joined', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {profile['auction_joined']}" for index, profile in enumerate(sorted_profiles_joined)]), inline=False)
-
+            embed.add_field(name='Auctions Joined', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile['auction_joined']), ',')}" for index, profile in enumerate(sorted_profiles_joined)]), inline=False)
+        
+        elif table == 'auctions requested':
+            embed = discord.Embed(title='Auctions Requested', color=discord.Color.from_str('0x2F3136'))
+            embed.add_field(name='Total Auctions Requested', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile.get('total_auction_requested', 0)), ',')}" for index, profile in enumerate(sorted_profiles_requested)]), inline=False)
+            
         else :
             await interaction.followup.send('Invalid table selection.')
 
@@ -706,7 +712,7 @@ class auction(commands.Cog):
     
     @leaderboard.autocomplete('table')
     async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
-        table_list = ['Auctions Hosted', 'Bid Amount', 'Sold Amount', 'Auctions Won', 'Auctions Joined']
+        table_list = ['Auctions Hosted', 'Bid Amount', 'Sold Amount', 'Auctions Won', 'Auctions Joined', 'Auctions Requested']
 
         return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in table_list if current.lower() in suggestion.lower()]
         
