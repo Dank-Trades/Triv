@@ -497,6 +497,15 @@ class auction(commands.Cog):
 
         if msg.channel.id != queue or msg.author.bot:
             return
+
+        config = await self.client.db.guild_config.find_one({"guild_id": msg.guild.id})
+        
+        if not config:
+            return  # Configuration not found for the guild
+        
+        auctioneer_role = msg.guild.get_role(config["auctioneer_role"])
+
+        
         
         bid_amount = self.utils.process_shorthand(msg.content)
         bid_amount = int(bid_amount)
@@ -514,6 +523,8 @@ class auction(commands.Cog):
             try:
                 embed = replied_to_message.embeds[0]
             except IndexError:
+                if auctioneer_role in msg.author.roles:
+                    return
                 await self.utils.send_error_message(msg, 'You have replied to the **WRONG MESSAGE**.\nPlease make sure to reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) from the item YOU sent to the pool in order to set the starting price.')
                 return await msg.add_reaction('❌')
 
@@ -523,6 +534,8 @@ class auction(commands.Cog):
             #     return await msg.add_reaction('❌')
 
             if replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id:
+                if auctioneer_role in msg.author.roles:
+                    return
                 await self.utils.send_error_message(msg, 'You have replied to the **WRONG MESSAGE**.\nPlease make sure to reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) from the item YOU sent to the pool in order to set the starting price.')
                 return await msg.add_reaction('❌')
             
@@ -548,6 +561,8 @@ class auction(commands.Cog):
 
             return await msg.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
         else:
+            if auctioneer_role in msg.author.roles:
+                return
             await self.utils.send_error_message(msg, 'You have replied to the **WRONG MESSAGE**.\nPlease make sure to reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) from the item YOU sent to the pool in order to set the starting price.')
             return await msg.add_reaction('❌')
 
