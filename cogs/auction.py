@@ -646,6 +646,7 @@ class auction(commands.Cog):
         total_amount_sold = profile.get('total_amount_sold', 0)
         auction_won = profile.get('auction_won', 0)
         auction_joined = profile.get('auction_joined', 0)
+        auction_requested = profile.get('total_auction_requested', 0)
     
         embed = discord.Embed(title = 'Profile', color = discord.Color.from_str('0x2F3136'))
         embed.set_author(name=str(user), icon_url=user.avatar.url)
@@ -654,6 +655,7 @@ class auction(commands.Cog):
         embed.add_field(name = 'Total Amount Sold', value = format(int(total_amount_sold), ","))
         embed.add_field(name = 'Auctions Won', value = format(int(auction_won), ","))
         embed.add_field(name = 'Auctions Joined', value = format(int(auction_joined), ","))
+        embed.add_field(name = 'Total Auction Requested', value = format(int(auction_requested), ","))
 
         await ctx.send(embed=embed)
 

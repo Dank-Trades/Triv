@@ -66,8 +66,7 @@ class loops(commands.Cog):
                 msg = await auction_channel.send(embed=winner_embed)
                 await tradeout_channel.set_permissions(winner, overwrite=utils.tradeout_access(tradeout_channel, winner, set=True))
                 await self.client.db.profile.update_one({'user_id': winner.id, 'guild_id': guild.id}, {'$inc': {'auction_won': 1, 'total_amount_bid': self.client.curr_bids[channel_id]}}, upsert=True)
-                await self.client.db.profile.update_one({'user_id': self.client.log['seller'].id, 'guild_id': guild.id}, {'$inc': {'total_amount_sold': self.client.curr_bids[channel_id]}}, upsert=True)
-                
+                await self.client.db.profile.update_one({'user_id': self.client.log['seller'].id, 'guild_id': guild.id}, {'$inc': {'total_amount_sold': self.client.curr_bids[channel_id], 'total_auction_requested': 1}}, upsert=True)                
                 payout_log = discord.Embed(color=discord.Color.blue(), title='Auction Logs')
                 payout_log.description = (
                     f"Buyer : {self.client.log['buyer'].mention}\n"
