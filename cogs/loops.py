@@ -145,21 +145,20 @@ class loops(commands.Cog):
         auctioneer_role = guild.get_role(config["auctioneer_role"])
         min_increment = config['min_increment']
 
-        await self.utils.bid(msg ,msg.content, min_increment)
-        
-        if msg.author == self.client.user or auctioneer_role in msg.author.roles or msg.channel != auction_channel:
+        if msg.author == self.client.user or msg.channel != auction_channel:
             return
         
-        else:            
-            with open('config.json', 'r') as f:
-                data = json.load(f)
-                token = data['TokeN']
+        await self.utils.bid(msg ,msg.content, min_increment)
+        
+        with open('config.json', 'r') as f:
+            data = json.load(f)
+            token = data['TokeN']
 
-                if utils.poll_check(msg.channel.id, token, msg.id):
-                    await msg.delete()
-                
-                else:
-                    await msg.delete(delay=3)
+            if utils.poll_check(msg.channel.id, token, msg.id):
+                await msg.delete()
+            
+            elif auctioneer_role not in msg.author.roles:
+                await msg.delete(delay=3)
                 
         
 
