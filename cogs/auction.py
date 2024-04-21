@@ -86,7 +86,7 @@ class pagination_buttons(discord.ui.View):
         self.client = client
         self.author = author
 
-    @discord.ui.button(label='<', style= discord.ButtonStyle.grey)
+    @discord.ui.button(label='', style= discord.ButtonStyle.grey, emoji='<:leftarr:1231673812953862316>')
     async def previous_button(self, interaction : discord.Interaction, button : discord.ui.Button):
 
         await interaction.response.defer()
@@ -125,7 +125,7 @@ class pagination_buttons(discord.ui.View):
     async def interaction_check(self, interaction: discord.Interaction):
         return interaction.user.id == self.author.id
 
-    @discord.ui.button(label='>', style= discord.ButtonStyle.grey)
+    @discord.ui.button(label='', style= discord.ButtonStyle.grey, emoji='<:rightarr:1231673861091758194>')
     async def next_button(self, interaction : discord.Interaction, button : discord.ui.Button):
 
         await interaction.response.defer()
