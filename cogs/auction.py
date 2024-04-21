@@ -80,6 +80,86 @@ class auc_buttons(discord.ui.View):
     async def interaction_check(self, interaction: discord.Interaction):
         return interaction.user.id == self.author.id
 
+class pagination_buttons(discord.ui.View):
+    def __init__(self, client):
+        super().__init__()
+        self.client = client
+
+    @discord.ui.button(label='<', style= discord.ButtonStyle.grey)
+    async def previous_button(self, interaction : discord.Interaction, button : discord.ui.Button):
+
+        await interaction.response.defer()
+        
+        embed_footer = interaction.message.embeds[0].footer.text.split('/')
+        auctions_queue = await self.client.db.auction_queue.find_one({'guild_id' : interaction.guild.id})
+        auctions = auctions_queue['queue']
+        
+
+        curr_page = int(embed_footer[0])
+
+        if curr_page == 1:
+
+            return
+
+        pages = int(embed_footer[1])
+
+        start = (curr_page - 1 - 1) * 5
+        end = start + 5
+
+        
+
+        embed = discord.Embed(title = 'Auction Queue', color = discord.Color.from_str('0x2F3136'))
+
+        for i in range(start, end):
+            try:
+                auction = auctions[i]
+            except IndexError:
+                break
+            item_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["message_id"]}'
+            price_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["msg_id"]}'
+            embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}\nLinks : [Items]({item_msg_link}) | [Price]({price_msg_link})', inline = False)
+        embed.set_footer(text = f'{curr_page-1}/{pages}')
+        await interaction.edit_original_response(embed = embed, view=self)
+
+    async def interaction_check(self, interaction: discord.Interaction):
+        return interaction.user.id == self.author.id
+
+    @discord.ui.button(label='>', style= discord.ButtonStyle.grey)
+    async def next_button(self, interaction : discord.Interaction, button : discord.ui.Button):
+
+        await interaction.response.defer()
+
+        embed_footer = interaction.message.embeds[0].footer.text.split('/')
+        auctions_queue = await self.client.db.auction_queue.find_one({'guild_id' : interaction.guild.id})
+        auctions = auctions_queue['queue']
+        
+
+        curr_page = int(embed_footer[0])
+        pages = int(embed_footer[1])
+
+        if curr_page == pages:
+            return
+
+        start = (curr_page) * 5
+        end = start + 5
+
+        embed = discord.Embed(title = 'Auction Queue', color = discord.Color.from_str('0x2F3136'))
+
+        for i in range(start, end):
+            try:
+                auction = auctions[i]
+            except IndexError:
+                break
+            item_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["message_id"]}'
+            price_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["msg_id"]}'
+            embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}\nLinks : [Items]({item_msg_link}) | [Price]({price_msg_link})', inline = False)
+        embed.set_footer(text = f'{curr_page+1}/{pages}')
+        await interaction.edit_original_response(embed = embed, view=self)
+    
+    async def interaction_check(self, interaction: discord.Interaction):
+        return interaction.user.id == self.author.id
+
+
 class auction(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -233,7 +313,6 @@ class auction(commands.Cog):
     queue_group = Group(name='queue', description='just a group for queue subcommands')
 
     @queue_group.command(name='list')
-    @app_commands.checks.has_any_role(750117211087044679, 1051128651929882695)
     async def auction_queue(self, interaction: discord.Interaction, page: str = '1'):
         await interaction.response.defer()
         try:
@@ -285,7 +364,7 @@ class auction(commands.Cog):
                 price_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["msg_id"]}'
                 embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}\nLinks : [Items]({item_msg_link}) | [Price]({price_msg_link})', inline = False)
             embed.set_footer(text = f'Page {page}/{pages}')
-            await interaction.followup.send(embed = embed, ephemeral=True)
+            await interaction.followup.send(embed = embed, ephemeral=True, view=pagination_buttons(interaction.client))
 
     # this is a subcommand of the queue command
     @queue_group.command(name='remove', description = 'Remove an auction from the queue')
@@ -673,36 +752,33 @@ class auction(commands.Cog):
         sorted_profiles_sold = sorted(profiles, key=lambda x: x.get('total_amount_sold', 0), reverse=True)[:10]
         sorted_profiles_won = sorted(profiles, key=lambda x: x.get('auction_won', 0), reverse=True)[:10]
         sorted_profiles_joined = sorted(profiles, key=lambda x: x.get('auction_joined', 0), reverse=True)[:10]
-        sorted_profiles_requested = sorted(profiles, key=lambda x: x.get('total_auction_requested', 0), reverse=True)[:10]
-
-        # Create embed message
-        
+        sorted_profiles_requested = sorted(profiles, key=lambda x: x.get('total_auction_requested', 0), reverse=True)[:10]    
 
         # Add fields for each stat leaderboard
         table = table.lower()
 
         if table == 'auctions hosted':
-            embed = discord.Embed(title='Auctions Hosted', color=discord.Color.from_str('0x2F3136'))
+            embed = discord.Embed(title='Leaderboard', color=discord.Color.from_str('0x2F3136'))
             embed.add_field(name='Auctions Hosted', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile.get('auction_hosted', 0)), ',')}" for index, profile in enumerate(sorted_profiles_hosted)]), inline=False)
         
         elif table == 'bid amount':
-            embed = discord.Embed(title='Bid Amount', color=discord.Color.from_str('0x2F3136'))
+            embed = discord.Embed(title='Leaderboard', color=discord.Color.from_str('0x2F3136'))
             embed.add_field(name='Total Amount Bid', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile['total_amount_bid']), ',')}" for index, profile in enumerate(sorted_profiles_bid)]), inline=False)
         
         elif table == 'sold amount':
-            embed = discord.Embed(title='Amount Sold', color=discord.Color.from_str('0x2F3136'))
+            embed = discord.Embed(title='Leaderboard', color=discord.Color.from_str('0x2F3136'))
             embed.add_field(name='Total Amount Sold', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile['total_amount_sold']), ',')}" for index, profile in enumerate(sorted_profiles_sold)]), inline=False)
         
         elif table == 'auctions won':
-            embed = discord.Embed(title='Auctions Won', color=discord.Color.from_str('0x2F3136'))
+            embed = discord.Embed(title='Leaderboard', color=discord.Color.from_str('0x2F3136'))
             embed.add_field(name='Auctions Won', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile['auction_won']), ',')}" for index, profile in enumerate(sorted_profiles_won)]), inline=False)
         
         elif table == 'auctions joined':
-            embed = discord.Embed(title='Auctions Joined', color=discord.Color.from_str('0x2F3136'))
+            embed = discord.Embed(title='Leaderboard', color=discord.Color.from_str('0x2F3136'))
             embed.add_field(name='Auctions Joined', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile['auction_joined']), ',')}" for index, profile in enumerate(sorted_profiles_joined)]), inline=False)
         
         elif table == 'auctions requested':
-            embed = discord.Embed(title='Auctions Requested', color=discord.Color.from_str('0x2F3136'))
+            embed = discord.Embed(title='Leaderboard', color=discord.Color.from_str('0x2F3136'))
             embed.add_field(name='Total Auctions Requested', value='\n'.join([f"{index+1}. {interaction.guild.get_member(profile['user_id'])}: {format(int(profile.get('total_auction_requested', 0)), ',')}" for index, profile in enumerate(sorted_profiles_requested)]), inline=False)
             
         else :

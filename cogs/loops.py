@@ -176,6 +176,7 @@ class log_button(discord.ui.View):
         self.client = client
         super().__init__()
         self.value = None
+        self.timeout = None
 
     @discord.ui.button(label='Confirm Payout', style=discord.ButtonStyle.green, custom_id='confirm_payout')
     async def confirm_payout(self, interaction: discord.Interaction, button: discord.ui.Button):

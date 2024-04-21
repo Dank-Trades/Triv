@@ -75,22 +75,22 @@ class utils(commands.Cog):
         if matching_items.empty:
             return 0  # or some other value or action if there are no matching items
         
-        avg_price = int(matching_items.values[0]) * item_amount
+        avg_price = int(matching_items.values[0]) 
         if avg_price < 5e5:
             return 5e5
 
         if avg_price <= 1e7:
-            max_price = avg_price * 0.6
+            max_price = (avg_price * 0.6) * item_amount
         elif avg_price <= 3e7:
-            max_price = avg_price * 0.55
+            max_price = (avg_price * 0.55) * item_amount
         elif avg_price <= 7e7:
-            max_price = avg_price * 0.5
+            max_price = (avg_price * 0.5) * item_amount
         elif avg_price <= 12e7:
-            max_price = avg_price * 0.45
+            max_price = (avg_price * 0.45) * item_amount
         elif avg_price <= 2e8:
-            max_price = avg_price * 0.4
+            max_price = (avg_price * 0.4) * item_amount
         else:
-            max_price = avg_price * 0.35  # Adding an extra case for prices over 200 million
+            max_price = (avg_price * 0.35) * item_amount  # Adding an extra case for prices over 200 million
 
         if price > max_price:
             return max_price
