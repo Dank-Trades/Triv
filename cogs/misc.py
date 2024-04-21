@@ -201,10 +201,6 @@ class misc(commands.Cog):
             
 
         await interaction.followup.send('Updated successfully!' , ephemeral=True)
-
-            
-
-
         
 
     @app_commands.command(name='help')
@@ -224,25 +220,6 @@ class misc(commands.Cog):
         view.add_item(discord.ui.Button(label='Join Support Server', url= 'https://discord.gg/qd3cy9qs3R'))
         await interaction.response.send_message(embed=embed, view=view)
 
-    @commands.command()
-    async def data_view(self, ctx):
-        # Assuming self.client.db is the connection pool to your PostgreSQL database
-        pool = self.client.db
-        query = 'SELECT * FROM "guild_config"'
-        
-        # Acquire a connection from the pool
-        async with pool.acquire() as connection:
-            # Execute the query and fetch data
-            data = await connection.fetch(query)
-        
-        # Extract column names from the result set
-        columns = data[0].keys() if data else []
-        
-        # Convert the fetched data into a DataFrame with column names
-        df = pd.DataFrame(data, columns=columns)
-        
-        # Convert DataFrame to a string and send it as a message
-        await ctx.send(f'```sql\n{df.to_string()}```')
     
 
 async def setup(client):

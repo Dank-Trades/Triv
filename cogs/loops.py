@@ -190,7 +190,7 @@ class log_button(discord.ui.View):
             return interaction.author.send('You are not authorized to mark this auction as paid.')
         
         else:
-            button_url = interaction.message.components[0].children[0].url
+            button_url = interaction.message.components[0].children[2].url
             view = mark_log(self.client)
             view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
             payout_embed.color = discord.Color.green()
@@ -220,7 +220,7 @@ class log_button(discord.ui.View):
             return interaction.author.send('You are not authorized to mark this auction as paid.')
         
         else :
-            button_url = interaction.message.components[0].children[0].url
+            button_url = interaction.message.components[0].children[2].url
             view = mark_log(self.client)
             view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
             payout_embed.color = discord.Color.green()
