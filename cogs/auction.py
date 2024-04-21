@@ -364,7 +364,7 @@ class auction(commands.Cog):
                 item_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["message_id"]}'
                 price_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["msg_id"]}'
                 embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}\nLinks : [Items]({item_msg_link}) | [Price]({price_msg_link})', inline = False)
-            embed.set_footer(text = f'Page {page}/{pages}')
+            embed.set_footer(text = f'{page}/{pages}')
             await interaction.followup.send(embed = embed, ephemeral=True, view=pagination_buttons(client=interaction.client, author=interaction.user))
 
     # this is a subcommand of the queue command
