@@ -76,8 +76,6 @@ class utils(commands.Cog):
             return 0  # or some other value or action if there are no matching items
         
         avg_price = int(matching_items.values[0]) 
-        if avg_price < 5e5:
-            return 5e5
 
         if avg_price <= 1e7:
             max_price = (avg_price * 0.6) * item_amount
@@ -91,6 +89,9 @@ class utils(commands.Cog):
             max_price = (avg_price * 0.4) * item_amount
         else:
             max_price = (avg_price * 0.35) * item_amount  # Adding an extra case for prices over 200 million
+
+        if max_price <= 5e5:
+            return max_price
 
         if price > max_price:
             return max_price

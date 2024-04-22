@@ -159,6 +159,41 @@ class pagination_buttons(discord.ui.View):
     
     async def interaction_check(self, interaction: discord.Interaction):
         return interaction.user.id == self.author.id
+    
+class clear_confirm(discord.ui.View):
+    def __init__(self, client, author):
+        super().__init__()
+        self.client = client
+        self.author = author
+
+    async def disable_buttons(self):
+        for child in self.children:
+            child.disabled = True
+
+
+    async def interaction_check(self, interaction: discord.Interaction):
+        return interaction.user.id == self.author.id
+
+    @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green, custom_id='confirm_button')
+    async def confirm_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
+        await self.disable_buttons()
+        await interaction.message.edit(view=self)
+
+        auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
+
+        if not auction_queue:
+            return
+        else:
+            await self.client.db.auction_queue.update_one({'guild_id': interaction.guild.id}, {'$set': {'queue': []}})
+            await interaction.followup.send(f'Removed all auctions from the queue!')
+
+    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.grey, custom_id='cancel_button')
+    async def cancel_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        
+        await self.disable_buttons()
+        await interaction.message.edit(view=self)
+        await interaction.response.send_message('Aborted.')
 
 
 class auction(commands.Cog):
@@ -394,16 +429,7 @@ class auction(commands.Cog):
     @commands.has_any_role(750117211087044679,1051128651929882695 )
     async def auction_queue_remove_all(self, interaction : discord.Interaction):
 
-        await interaction.response.defer()
-        
-
-        auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : interaction.guild.id})
-
-        if not auction_queue:
-            return
-        else:
-            await self.client.db.auction_queue.update_one({'guild_id' : interaction.guild.id}, {'$set' : {'queue' : [] }})
-            await interaction.followup.send(f'Removed all auctions from the queue!')
+        await interaction.response.send_message('Are you sure you want to clear the auction queue?', view=clear_confirm(client=interaction.client, author=interaction.user))
 
     @queue_group.command(name='insert')
     @commands.has_any_role(750117211087044679,1051128651929882695)
@@ -668,6 +694,11 @@ class auction(commands.Cog):
                 guild_queue = await self.client.db.auction_queue.find_one({'guild_id' : message_after.guild.id})
 
             user_queue = next((item for item in guild_queue['queue'] if item['host'] == message_after.author.id), None)
+
+            for react in message_after.reactions:
+                if react.emoji == '✅':
+                    if user_queue is None:
+                        return await self.utils.send_error_message(message_after, 'This auction has been hosted already!')
             
             await message_after.clear_reactions()
             
