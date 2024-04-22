@@ -741,16 +741,17 @@ class auction(commands.Cog):
 
             # return await message_after.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
 
-    @commands.command(name='profile')
-    async def profile(self, ctx, user: discord.Member = None):
+    @auc_group.command(name='profile')
+    async def profile(self, interaction : discord.Interaction, user: discord.Member = None):
+        await interaction.response.defer()
         if user is None:
-            user = ctx.author
+            user = interaction.user
     
-        profile = await self.client.db.profile.find_one({'user_id' : user.id, 'guild_id' : ctx.guild.id})
+        profile = await self.client.db.profile.find_one({'user_id' : user.id, 'guild_id' : interaction.guild.id})
     
         if not profile:
-            await self.client.db.profile.insert_one({'user_id' : user.id, 'guild_id' : ctx.guild.id, 'auction_hosted' : 0, 'total_amount_bid' : 0, 'total_amount_sold' : 0, 'auction_won': 0, 'auction_joined' : 0})
-            profile = await self.client.db.profile.find_one({'user_id' : user.id, 'guild_id' : ctx.guild.id})
+            await self.client.db.profile.insert_one({'user_id' : user.id, 'guild_id' : interaction.guild.id, 'auction_hosted' : 0, 'total_amount_bid' : 0, 'total_amount_sold' : 0, 'auction_won': 0, 'auction_joined' : 0})
+            profile = await self.client.db.profile.find_one({'user_id' : user.id, 'guild_id' : interaction.guild.id})
 
         auction_hosted = profile.get('auction_hosted', 0)
         total_amount_bid = profile.get('total_amount_bid', 0)
@@ -768,9 +769,9 @@ class auction(commands.Cog):
         embed.add_field(name = 'Auctions Joined', value = format(int(auction_joined), ","))
         embed.add_field(name = 'Total Auction Requested', value = format(int(auction_requested), ","))
 
-        await ctx.send(embed=embed)
+        await interaction.followup.send(embed=embed)
 
-    @app_commands.command(name='leaderboard')
+    @auc_group.command(name='leaderboard')
     async def leaderboard(self, interaction : discord.Interaction, table : str):
 
         await interaction.response.defer()
