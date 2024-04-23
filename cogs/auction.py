@@ -350,7 +350,7 @@ class auction(commands.Cog):
 
     @queue_group.command(name='list')
     async def auction_queue(self, interaction: discord.Interaction, page: str = '1'):
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
         try:
             page = int(page)
         except ValueError:
