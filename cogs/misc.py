@@ -201,6 +201,31 @@ class misc(commands.Cog):
             
 
         await interaction.followup.send('Updated successfully!' , ephemeral=True)
+
+    @app_commands.command(name='update_stats')
+    async def update_stats(self, interaction : discord.Interaction, table : str, user : discord.Member, to : int):
+        await interaction.response.defer()
+
+        table_list = ['auction_hosted', 'total_amount_bid', 'total_amount_sold', 'auction_won', 'auction_joined', 'total_auction_requested']
+
+        if interaction.user.id not in [729643700455604266, 692994778136313896]:
+            return await interaction.followup.send('You do not have the permission to update user stats!', ephemeral=True)
+        
+        if table not in table_list:
+            return await interaction.followup.send('Invalid table!', ephemeral=True)
+
+        else :
+            table = table.lower()
+
+        await self.client.db.profile.update_one({'user_id' :  user.id, 'guild_id' : interaction.guild.id}, {'$set' : {table : to}})
+
+        await interaction.followup.send(f'Updated {user.mention}\'s stats.')
+
+    @update_stats.autocomplete('table')
+    async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
+        table_list = ['auction_hosted', 'total_amount_bid', 'total_amount_sold', 'auction_won', 'auction_joined', 'total_auction_requested']
+
+        return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in table_list if current.lower() in suggestion.lower()]
         
 
     @app_commands.command(name='help')
