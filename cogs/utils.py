@@ -92,6 +92,9 @@ class utils(commands.Cog):
 
         if max_price <= 5e5:
             return max_price
+        
+        if max_price > 2e8:
+            return 2e8
 
         if price > max_price:
             return max_price
