@@ -386,7 +386,10 @@ class auction(commands.Cog):
         if auctions == []:
             return await interaction.followup.send('No auctions in queue.', ephemeral= True)
         else:
-            pages = len(auctions) // 5 + 1
+            if len(auctions) % 5 != 0:    
+                pages = len(auctions) // 5 + 1
+            else :
+                pages = len(auctions) // 5
             start = (page - 1) * 5
             end = start + 5
             embed = discord.Embed(title = 'Auction Queue', color = discord.Color.from_str('0x2F3136'))
