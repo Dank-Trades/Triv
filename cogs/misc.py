@@ -7,7 +7,6 @@ import sys
 import humanize
 sys.path.append(r'/home/container/')
 from cogs.utils import utils
-from cogs.loops import mark_log
 from datetime import datetime
 from discord.ext import commands
 from discord import app_commands
@@ -20,7 +19,11 @@ class help_button(discord.ui.View):
         super().__init__()
         self.value = None
 
-
+class mark_log(discord.ui.View):
+    def __init__(self, client):
+        super().__init__()
+        self.value = None
+        self.client = client
 
 class misc(commands.Cog):
     def __init__(self, client):

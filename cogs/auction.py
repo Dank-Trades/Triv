@@ -2,7 +2,6 @@ import discord
 import json
 import sys
 sys.path.append(r'/home/container/')
-from cogs.loops import mark_log
 from cogs.utils import utils
 import re
 import asyncio
@@ -14,6 +13,12 @@ import pandas as pd
 
 MIN_BID_AMOUNT = 5e5
 
+class mark_log(discord.ui.View):
+    def __init__(self, client):
+        super().__init__()
+        self.value = None
+        self.client = client
+        
 class auc_buttons(discord.ui.View):
     def __init__(self, author, client):
         self.author = author
