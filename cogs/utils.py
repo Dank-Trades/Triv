@@ -23,13 +23,13 @@ class utils(commands.Cog):
             await msg.add_reaction('⚠')
 
     def extract_item_and_amount(self, text):
-        pattern = r'\*\*(\d+)x <a?:(?:[a-zA-Z0-9_]+):[0-9]+> ([^\*]+)\*\*'
+        pattern = r"(\d{1,3}(?:,\d{3})*|\d+)x\s+<a?:(?:[a-zA-Z0-9_]+):[0-9]+>\s+([^\*]+)"
         match = re.search(pattern, text)
-
+    
         if match:
             amount = match.group(1)
             item_name = match.group(2)
-            return int(amount), item_name
+            return int(amount.replace(",", "")), item_name
         else:
             return None, None
 
