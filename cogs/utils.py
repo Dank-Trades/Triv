@@ -79,26 +79,29 @@ class utils(commands.Cog):
         avg_price = int(matching_items.values[0]) 
 
         if avg_price <= 1e7:
-            max_price = (avg_price * 0.6) * item_amount
+            item_max_price = avg_price * 0.6
         elif avg_price <= 3e7:
-            max_price = (avg_price * 0.55) * item_amount
+            item_max_price = avg_price * 0.55
         elif avg_price <= 7e7:
-            max_price = (avg_price * 0.5) * item_amount
+            item_max_price = avg_price * 0.5
         elif avg_price <= 12e7:
-            max_price = (avg_price * 0.45) * item_amount
+            item_max_price = avg_price * 0.45
         elif avg_price <= 2e8:
-            max_price = (avg_price * 0.4) * item_amount
+            item_max_price = avg_price * 0.4
         else:
-            max_price = (avg_price * 0.35) * item_amount  # Adding an extra case for prices over 200 million
+            item_max_price = avg_price * 0.35
+
+        max_price = item_max_price * item_amount
 
         if max_price <= 5e5:
             return max_price
         
-        if max_price > 2e8:
+        if price > 2e8 and price < max_price :
             return 2e8
 
         if price > max_price:
             return max_price
+        
         else:
             return 0
 
