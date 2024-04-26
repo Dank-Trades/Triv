@@ -248,6 +248,15 @@ class misc(commands.Cog):
         view.add_item(discord.ui.Button(label='Join Support Server', url= 'https://discord.gg/qd3cy9qs3R'))
         await interaction.response.send_message(embed=embed, view=view)
 
+    @app_commands.command(name='auc_count')
+    async def auction_count(self, interaction : discord.Interaction):
+
+        await interaction.response.defer(ephemeral=True)
+        
+        data = await utils(self.client).get_auc_count(guild = interaction.guild)
+
+        await interaction.followup.send(f"Daily: `{data['daily']}`\nWeekly: `{data['weekly']}`\nMonthly: `{data['monthly']}`")
+
     
 
 async def setup(client):

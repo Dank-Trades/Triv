@@ -4,6 +4,7 @@ import requests
 import re
 import pandas as pd
 from discord.components import Button, ButtonStyle
+import datetime as dt
 
 class utils(commands.Cog):
     def __init__(self, client):
@@ -142,6 +143,34 @@ class utils(commands.Cog):
                 await ctx.message.add_reaction('‼')
             except:
                 pass
+
+    async def get_auc_count(self, guild):
+    
+        daily = await self.client.db.auc_count.find_one({'guild_id' : guild.id, 
+                                                        'year' : dt.datetime.utcnow().year, 
+                                                        'month' : dt.datetime.utcnow().month, 
+                                                        'day' : dt.datetime.utcnow().day})
+        daily_count = daily.get('auc_count', 0)
+
+
+        monthly = await self.client.db.auc_count.find({'guild_id' : guild.id, 
+                                                    'year' : dt.datetime.utcnow().year, 
+                                                    'month' : dt.datetime.utcnow().month}).to_list(length = None)
+        
+        monthly_count = sum([day['auc_count'] for day in monthly])
+
+        current_date = dt.datetime.utcnow()
+        start_of_week = current_date - dt.timedelta(days=current_date.weekday())
+        end_of_week = start_of_week + dt.timedelta(days=7)
+
+        weekly = await self.client.db.auc_count.find({'guild_id': guild.id,
+                                                    'year': current_date.year,
+                                                    'month': current_date.month,
+                                                    'day': {'$gte': start_of_week.day, '$lt': end_of_week.day}}).to_list(None)
+        
+        weekly_count = sum(day['auc_count'] for day in weekly)
+
+        return {'daily' : daily_count, 'monthly' : monthly_count, 'weekly' : weekly_count}
 
     async def get_auction_channel(self, arg):
         doc = await self.client.db.guild_config.find_one({"guild_id": arg.guild.id})

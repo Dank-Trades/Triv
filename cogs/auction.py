@@ -10,6 +10,7 @@ from discord import app_commands
 from discord.app_commands import Group, command
 from discord.ext import tasks, commands
 import pandas as pd
+from datetime import datetime
 
 MIN_BID_AMOUNT = 5e5
 
@@ -37,6 +38,7 @@ class auc_buttons(discord.ui.View):
         auction_cog.auc_count.start()
         await channel.set_permissions(role, overwrite = utils.channel_open(channel, role))
         await self.client.db.profile.update_one({'user_id' : interaction.user.id, 'guild_id' : interaction.guild.id}, {'$inc' : {'auction_hosted' : 1}}, upsert = True)
+        await self.client.db.auc_count.update_one({'guild_id' : interaction.guild.id, 'year' : datetime.utcnow().year, 'month' : datetime.utcnow().month, 'day' : datetime.utcnow().day}, {'$inc' : {'auc_count' : 1}}, upsert = True)
         await interaction.followup.send('Auction Started!')
         await interaction.channel.send('Auction has started! Run `t!bid <amount><unit>` to bid. E.g. `t!bid 700k` | `t!bid 6m`.')
         await interaction.channel.send('You can bid just by saying the amount, too! E.g. `3m` | `900k`')
