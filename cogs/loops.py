@@ -35,7 +35,7 @@ class log_button(discord.ui.View):
             del self.client.payout_msgs[interaction.message.id]
             auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
             auction_queue = auction_queue['queue']
-            index = next((index for index, auction in enumerate(auction_queue) if auction['queue_message_id'] == interaction.message.id), None)
+            index = next((index for index, auction in enumerate(auction_queue) if auction.get('queue_message_id') == interaction.message.id), None)
             if index == None:
                 print('WARNING : Request in queue not found.')
             else:
@@ -65,7 +65,7 @@ class log_button(discord.ui.View):
             del self.client.payout_msgs[interaction.message.id]
             auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
             auction_queue = auction_queue['queue']
-            index = next((index for index, auction in enumerate(auction_queue) if auction['queue_message_id'] == interaction.message.id), None)
+            index = next((index for index, auction in enumerate(auction_queue) if auction.get('queue_message_id') == interaction.message.id), None)
             if index == None:
                 print('WARNING : Request in queue not found.')
             else:
