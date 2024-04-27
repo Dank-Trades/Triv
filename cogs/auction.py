@@ -346,7 +346,7 @@ class auction(commands.Cog):
 
                 for tracker in trackers:
                     user = interaction.guild.get_member(tracker)
-                    await user.send(f'Hi! There is a **{items}** auction going on right now!\n \n> If you don\'t want to get notified for this item anymore, use `/auction tracker` (toggle: off)', view=view)
+                    await user.send(f'Hi! There is a **Pepe Coin** auction going on right now!\n \n> If you don\'t want to get notified for this item anymore, use `/auction tracker (toggle: Disable)`', view=view)
 
             
     # @auction_host.autocomplete('items')
