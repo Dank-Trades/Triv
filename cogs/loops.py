@@ -206,7 +206,7 @@ class loops(commands.Cog):
                         print('WARNING: Auction not found in queue.')
                     else:
                         auction = auctions[index]
-                        auction['queue_message_id'] = embed_msg.id
+                        auction.update({'queue_message_id' : embed_msg.id }) 
                         await self.client.db.auction_queue.update_one({'guild_id' : msg.guild.id}, {'$set' : {'queue' : auctions}})
 
                 self.client.payout_msgs.update({
