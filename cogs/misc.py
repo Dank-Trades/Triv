@@ -249,6 +249,7 @@ class misc(commands.Cog):
         await interaction.response.send_message(embed=embed, view=view)
 
     @app_commands.command(name='auc_count')
+    @app_commands.checks.has_role(1228100188204437596)
     async def auction_count(self, interaction : discord.Interaction):
 
         await interaction.response.defer(ephemeral=True)

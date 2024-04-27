@@ -14,6 +14,11 @@ from datetime import datetime
 
 MIN_BID_AMOUNT = 5e5
 
+class auc_link(discord.ui.View):
+    def __init__(self, client):
+        super().__init__()
+        self.client = client
+
 class mark_log(discord.ui.View):
     def __init__(self, client):
         super().__init__()
@@ -276,6 +281,7 @@ class auction(commands.Cog):
             return await interaction.followup.send('Invalid index.')
         
         auction_queue = await self.client.db.auction_queue.find_one({'guild_id' : interaction.guild.id})
+        item_tracker = await self.client.db.item_tracker.find_one({'guild_id' : interaction.guild.id})
 
         if not auction_queue:
             return await interaction.followup.send('No auctions in queue.')
@@ -290,6 +296,15 @@ class auction(commands.Cog):
             item_amount = auction['item_amount']
             full_int = auction['starting_price']
             host = interaction.guild.get_member(auction['host'])
+
+            if not item_tracker:
+                await self.client.db.item_tracker.insert_one({'guild_id' : interaction.guild.id, items : []})
+                item_tracker = await self.client.db.item_tracker.find_one({'guild_id' : interaction.guild.id})
+            try :
+                trackers = item_tracker[items]
+            except KeyError:
+                trackers = []
+
 
   
             embed = discord.Embed(title = f'{item_amount} {items} auction', description= f'starting bid : {format(full_int, ",")} \nseller : {host.mention}', color = discord.Color.from_str('0x2F3136'))
@@ -324,6 +339,14 @@ class auction(commands.Cog):
                 await interaction.followup.send(embed=embed, view=auc_buttons(interaction.user, self.client))
                 await interaction.channel.send(content=f'{ping_role.mention}', allowed_mentions = discord.AllowedMentions(roles=True))
                 await msg.add_reaction('⭐')
+
+                view = auc_link(client=self.client)
+
+                view.add_item(discord.ui.Button(label='Jump to auction', url=msg.jump_url))
+
+                for tracker in trackers:
+                    user = interaction.guild.get_member(tracker)
+                    await user.send(f'Hi! There is a **{items}** auction going on right now!\n \n> If you don\'t want to get notified for this item anymore, use `/auction tracker` (toggle: off)', view=view)
 
             
     # @auction_host.autocomplete('items')
@@ -844,6 +867,60 @@ class auction(commands.Cog):
         table_list = ['Auctions Hosted', 'Bid Amount', 'Sold Amount', 'Auctions Won', 'Auctions Joined', 'Auctions Requested']
 
         return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in table_list if current.lower() in suggestion.lower()]
+    
+    @auc_group.command(name='tracker')
+    async def tracker(self, interaction : discord.Interaction, toggle : str, item : str):
+
+        await interaction.response.defer()
+
+        guild_items = await self.client.db.item_tracker.find_one({'guild_id' : interaction.guild.id})
+        if not guild_items:
+            await self.client.db.item_tracker.insert_one({'guild_id' : interaction.guild.id, item : []})
+            guild_items = await self.client.db.item_tracker.find_one({'guild_id' : interaction.guild.id})
+
+        items = pd.read_csv('auctions.csv')
+        item_list = [item for item in items['name']]
+
+        if item not in item_list or toggle not in ['Enable', 'Disable']:
+            return await interaction.followup.send('Invalid input.\nPlease make sure to pick from the bot suggestions for the inputs.')
+
+        try :
+            users = guild_items[item]
+
+        except KeyError:
+
+            guild_items[item]  = []
+            users = guild_items[item]
+
+        if toggle == 'Enable':
+            if interaction.user.id not in users:
+                users.append(interaction.user.id)
+            else :
+                return await interaction.followup.send('You already enabled tracker for .')
+
+        elif toggle == 'Disable':
+            if interaction.user.id in users:
+                users.remove(interaction.user.id)
+            else :
+                return await interaction.followup.send('You already disabled tracker for this item.')
+
+        await self.client.db.item_tracker.update_one({'guild_id' : interaction.guild.id}, {'$set' : {item : users}})
+        await interaction.followup.send(f'**{toggle}d** tracking for {item}!')
+
+    @tracker.autocomplete('toggle')
+    async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
+
+        the_list = ['Enable', 'Disable']
+        
+        return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in the_list if current.lower() in suggestion.lower()]
+
+    @tracker.autocomplete('item')
+    async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
+        items = pd.read_csv('auctions.csv')
+
+        item_list = [item for item in items['name']]
+
+        return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in item_list if current.lower() in suggestion.lower()]
         
     
         
