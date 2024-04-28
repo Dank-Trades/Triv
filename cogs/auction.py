@@ -459,13 +459,13 @@ class auction(commands.Cog):
             await interaction.followup.send(f'Removed the auction : {auction["item_amount"]} {auction["item"]} auction hosted by {auction["host"]}')
 
     @queue_group.command(name='clear')
-    @commands.has_any_role(750117211087044679,1051128651929882695 )
+    @app_commands.checks.has_any_role(750117211087044679,1051128651929882695 )
     async def auction_queue_remove_all(self, interaction : discord.Interaction):
 
         await interaction.response.send_message('Are you sure you want to clear the auction queue?', view=clear_confirm(client=interaction.client, author=interaction.user))
 
     @queue_group.command(name='insert')
-    @commands.has_any_role(750117211087044679,1051128651929882695)
+    @app_commands.checks.has_any_role(750117211087044679,1051128651929882695)
     async def insert_queue(self, interaction : discord.Interaction, seller : discord.Member, items : str, item_amount : int, starting_price : str ):
 
         starting_price = int(self.utils.process_shorthand(starting_price))
@@ -501,6 +501,7 @@ class auction(commands.Cog):
         await interaction.response.send_message(embed=embed, view=view)
 
     @commands.command(name= 'revert', aliases = ['r'])
+    @commands.has_any_role(750117211087044679,1051128651929882695)
     async def auction_revert(self, ctx):
         
         auctioneer_role = await utils(self.client).get_auctioneer_role(ctx)
@@ -545,6 +546,7 @@ class auction(commands.Cog):
             loop_cog.auc_count.restart()
 
     @auc_group.command(name='end', description = 'Ends the ongoing auction')
+    @app_commands.checks.has_any_role(750117211087044679,1051128651929882695)
     async def auction_end(self, interaction : discord.Interaction):
         auction_channel = await utils(interaction.client).get_auction_channel(interaction)
         
