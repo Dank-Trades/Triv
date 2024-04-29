@@ -24,6 +24,81 @@ class mark_log(discord.ui.View):
         super().__init__()
         self.value = None
         self.client = client
+
+class log_button(discord.ui.View):
+    def __init__(self, client):
+        self.client = client
+        super().__init__()
+        self.value = None
+        self.timeout = None
+
+    @discord.ui.button(label='Confirm Payout', style=discord.ButtonStyle.green, custom_id='confirm_payout')
+    async def confirm_payout(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
+        # implement the mark_as_paid function here as it was for the message to reply but now this button is directly on that message
+        payout_embed = interaction.message.embeds[0]
+        auctioneer_id = int(interaction.message.embeds[0].footer.text.split(' : ')[1])
+        sman_role = interaction.guild.get_role(719197064193638402)
+
+        if interaction.user.id != auctioneer_id and sman_role not in interaction.user.roles:
+            return interaction.author.send('You are not authorized to mark this auction as paid.')
+        
+        else:
+            button_url = interaction.message.components[0].children[2].url
+            view = mark_log(self.client)
+            view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
+            payout_embed.color = discord.Color.green()
+            payout_embed.title = 'Auction Logs - Paid'
+            await interaction.message.edit(embed=payout_embed, view=view)
+            for messages in self.client.payout_msgs[interaction.message.id]:
+                await messages.delete()
+            del self.client.payout_msgs[interaction.message.id]
+            auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
+            auction_queue = auction_queue['queue']
+            index = next((index for index, auction in enumerate(auction_queue) if auction.get('queue_message_id') == interaction.message.id), None)
+            if index == None:
+                print('WARNING : Request in queue not found.')
+            else:
+                auction_queue.pop(index)
+                await self.client.db.auction_queue.update_one({'guild_id': interaction.guild.id}, {'$set': {'queue': auction_queue}})
+
+    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.red, custom_id='cancel_payout')
+    async def cancel_payout(self, interaction: discord.Interaction, button : discord.ui.Button):
+        await interaction.response.defer()
+
+        payout_embed = interaction.message.embeds[0]
+        auctioneer_id = int(interaction.message.embeds[0].footer.text.split(' : ')[1])
+        sman_role = interaction.guild.get_role(719197064193638402)
+        payout_embed_title = payout_embed.title.title()
+
+        if interaction.user.id != auctioneer_id and sman_role not in interaction.user.roles:
+            return interaction.author.send('You are not authorized to mark this auction as paid.')
+        
+        else :
+            button_url = interaction.message.components[0].children[2].url
+            view = mark_log(self.client)
+            view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
+            payout_embed.color = discord.Color.green()
+            if payout_embed_title == 'Auction Cancelled':
+                payout_embed.title = 'Auction Cancelled'
+            else :
+                payout_embed.title = 'Auction Logs - Cancelled'
+            payout_embed.title = 'Auction Logs - Cancelled'
+            await interaction.message.edit(embed=payout_embed, view=view)
+            for messages in self.client.payout_msgs[interaction.message.id]:
+                await messages.delete()
+            del self.client.payout_msgs[interaction.message.id]
+            if payout_embed != 'Auction Cancelled':
+                auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
+                auction_queue = auction_queue['queue']
+                index = next((index for index, auction in enumerate(auction_queue) if auction.get('queue_message_id') == interaction.message.id), None)
+                if index == None:
+                    print('WARNING : Request in queue not found.')
+                else:
+                    auction_queue.pop(index)
+                    await self.client.db.auction_queue.update_one({'guild_id': interaction.guild.id}, {'$set': {'queue': auction_queue}})
+            else:
+                return
         
 class auc_buttons(discord.ui.View):
     def __init__(self, author, client):
@@ -31,6 +106,10 @@ class auc_buttons(discord.ui.View):
         self.client = client
         super().__init__()
         self.value = None
+    
+    async def disable_buttons(self):
+        for child in self.children:
+            child.disabled = True
 
     @discord.ui.button(label='Start')
     async def auc_start(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -38,7 +117,7 @@ class auc_buttons(discord.ui.View):
         auction_cog = interaction.client.get_cog('loops')
         channel = await utils(interaction.client).get_auction_channel(interaction)
         role = await utils(interaction.client).get_auction_access(interaction)
-        button.disabled = True
+        await self.disable_buttons()
         await interaction.message.edit(view=self)
         auction_cog.auc_count.start()
         await channel.set_permissions(role, overwrite = utils.channel_open(channel, role))
@@ -62,10 +141,10 @@ class auc_buttons(discord.ui.View):
         auc_log = await utils(interaction.client).get_auction_log(interaction)
 
         role = await utils(interaction.client).get_auction_access(interaction)
-        button.disabled = True
+        await self.disable_buttons()
         await interaction.message.edit(view=self)
 
-        payout_log = discord.Embed(color=discord.Color.red(), title='Auction Logs - Cancelled')
+        payout_log = discord.Embed(color=discord.Color.red(), title='Auction Cancelled')
         payout_log.description = (
                             f"Buyer : \n"
                             f"Seller : {interaction.client.log['seller'].mention}\n"
@@ -75,8 +154,18 @@ class auc_buttons(discord.ui.View):
                         )
         payout_log.set_footer( text= f'auctioner : {interaction.client.log["auctioneer"].id}')
 
-        link_button = mark_log(interaction.client)
+        link_button = log_button(interaction.client)
         link_button.add_item(discord.ui.Button(label='Jump to auction', url= org_msg.jump_url))
+
+        auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
+        auction_queue = auction_queue['queue']
+        index = next((index for index, auction in enumerate(auction_queue) if auction['host'] == interaction.client.log['seller'].id), None)
+        if index == None:
+            print('WARNING : Request in queue not found.')
+        else:
+            auction_queue.pop(index)
+            await self.client.db.auction_queue.update_one({'guild_id': interaction.guild.id}, {'$set': {'queue': auction_queue}})
+
 
         embed_msg = await auc_log.send(embed=payout_log, view=link_button)
 

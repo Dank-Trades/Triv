@@ -49,6 +49,7 @@ class log_button(discord.ui.View):
         payout_embed = interaction.message.embeds[0]
         auctioneer_id = int(interaction.message.embeds[0].footer.text.split(' : ')[1])
         sman_role = interaction.guild.get_role(719197064193638402)
+        payout_embed_title = payout_embed.title.title()
 
         if interaction.user.id != auctioneer_id and sman_role not in interaction.user.roles:
             return interaction.author.send('You are not authorized to mark this auction as paid.')
@@ -58,19 +59,26 @@ class log_button(discord.ui.View):
             view = mark_log(self.client)
             view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
             payout_embed.color = discord.Color.green()
+            if payout_embed_title == 'Auction Cancelled':
+                payout_embed.title = 'Auction Cancelled'
+            else :
+                payout_embed.title = 'Auction Logs - Cancelled'
             payout_embed.title = 'Auction Logs - Cancelled'
             await interaction.message.edit(embed=payout_embed, view=view)
             for messages in self.client.payout_msgs[interaction.message.id]:
                 await messages.delete()
             del self.client.payout_msgs[interaction.message.id]
-            auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
-            auction_queue = auction_queue['queue']
-            index = next((index for index, auction in enumerate(auction_queue) if auction.get('queue_message_id') == interaction.message.id), None)
-            if index == None:
-                print('WARNING : Request in queue not found.')
+            if payout_embed != 'Auction Cancelled':
+                auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
+                auction_queue = auction_queue['queue']
+                index = next((index for index, auction in enumerate(auction_queue) if auction.get('queue_message_id') == interaction.message.id), None)
+                if index == None:
+                    print('WARNING : Request in queue not found.')
+                else:
+                    auction_queue.pop(index)
+                    await self.client.db.auction_queue.update_one({'guild_id': interaction.guild.id}, {'$set': {'queue': auction_queue}})
             else:
-                auction_queue.pop(index)
-                await self.client.db.auction_queue.update_one({'guild_id': interaction.guild.id}, {'$set': {'queue': auction_queue}})
+                return
 
 class queue_button(discord.ui.View):
     def __init__(self, client):
