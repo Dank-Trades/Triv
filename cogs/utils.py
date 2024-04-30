@@ -146,6 +146,48 @@ class utils(commands.Cog):
                 await ctx.message.add_reaction('‼')
             except:
                 pass
+    
+    async def update_user_roles(self, guild):
+    # Fetch leaderboard data for each category
+        data = await self.client.db.profile.find({'guild_id': guild.id}).to_list(length=None)
+
+        leaderboard_data = {
+            'bid amount': sorted(data, key=lambda x: x.get('total_amount_bid', 0), reverse=True)[:10],
+            'auctions won': sorted(data, key=lambda x: x.get('auction_won', 0), reverse=True)[:10],
+            'auctions joined': sorted(data, key=lambda x: x.get('auction_joined', 0), reverse=True)[:10],
+            'auctions requested': sorted(data, key=lambda x: x.get('total_auction_requested', 0), reverse=True)[:10]
+        }
+
+        # Extract user IDs of the top 10 users from each category
+        top_users = {category: [profile['user_id'] for profile in profiles] for category, profiles in leaderboard_data.items()}
+        respective_roles = {'bid amount': 1233460981968142367, 'auctions won': 1233460999894335500,
+                            'auctions joined': 1233460990121742367, 'auctions requested': 1233461091892199434}
+
+        # Retrieve the role to assign
+        # Replace role_id with the ID of the role to assign
+
+        # Update roles for each category
+        for category, user_ids in top_users.items():
+            for user_id in user_ids:
+                # Get the member object
+                member = guild.get_member(user_id)
+                if member:
+                    # Check if the member already has the role
+                    role_to_assign = guild.get_role(respective_roles[category])
+                    if role_to_assign:
+                        if role_to_assign not in member.roles:
+                            # If not, add the role
+                            await member.add_roles(role_to_assign)
+                    else:
+                        print(f"Role for category '{category}' not found.")
+            # Remove the role from users not in the top 10
+            for member in guild.members:
+                for category, role_id in respective_roles.items():
+                    role_to_check = guild.get_role(role_id)
+                    if role_to_check and role_to_check in member.roles and member.id not in top_users[category]:
+                        await member.remove_roles(role_to_check)
+
+    
 
     async def get_auc_count(self, guild):
     

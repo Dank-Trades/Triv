@@ -221,6 +221,8 @@ class loops(commands.Cog):
                     embed_msg.id: [msg1, msg2]
                 })
 
+                await self.utils.update_user_roles(guild=guild)
+
             except IndexError:
 
                 payout_log = discord.Embed(color=discord.Color.red(), title='Auction Logs - Cancelled')
@@ -252,6 +254,8 @@ class loops(commands.Cog):
 
                 self.client.last_bids.clear()
                 self.client.bidders.clear()
+
+                await self.utils.update_user_roles(guild=guild)
 
     @commands.Cog.listener()
     async def on_message(self, msg):
