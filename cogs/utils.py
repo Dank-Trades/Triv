@@ -75,24 +75,12 @@ class utils(commands.Cog):
         
         if matching_items.empty:
             return 0  # or some other value or action if there are no matching items
-        
-        avg_price = int(matching_items.values[0]) 
 
-        if avg_price <= 1e7:
-            item_max_price = avg_price * 0.6
-        elif avg_price <= 3e7:
-            item_max_price = avg_price * 0.55
-        elif avg_price <= 7e7:
-            item_max_price = avg_price * 0.5
-        elif avg_price <= 12e7:
-            item_max_price = avg_price * 0.45
-        elif avg_price <= 2e8:
-            item_max_price = avg_price * 0.4
-        else:
-            item_max_price = avg_price * 0.35
+        item_max_price = int(matching_items.values[0])
+
 
         max_price = item_max_price * item_amount
-
+        
         if max_price <= 5e5:
             return max_price
         
@@ -104,6 +92,7 @@ class utils(commands.Cog):
         
         else:
             return 0
+
 
     async def bid(self, ctx, bid, min_increment):
         loop_cog = self.client.get_cog('loops')
