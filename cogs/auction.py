@@ -736,8 +736,6 @@ class auction(commands.Cog):
         
         auctioneer_role = msg.guild.get_role(config["auctioneer_role"])
 
-        
-        
         bid_amount = self.utils.process_shorthand(msg.content)
         bid_amount = int(bid_amount)
 
@@ -750,6 +748,9 @@ class auction(commands.Cog):
                 guild_queue = await self.client.db.auction_queue.find_one({'guild_id' : msg.guild.id})
 
             user_queue = next((item for item in guild_queue['queue'] if item['host'] == msg.author.id), None)
+
+            if auctioneer_role not in msg.author.roles:
+                await self.utils.update_user_count(guild=msg.guild, user=msg.author, target='queue_users')
 
             try:
                 embed = replied_to_message.embeds[0]

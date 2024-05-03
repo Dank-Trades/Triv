@@ -5,6 +5,8 @@ import re
 import pandas as pd
 from discord.components import Button, ButtonStyle
 import datetime as dt
+import matplotlib as plt
+import io
 
 class utils(commands.Cog):
     def __init__(self, client):
@@ -205,6 +207,91 @@ class utils(commands.Cog):
         weekly_count = sum(day['auc_count'] for day in weekly)
 
         return {'daily' : daily_count, 'monthly' : monthly_count, 'weekly' : weekly_count}
+    
+    async def update_user_count(self, guild, user, target):
+
+        participants = await self.client.db.participants.find_one({'guild_id' : guild.id})
+        if not participants:
+            await self.client.db.participants.insert_one({'guild_id' : guild.id, 'queue_users' : {}, 'auction_users' : {}})
+            participants = await self.client.db.participants.find_one({'guild_id' : guild.id})
+
+        curr_time = dt.datetime.utcnow()
+        user_count = participants[target]
+
+        curr_date = str(curr_time.date())
+        curr_hour = str(curr_time.hour)
+
+        if curr_date not in user_count:
+            user_count.update({curr_date : {}})
+
+        if curr_hour not in user_count[curr_date]:
+            user_count[curr_date].update({curr_hour : []})
+
+        curr_users = user_count[curr_date][curr_hour]
+
+        if user.id not in curr_users:
+            curr_users.append(user.id)
+        
+        await self.client.db.participants.update_one({'guild_id' : guild.id} , {'$set' : {target : user_count}})
+
+
+
+    async def get_user_count(self, guild, scope, target):
+
+        participants = await self.client.db.participants.find_one({'guild_id' : guild.id})
+        if not participants:
+            return print('WARNING : No data found.')
+        
+        user_count = participants[target]
+        timestamps = []
+        values = []
+
+        if scope == 'today':
+            curr_time = dt.datetime.utcnow()
+            curr_date = str(curr_time.date())
+            today_count = user_count[curr_date]
+            for key, value in today_count.items():
+                timestamps.append(key)
+                values.append(len(value))
+        
+        elif scope == 'everyday':
+
+            key_sums = {}
+            for category in user_count.values():
+                for key, value in category.items():
+                    key_sums[key] = key_sums.get(key, 0) + len(value)
+
+            timestamps, values = list(key_sums.keys()), list(key_sums.values())
+
+
+        elif scope == 'overall':
+        
+            total_values = {}
+            for category, subcategories in user_count.items():
+                total_category_values = 0
+                for values in subcategories.values():
+                    total_category_values += len(values)
+                total_values[category] = total_category_values
+
+            timestamps, values = list(total_values.keys()), list(total_values.values())
+
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(timestamps, values, marker='o')
+        plt.title('Data with Timestamps')
+        plt.xlabel('Timestamp')
+        plt.ylabel('Values')
+        plt.xticks(rotation=45)
+        plt.grid(True)
+        plt.tight_layout()
+
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+
+        file = discord.File(buffer, filename='plot.png')
+
+        return file
 
     async def get_auction_channel(self, arg):
         doc = await self.client.db.guild_config.find_one({"guild_id": arg.guild.id})

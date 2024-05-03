@@ -258,6 +258,17 @@ class misc(commands.Cog):
 
         await interaction.followup.send(f"Daily: `{data['daily']}`\nWeekly: `{data['weekly']}`\nMonthly: `{data['monthly']}`")
 
+
+    @app_commands.command(name='get_metrics')
+    @app_commands.checks.has_any_role(1228100188204437596)
+    async def get_metrics(self, interaction : discord.Interaction, target : str, scope :str = 'today'):
+
+        await interaction.response.defer()
+
+        data = await utils(self.client).get_user_count(guild=interaction.guild, scope=scope, target=target)
+
+        await interaction.followup.send(file=data)
+
     
 
 async def setup(client):

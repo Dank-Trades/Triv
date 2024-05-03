@@ -279,12 +279,11 @@ class loops(commands.Cog):
         if msg.author == self.client.user or msg.channel != auction_channel:
             return
         
+        if auctioneer_role not in msg.author.roles and not msg.author.bot:
+            await utils(self.client).update_user_count(guild=msg.guild, user=msg.author, target='auction_users')
+        
         if msg.author != self.client.log['seller']:    
             await self.utils.bid(msg ,msg.content, min_increment)
-        
-        with open('config.json', 'r') as f:
-            data = json.load(f)
-            token = data['TokeN']
 
             if auctioneer_role not in msg.author.roles and msg.author.id != 722936235575738419:
                 await msg.delete(delay=3)
