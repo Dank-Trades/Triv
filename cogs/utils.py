@@ -84,7 +84,7 @@ class utils(commands.Cog):
         if max_price <= 5e5:
             return max_price
         
-        if price > 2e8 and price < max_price :
+        if price > 2e8 and price <= max_price :
             return 2e8
 
         if price > max_price:
