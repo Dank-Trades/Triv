@@ -5,7 +5,7 @@ import re
 import pandas as pd
 from discord.components import Button, ButtonStyle
 import datetime as dt
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import io
 
 class utils(commands.Cog):
