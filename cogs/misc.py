@@ -277,6 +277,7 @@ class misc(commands.Cog):
         embed.add_field(name='Avg_User_Count', value=data['avg_user_count'])
         embed.add_field(name=f'{target[:-6].title()} Count', value=data['event_count'])
         embed.add_field(name='Current Time', value=str(datetime.utcnow())[0:-7])
+        embed.add_field(name='Scope', value=scope.title())
 
         await interaction.followup.send(file=data['file'], embed = embed)
 

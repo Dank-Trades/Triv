@@ -236,7 +236,6 @@ class utils(commands.Cog):
 
         curr_users = user_count[curr_date][curr_hour]
         unique_users = user_count[curr_date]['unique_users']
-        user_count[curr_date][curr_date]['today_event_count'] += 1
 
 
         if user.id not in curr_users:
