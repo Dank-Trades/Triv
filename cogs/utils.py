@@ -236,17 +236,13 @@ class utils(commands.Cog):
 
         curr_users = user_count[curr_date][curr_hour]
         unique_users = user_count[curr_date]['unique_users']
-        today_event_count = user_count[curr_date]['today_event_count']
+        user_count[curr_date][curr_date]['today_event_count'] += 1
 
 
         if user.id not in curr_users:
             curr_users.append(user.id)
         if user.id not in unique_users:
-            unique_users.append(user.id)
-        
-        today_event_count += 1
-        
-        
+            unique_users.append(user.id)      
         
         await self.client.db.participants.update_one({'guild_id' : guild.id} , {'$set' : {target : user_count}})
 
