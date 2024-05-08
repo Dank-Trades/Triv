@@ -7,6 +7,7 @@ from discord.components import Button, ButtonStyle
 import datetime as dt
 import matplotlib.pyplot as plt
 import io
+import statistics
 
 class utils(commands.Cog):
     def __init__(self, client):
@@ -224,13 +225,28 @@ class utils(commands.Cog):
         if curr_date not in user_count:
             user_count.update({curr_date : {}})
 
+        if 'unique_users' not in user_count[curr_date]:
+            user_count[curr_date].update({'unique_users' : []})
+        
+        if 'today_event_count' not in user_count[curr_date]:
+            user_count[curr_date].update({'today_event_count' : 0})
+
         if curr_hour not in user_count[curr_date]:
             user_count[curr_date].update({curr_hour : []})
 
         curr_users = user_count[curr_date][curr_hour]
+        unique_users = user_count[curr_date]['unique_users']
+        today_event_count = user_count[curr_date]['today_event_count']
+
 
         if user.id not in curr_users:
             curr_users.append(user.id)
+        if user.id not in unique_users:
+            unique_users.append(user.id)
+        
+        today_event_count += 1
+        
+        
         
         await self.client.db.participants.update_one({'guild_id' : guild.id} , {'$set' : {target : user_count}})
 
@@ -243,44 +259,74 @@ class utils(commands.Cog):
             return print('WARNING : No data found.')
         
         user_count = participants[target]
+        event_count = participants[target][str(dt.datetime.utcnow().date())]['today_event_count']
+
         timestamps = []
         values = []
+        avg_user_count = 0
+        
 
         if scope == 'today':
             curr_time = dt.datetime.utcnow()
             curr_date = str(curr_time.date())
             today_count = user_count[curr_date]
+            unique_user_count = 0
             for key, value in today_count.items():
-                timestamps.append(key)
-                values.append(len(value))
+                if key == 'unique_users':
+                    unique_user_count = len(value)
+                    continue
+                elif key == 'today_event_count' :
+                    continue
+                else :
+                    timestamps.append(key)
+                    values.append(len(value))
+            avg_user_count = statistics.mean(values)
         
         elif scope == 'everyday':
 
             key_sums = {}
+            unique_user_count = 0
             for category in user_count.values():
                 for key, value in category.items():
-                    key_sums[key] = key_sums.get(key, 0) + len(value)
+                    if key == 'unique_users':
+                        unique_user_count = len(value)
+                        continue
+                    elif key == 'today_event_count' :
+                        continue
+                    else :
+                        key_sums[key] = key_sums.get(key, 0) + len(value)
 
             timestamps, values = list(key_sums.keys()), list(key_sums.values())
+            avg_user_count = statistics.mean(values)
 
 
         elif scope == 'overall':
-        
+            
+            total_unique_users = []
+            unique_user_count = 0
             total_values = {}
             for category, subcategories in user_count.items():
                 total_category_values = 0
-                for values in subcategories.values():
-                    total_category_values += len(values)
+                for key, values in subcategories.items():
+                    if key == 'unique_users':
+                        total_category_values += len(values)
+                        for user in values:
+                            if user not in total_unique_users:
+                                total_unique_users.append(user)
                 total_values[category] = total_category_values
 
             timestamps, values = list(total_values.keys()), list(total_values.values())
+            avg_user_count = statistics.mean(values)
+            unique_user_count = len(total_unique_users)
+
 
 
         plt.figure(figsize=(10, 6))
+        plt.style.use('dark_background')
         plt.plot(timestamps, values, marker='o')
-        plt.title('Data with Timestamps')
-        plt.xlabel('Timestamp')
-        plt.ylabel('Values')
+        plt.title('Metrics')
+        plt.xlabel('Time')
+        plt.ylabel('User Count')
         plt.xticks(rotation=45)
         plt.grid(True)
         plt.tight_layout()
@@ -291,7 +337,7 @@ class utils(commands.Cog):
 
         file = discord.File(buffer, filename='plot.png')
 
-        return file
+        return {'file' : file, 'avg_user_count' : avg_user_count, 'unique_user_count' : unique_user_count, 'event_count' : event_count}
 
     async def get_auction_channel(self, arg):
         doc = await self.client.db.guild_config.find_one({"guild_id": arg.guild.id})

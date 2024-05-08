@@ -285,8 +285,8 @@ class loops(commands.Cog):
         if msg.author != self.client.log['seller']:    
             await self.utils.bid(msg ,msg.content, min_increment)
 
-            if auctioneer_role not in msg.author.roles and msg.author.id != 722936235575738419:
-                await msg.delete(delay=3)
+        if auctioneer_role not in msg.author.roles and msg.author.id != 722936235575738419:
+            await msg.delete(delay=3)
 
 
 

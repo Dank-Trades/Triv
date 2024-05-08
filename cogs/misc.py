@@ -267,7 +267,18 @@ class misc(commands.Cog):
 
         data = await utils(self.client).get_user_count(guild=interaction.guild, scope=scope, target=target)
 
-        await interaction.followup.send(file=data)
+        if target == 'auction_users':
+            embed = discord.Embed(title='Metrics for Auctions', color= discord.Color.from_str('0x2F3136'))
+        elif target == 'queue_users':
+            embed = discord.Embed(title='Metrics for Queues', color= discord.Color.from_str('0x2F3136'))
+        
+        embed.set_image(url = 'attachment://plot.png')
+        embed.add_field(name='Unique_Users', value=data['unique_user_count'])
+        embed.add_field(name='Avg_User_Count', value=data['avg_user_count'])
+        embed.add_field(name=f'{target[:-6].title()} Count', value=data['event_count'])
+        embed.add_field(name='Current Time', value=str(datetime.utcnow())[0:-7])
+
+        await interaction.followup.send(file=data['file'], embed = embed)
 
     
 
