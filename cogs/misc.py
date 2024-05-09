@@ -281,6 +281,37 @@ class misc(commands.Cog):
 
         await interaction.followup.send(file=data['file'], embed = embed)
 
+
+    @commands.command(name='alock')
+    @commands.has_any_role(750117211087044679,1051128651929882695)
+    async def alock(self, ctx):
+        queue_channel = self.client.get_channel(782483247619112991)
+        auc_access = await utils(self.client).get_auction_access(arg=ctx)
+        overwrites = utils(self.client).channel_close(channel=queue_channel, role=auc_access)
+        await queue_channel.set_permissions(role = auc_access ,overwrites=overwrites)
+        await ctx.send('✅ Locked down 🍯┃・auction-queue\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
+
+    
+    @commands.command(name='aunlock')
+    @commands.has_any_role(750117211087044679,1051128651929882695)
+    async def aunlock(self, ctx):
+        queue_channel = self.client.get_channel(782483247619112991)
+        auc_access = await utils(self.client).get_auction_access(arg=ctx)
+        overwrites = utils(self.client).channel_open(channel=queue_channel, role=auc_access)
+        await queue_channel.set_permissions(role = auc_access ,overwrites=overwrites)
+        await ctx.send('✅ Unlocked **🍯┃・auction-queue**\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
+
+        queue_count = await self.client.db.participants.find_one({'guild_id' : ctx.guild.id})
+        queue_users = queue_count['queue_users']
+        currn_date = queue_users.get(str(datetime.utcnow().date()), None)
+        if not currn_date:
+            queue_users.update({str(datetime.utcnow().date()) : {}})
+        try:
+            queue_users[str(datetime.utcnow().date())]['today_event_count'] += 1
+        except  KeyError:
+            queue_users[str(datetime.utcnow().date())].update({'today_event_count' : 1})
+        await self.client.db.participants.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue_users' : queue_users}})
+
     
 
 async def setup(client):
