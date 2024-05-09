@@ -332,7 +332,8 @@ class utils(commands.Cog):
 
         file = discord.File(buffer, filename='plot.png')
 
-        return {'file' : file, 'avg_user_count' : avg_user_count, 'unique_user_count' : unique_user_count, 'event_count' : event_count}
+
+        return {'file' : file, 'avg_user_count' : round(avg_user_count), 'unique_user_count' : unique_user_count, 'event_count' : event_count}
 
     async def get_auction_channel(self, arg):
         doc = await self.client.db.guild_config.find_one({"guild_id": arg.guild.id})

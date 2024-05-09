@@ -373,7 +373,10 @@ class auction(commands.Cog):
         item_tracker = await self.client.db.item_tracker.find_one({'guild_id' : interaction.guild.id})
         auc_count = await self.client.db.participants.find_one({'guild_id' : interaction.guild.id})
         auction_users = auc_count['auction_users']
-        try :
+        currn_date = auction_users.get(str(datetime.utcnow().date()), None)
+        if not currn_date:
+            auction_users.update({str(datetime.utcnow().date()) : {}})
+        try:
             auction_users[str(datetime.utcnow().date())]['today_event_count'] += 1
         except  KeyError:
             auction_users[str(datetime.utcnow().date())].update({'today_event_count' : 1})
