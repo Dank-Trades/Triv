@@ -373,7 +373,10 @@ class auction(commands.Cog):
         item_tracker = await self.client.db.item_tracker.find_one({'guild_id' : interaction.guild.id})
         auc_count = await self.client.db.participants.find_one({'guild_id' : interaction.guild.id})
         auction_users = auc_count['auction_users']
-        auction_users[str(datetime.utcnow().date())]['today_event_count'] += 1
+        try :
+            auction_users[str(datetime.utcnow().date())]['today_event_count'] += 1
+        except  KeyError:
+            auction_users[str(datetime.utcnow().date())].update({'today_event_count' : 1})
         await self.client.db.participants.update_one({'guild_id' : interaction.guild.id}, {'$set' : {'auction_users' : auction_users} })
         
         
@@ -758,10 +761,6 @@ class auction(commands.Cog):
 
             if auctioneer_role not in msg.author.roles:
                 await self.utils.update_user_count(guild=msg.guild, user=msg.author, target='queue_users')
-                queue_count = await self.client.db.participants.find_one({'guild_id' : msg.guild.id})
-                queue_users = queue_count['queue_users']
-                queue_users[str(datetime.utcnow().date())]['today_event_count'] += 1
-                await self.client.db.participants.update_one({'guild_id' : msg.guild.id}, {'$set' : {'queue_users' : queue_users}})
 
             try:
                 embed = replied_to_message.embeds[0]
