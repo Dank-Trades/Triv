@@ -288,6 +288,9 @@ class misc(commands.Cog):
         queue_channel = self.client.get_channel(782483247619112991)
         auc_access = await utils(self.client).get_auction_access(arg=ctx)
         overwrites = utils(self.client).channel_close(channel=queue_channel, role=auc_access)
+        if ctx.channel != queue_channel:
+            return await ctx.send('This is not queue channel!')
+
         await queue_channel.set_permissions(auc_access ,overwrite=overwrites)
         await ctx.send('✅ Locked down 🍯┃・auction-queue\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
 
@@ -298,6 +301,9 @@ class misc(commands.Cog):
         queue_channel = self.client.get_channel(782483247619112991)
         auc_access = await utils(self.client).get_auction_access(arg=ctx)
         overwrites = utils(self.client).channel_open(channel=queue_channel, role=auc_access)
+        
+        if ctx.channel != queue_channel:
+            return await ctx.send('This is not queue channel!')
         await queue_channel.set_permissions(auc_access ,overwrite=overwrites)
         await ctx.send('✅ Unlocked **🍯┃・auction-queue**\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
 
