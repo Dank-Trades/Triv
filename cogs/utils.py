@@ -285,7 +285,7 @@ class utils(commands.Cog):
             for category in user_count.values():
                 for key, value in category.items():
                     if key == 'unique_users':
-                        unique_user_count = len(value)
+                        unique_user_count += len(value)
                         continue
                     elif key == 'today_event_count' :
                         event_count += value
@@ -315,7 +315,6 @@ class utils(commands.Cog):
                         event_count += values
                 total_values[category] = total_category_values
 
-            total_values = dict(sorted(total_values.items(), key=lambda item: int(item[0])))
             timestamps, values = list(total_values.keys()), list(total_values.values())
             avg_user_count = statistics.mean(values)
             unique_user_count = len(total_unique_users)
