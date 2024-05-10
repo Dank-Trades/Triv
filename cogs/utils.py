@@ -254,7 +254,7 @@ class utils(commands.Cog):
             return print('WARNING : No data found.')
         
         user_count = participants[target]
-        event_count = participants[target][str(dt.datetime.utcnow().date())]['today_event_count']
+        event_count = 0
 
         timestamps = []
         values = []
@@ -271,6 +271,7 @@ class utils(commands.Cog):
                     unique_user_count = len(value)
                     continue
                 elif key == 'today_event_count' :
+                    event_count += value
                     continue
                 else :
                     timestamps.append(key)
@@ -287,10 +288,12 @@ class utils(commands.Cog):
                         unique_user_count = len(value)
                         continue
                     elif key == 'today_event_count' :
+                        event_count += value
                         continue
                     else :
                         key_sums[key] = key_sums.get(key, 0) + len(value)
 
+            key_sums = dict(sorted(key_sums.items(), key=lambda item: int(item[0])))
             timestamps, values = list(key_sums.keys()), list(key_sums.values())
             avg_user_count = statistics.mean(values)
 
@@ -308,8 +311,11 @@ class utils(commands.Cog):
                         for user in values:
                             if user not in total_unique_users:
                                 total_unique_users.append(user)
+                    elif key == 'today_event_count':
+                        event_count += values
                 total_values[category] = total_category_values
 
+            total_values = dict(sorted(total_values.items(), key=lambda item: int(item[0])))
             timestamps, values = list(total_values.keys()), list(total_values.values())
             avg_user_count = statistics.mean(values)
             unique_user_count = len(total_unique_users)
