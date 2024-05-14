@@ -318,6 +318,62 @@ class misc(commands.Cog):
             queue_users[str(datetime.utcnow().date())].update({'today_event_count' : 1})
         await self.client.db.participants.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue_users' : queue_users}})
 
+
+    auctioneer_group = app_commands.Group(name='auc', description='command group for auctioneers')
+
+    @auctioneer_group.command(name='info')
+    @app_commands.checks.has_any_role(750117211087044679,1051128651929882695)
+    async def auc_info(self, interaction: discord.Interaction, user : discord.Member = None):
+        await interaction.response.defer(ephemeral=True)
+
+        if user is None:
+            user = interaction.user
+        
+        data = await utils(self.client).get_auc_stats(guild = interaction.guild, user=user )
+
+        embed = discord.Embed(title= f'{user.display_name} - {user.id}', color = discord.Color.from_str('0x2F3136'))
+        embed.add_field(name='Today Logs', value= data['today'], inline=False)
+        embed.add_field(name='Weekly Logs', value= data['weekly'], inline=False)
+        embed.add_field(name='Total Logs', value= data['total'], inline=False)
+        embed.set_footer(text=datetime.utcnow())
+
+        await interaction.followup.send(embed=embed, ephemeral=True)
+
+    
+
+    
+    @auctioneer_group.command(name='lb')
+    @app_commands.checks.has_any_role(750117211087044679,1051128651929882695)
+    async def auc_lb(self, interaction : discord.Interaction, scope: str):
+        await interaction.response.defer()
+
+        auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
+
+        embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.title()}]')
+
+        curr_rank = next((rank + 1 for rank, (user_id, _) in enumerate(auctioneers.items()) if user_id == str(interaction.user.id)), None)
+
+        curr_activity = auctioneers[str(interaction.user.id)]
+
+
+        for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
+
+            if rank == 16:
+                break
+
+            user = interaction.guild.get_member(int(user_id))
+            
+            embed.add_field(
+                name=f"#{rank} {user.display_name}",
+                value=f"Auctions: `{activity}`",
+                inline=False
+            )
+
+        embed.add_field(name=f'Your rank : #{curr_rank}', value=f'Auctions: `{curr_activity}`')
+
+
+        await interaction.followup.send(embed=embed)
+
     
 
 async def setup(client):

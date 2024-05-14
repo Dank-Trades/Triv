@@ -280,12 +280,14 @@ class utils(commands.Cog):
         
         elif scope == 'everyday':
 
+            total_unique_users = []
             key_sums = {}
-            unique_user_count = 0
             for category in user_count.values():
                 for key, value in category.items():
                     if key == 'unique_users':
-                        unique_user_count += len(value)
+                        for user in value:
+                            if user not in total_unique_users:
+                                total_unique_users.append(user)
                         continue
                     elif key == 'today_event_count' :
                         event_count += value
@@ -293,6 +295,7 @@ class utils(commands.Cog):
                     else :
                         key_sums[key] = key_sums.get(key, 0) + len(value)
 
+            unique_user_count = len(total_unique_users)
             key_sums = dict(sorted(key_sums.items(), key=lambda item: int(item[0])))
             timestamps, values = list(key_sums.keys()), list(key_sums.values())
             avg_user_count = statistics.mean(values)
@@ -339,6 +342,111 @@ class utils(commands.Cog):
 
 
         return {'file' : file, 'avg_user_count' : round(avg_user_count), 'unique_user_count' : unique_user_count, 'event_count' : event_count}
+    
+    
+    
+
+    async def update_auc_stats(self, guild, user):
+        auctioneer_stats = await self.client.db.auctioneer_stats.find_one({'guild_id' : guild.id})
+        if not auctioneer_stats:
+            await self.client.db.auctioneer_stats.insert_one({'guild_id' : guild.id, 'auc_stats' : {}})
+            auctioneer_stats = await self.client.db.auctioneer_stats.find_one({'guild_id' : guild.id})
+        
+        auc_stats = auctioneer_stats['auc_stats']
+        try :
+            auctioneer = auc_stats[str(user.id)]
+        except KeyError:
+            auc_stats.update({str(user.id) : {
+                'today' : 0,
+                'weekly' : 0,
+                'past_weekly' : 0, 
+                'total' : 0,
+                'date' : str(dt.datetime.utcnow().date()),
+                'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday()))
+            }})
+            auctioneer = auc_stats[str(user.id)]
+
+        if auctioneer['week'] != str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())):
+
+            for auc in auc_stats.values():
+                if auc['week'] != str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())):
+                    auc.update({'past_weekly' : auctioneer['weekly']})
+                    auc.update({'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())), 'weekly' : 0})
+                    auc.update({'date' : str(dt.datetime.utcnow().date()), 'today' : 0})
+
+
+        
+        if auctioneer['date'] != str(dt.datetime.utcnow().date()):
+            for auc in auc_stats.values():
+                if auc['date'] != str(dt.datetime.utcnow().date()):
+                    auc.update({'date' : str(dt.datetime.utcnow().date()), 'today' : 0})
+        
+        auctioneer = auc_stats[str(user.id)]
+
+        
+        auctioneer['today'] += 1
+        auctioneer['weekly'] += 1
+        auctioneer['total'] += 1
+
+        auc_stats[str(user.id)] = auctioneer
+
+        await self.client.db.auctioneer_stats.update_one({'guild_id' : guild.id}, {'$set' : {'auc_stats' : auc_stats}})
+
+
+
+    async def get_auc_stats(self, guild, user):
+        auctioneer_stats = await self.client.db.auctioneer_stats.find_one({'guild_id' : guild.id})
+        if not auctioneer_stats:
+            await self.client.db.auctioneer_stats.insert_one({'guild_id' : guild.id, 'auc_stats' : {}})
+            auctioneer_stats = await self.client.db.auctioneer_stats.find_one({'guild_id' : guild.id})
+        
+        auc_stats = auctioneer_stats['auc_stats']
+        try :
+            auctioneer = auc_stats[str(user.id)]
+        except KeyError:
+            auc_stats.update({str(user.id) : {
+                'today' : 0,
+                'weekly' : 0,
+                'past_weekly' : 0, 
+                'total' : 0,
+                'date' : str(dt.datetime.utcnow().date()),
+                'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday()))
+            }})
+            auctioneer = auc_stats[str(user.id)]
+            
+            if auctioneer['week'] != str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())):
+                for auc in auc_stats.values():
+                    if auc['week'] != str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())):
+                        auc.update({'past_weekly' : auctioneer['weekly']})
+                        auc.update({'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())), 'weekly' : 0})
+                        auc.update({'date' : str(dt.datetime.utcnow().date()), 'today' : 0})
+
+            if auctioneer['date'] != str(dt.datetime.utcnow().date()):
+                for auc in auc_stats.values():
+                    if auc['date'] != str(dt.datetime.utcnow().date()):
+                        auc.update({'date' : str(dt.datetime.utcnow().date()), 'today' : 0})
+
+            auctioneer = auc_stats[str(user.id)]
+
+        return {'today' : auctioneer['today'], 'weekly' : auctioneer['weekly'], 'total' : auctioneer['total'], 'past_weekly' : auctioneer['past_weekly']}
+    
+
+
+    async def get_leaderboard(self, guild, scope : str):
+        
+        auctioneer_stats = await self.client.db.auctioneer_stats.find_one({'guild_id' : guild.id})
+        if not auctioneer_stats:
+            await self.client.db.auctioneer_stats.insert_one({'guild_id' : guild.id, 'auc_stats' : {}})
+            auctioneer_stats = await self.client.db.auctioneer_stats.find_one({'guild_id' : guild.id})
+        
+        auc_stats = auctioneer_stats['auc_stats']
+        activity = {user_id: stats[scope] for user_id, stats in auc_stats.items()}
+        sorted_users = dict(sorted(activity.items(), key=lambda x: x[1], reverse=True))
+
+        return sorted_users
+    
+
+
 
     async def get_auction_channel(self, arg):
         doc = await self.client.db.guild_config.find_one({"guild_id": arg.guild.id})

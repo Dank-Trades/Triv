@@ -36,6 +36,7 @@ class Triv(commands.Bot):
         self.db.auc_count = self.db['auc_count']
         self.db.item_tracker = self.db['item_tracker']
         self.db.participants = self.db['participants']
+        self.db.auctioneer_stats = self.db['auctioneer_stats']
 
         self.owner_id = 692994778136313896
         
