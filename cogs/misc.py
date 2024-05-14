@@ -391,7 +391,9 @@ class misc(commands.Cog):
 
         embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.upper()}]')
 
-        auctioneer_ids = [user_id.id for user_id in interaction.guild.members if user_id.has_role(750117211087044679)]
+        role = await utils(self.client).get_auctioneer_role(arg=interaction)
+
+        auctioneer_ids = [user_id.id for user_id in interaction.guild.members if role in user_id.roles]
 
         for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
 
