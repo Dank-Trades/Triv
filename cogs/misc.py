@@ -374,6 +374,50 @@ class misc(commands.Cog):
 
         await interaction.followup.send(embed=embed)
 
+    @auc_lb.autocomplete('scope')
+    async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
+
+        options = ['Today', 'Weekly', 'Total']
+
+        return [app_commands.Choice(name=suggestion, value=suggestion.lower()) for suggestion in options if current.lower() in suggestion.lower()]
+
+    @app_commands.command(name='wlb')
+    @app_commands.checks.has_any_role(1228100188204437596)
+    async def weekly_lb(self, interaction : discord.Interaction, scope : str):
+
+        await interaction.response.defer(ephemeral=True)
+
+        auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
+
+        embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.upper()}]')
+
+        auctioneer_ids = [user_id.id for user_id in interaction.guild.members if user_id.has_role(750117211087044679)]
+
+        for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
+
+            if user_id not in auctioneer_ids:
+
+                continue
+
+            else :
+                
+                user = interaction.guild.get_member(int(user_id))
+            
+                embed.add_field(
+                    name=f"#{rank} {user.display_name}",
+                    value=f"Auctions: `{activity}`",
+                    inline=False
+                )
+
+        await interaction.followup.send(embed=embed, ephemeral=True)
+
+
+    @weekly_lb.autocomplete('scope')
+    async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
+
+        options = ['weekly', 'past_weekly']
+
+        return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in options if current.lower() in suggestion.lower()]
     
 
 async def setup(client):
