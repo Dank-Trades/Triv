@@ -351,9 +351,9 @@ class misc(commands.Cog):
 
         embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.title()}]')
 
-        curr_rank = next((rank + 1 for rank, (user_id, _) in enumerate(auctioneers.items()) if user_id == str(interaction.user.id)), None)
+        curr_rank = next((rank + 1 for rank, (user_id, _) in enumerate(auctioneers.items()) if user_id == str(interaction.user.id)), "Unranked")
 
-        curr_activity = auctioneers[str(interaction.user.id)]
+        curr_activity = auctioneers.get(str(interaction.user.id), 0)
 
 
         for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
