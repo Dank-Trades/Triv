@@ -397,7 +397,7 @@ class misc(commands.Cog):
 
         for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
 
-            if user_id not in auctioneer_ids:
+            if int(user_id) not in auctioneer_ids:
 
                 continue
 
