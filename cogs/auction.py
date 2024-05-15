@@ -763,6 +763,12 @@ class auction(commands.Cog):
 
             user_queue = next((item for item in guild_queue['queue'] if item['host'] == msg.author.id), None)
 
+            for react in replied_to_message.reactions:
+                if react.emoji == '✅':
+                    if user_queue is None:
+                        await msg.add_reaction('❌')
+                        return await self.utils.send_error_message(msg, 'This auction has requested hosted already!')
+
             if auctioneer_role not in msg.author.roles:
                 await self.utils.update_user_count(guild=msg.guild, user=msg.author, target='queue_users')
 
@@ -813,6 +819,7 @@ class auction(commands.Cog):
                 return await msg.add_reaction('❌')
 
             await msg.add_reaction('✅')
+            await replied_to_message.add_reaction('✅')
             await self.client.db.auction_queue.update_one({'guild_id' : msg.guild.id}, {'$push' : {'queue' : {'message_id' : replied_to_message.id, 'host' : msg.author.id, 'item' : item_name, 'item_amount' : amount, 'starting_price' : bid_amount, 'msg_id' : msg.id}}}, upsert = True)
 
             return await msg.reply(f'Your starting bid for {amount} {item_name} is {format(bid_amount, ",")}.', mention_author = True)
@@ -844,10 +851,16 @@ class auction(commands.Cog):
 
             user_queue = next((item for item in guild_queue['queue'] if item['host'] == message_after.author.id), None)
 
+            for react in replied_to_message.reactions:
+                if react.emoji == '✅':
+                    if user_queue is None:
+                        await message_after.add_reaction('❌')
+                        return await self.utils.send_error_message(message_after, 'This auction has been requested already!')
+
             for react in message_after.reactions:
                 if react.emoji == '✅':
                     if user_queue is None:
-                        return await self.utils.send_error_message(message_after, 'This auction has been hosted already!')
+                        return await self.utils.send_error_message(message_after, 'This auction has been requested already!')
             
             await message_after.clear_reactions()
             
