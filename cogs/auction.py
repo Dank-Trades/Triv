@@ -580,7 +580,7 @@ class auction(commands.Cog):
     @insert_queue.autocomplete('items')
     async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
         
-        items = pd.read_csv('auctions.json')
+        items = pd.read_json('auctions.json')
 
         item_list = [item for item in items['name']]
 
@@ -1007,7 +1007,7 @@ class auction(commands.Cog):
             await self.client.db.item_tracker.insert_one({'guild_id' : interaction.guild.id, item : []})
             guild_items = await self.client.db.item_tracker.find_one({'guild_id' : interaction.guild.id})
 
-        items = pd.read_csv('auctions.json')
+        items = pd.read_json('auctions.json')
         item_list = [item for item in items['name']]
 
         if item not in item_list or toggle not in ['Enable', 'Disable']:
@@ -1045,7 +1045,7 @@ class auction(commands.Cog):
 
     @tracker.autocomplete('item')
     async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
-        items = pd.read_csv('auctions.csv')
+        items = pd.read_json('auctions.json')
 
         item_list = [item for item in items['name']]
 
