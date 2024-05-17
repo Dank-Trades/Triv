@@ -73,7 +73,7 @@ class utils(commands.Cog):
         return numeric_value
     
     def check_start_price(self, item: str, item_amount: int, price: int):
-        data = pd.read_csv('auctions.csv')
+        data = pd.read_json('auctions.csv')
         matching_items = data.loc[data['name'].str.lower().str.strip().str.match('^' + re.escape(item.strip().lower()) + '$'), 'price']
         
         if matching_items.empty:

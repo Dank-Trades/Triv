@@ -1,0 +1,1332 @@
+[
+  {
+    "name": "A Plus",
+    "price": 5400000,
+    "multiplier": 1
+  },
+  {
+    "name": "Adventure Compass",
+    "price": 2100000,
+    "multiplier": 1
+  },
+  {
+    "name": "Adventure Ticket",
+    "price": 120000,
+    "multiplier": 5
+  },
+  {
+    "name": "Adventure Voucher",
+    "price": 1500000,
+    "multiplier": 1
+  },
+  {
+    "name": "Aetheryx' Flower",
+    "price": 3000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Aha's Pitcher Plant",
+    "price": 5400000,
+    "multiplier": 1
+  },
+  {
+    "name": "Aiphey's Gemstone",
+    "price": 4200000,
+    "multiplier": 1
+  },
+  {
+    "name": "Alcohol",
+    "price": 100000,
+    "multiplier": 5
+  },
+  {
+    "name": "Alien Sample",
+    "price": 900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Ammo",
+    "price": 1800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Ant",
+    "price": 30000,
+    "multiplier": 17
+  },
+  {
+    "name": "Anti-Rob Pack",
+    "price": 600000,
+    "multiplier": 1
+  },
+  {
+    "name": "Apple",
+    "price": 10000,
+    "multiplier": 50
+  },
+  {
+    "name": "Apron",
+    "price": 7000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Armpit Hair",
+    "price": 1800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Baby",
+    "price": 2400000,
+    "multiplier": 1
+  },
+  {
+    "name": "Badosz's Card",
+    "price": 8000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Bait Box",
+    "price": 8800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Ban Hammer",
+    "price": 1000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Bank Note",
+    "price": 150000,
+    "multiplier": 4
+  },
+  {
+    "name": "Barrel of Sludge",
+    "price": 800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Beaker of sus fluid",
+    "price": 5000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Bean",
+    "price": 90000,
+    "multiplier": 6
+  },
+  {
+    "name": "Bean Mp3 Player",
+    "price": 36000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Bean Seeds",
+    "price": 270000,
+    "multiplier": 2
+  },
+  {
+    "name": "Berries and Cream",
+    "price": 6000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Binary",
+    "price": 5500000,
+    "multiplier": 1
+  },
+  {
+    "name": "Birthday Cake",
+    "price": 700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Black Hole",
+    "price": 390000,
+    "multiplier": 2
+  },
+  {
+    "name": "Blob",
+    "price": "INQUIRE",
+    "multiplier": 0
+  },
+  {
+    "name": "Blue Plastic Bits",
+    "price": 50000,
+    "multiplier": 10
+  },
+  {
+    "name": "Blue's Plane",
+    "price": 8000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Boar",
+    "price": 30000,
+    "multiplier": 17
+  },
+  {
+    "name": "Bolt Cutters",
+    "price": 40000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Bottle of Whiskey",
+    "price": 1800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Box Box",
+    "price": 13000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Box of Sand",
+    "price": 40000,
+    "multiplier": 13
+  },
+  {
+    "name": "Boxed Chocolates",
+    "price": 32000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Broccoli",
+    "price": 190000,
+    "multiplier": 3
+  },
+  {
+    "name": "Broccoli Seeds",
+    "price": 130000,
+    "multiplier": 4
+  },
+  {
+    "name": "Bundle Box",
+    "price": 58000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Cactus",
+    "price": 300000,
+    "multiplier": 2
+  },
+  {
+    "name": "Caipirinha",
+    "price": 15000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Camera",
+    "price": 3700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Candy",
+    "price": 240000,
+    "multiplier": 3
+  },
+  {
+    "name": "Candy Cane",
+    "price": 240000,
+    "multiplier": 3
+  },
+  {
+    "name": "Candy Corn",
+    "price": 1900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Carrot",
+    "price": 110000,
+    "multiplier": 5
+  },
+  {
+    "name": "Carrot Seeds",
+    "price": 60000,
+    "multiplier": 9
+  },
+  {
+    "name": "Cell Phone",
+    "price": "UNAVAILABLE",
+    "multiplier": 0
+  },
+  {
+    "name": "Chads's Weights",
+    "price": 6000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Chet's USB",
+    "price": 7000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Chill Pill",
+    "price": 900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Chocolate Cake",
+    "price": 5500000,
+    "multiplier": 1
+  },
+  {
+    "name": "Christmas Gift",
+    "price": 2700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Christmas Tree",
+    "price": 240000,
+    "multiplier": 3
+  },
+  {
+    "name": "Coin Bomb",
+    "price": 800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Coin Voucher",
+    "price": 6000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Cookie",
+    "price": 90000,
+    "multiplier": 6
+  },
+  {
+    "name": "Corn Seeds",
+    "price": 60000,
+    "multiplier": 9
+  },
+  {
+    "name": "Corncob",
+    "price": 70000,
+    "multiplier": 8
+  },
+  {
+    "name": "Corndog",
+    "price": 70000,
+    "multiplier": 8
+  },
+  {
+    "name": "Cowboy Boots",
+    "price": 8200000,
+    "multiplier": 1
+  },
+  {
+    "name": "Cowboy Hat",
+    "price": 900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Credit Card",
+    "price": 43000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Crunchy Taco",
+    "price": 16000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Cupid's Big Toe",
+    "price": 1100000,
+    "multiplier": 1
+  },
+  {
+    "name": "Cursed Pepe",
+    "price": 54000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Daily Box",
+    "price": 1000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Dank Box",
+    "price": 3900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Dank Memer's Hard Drive",
+    "price": "UNAVAILABLE",
+    "multiplier": 0
+  },
+  {
+    "name": "Deer",
+    "price": 120000,
+    "multiplier": 5
+  },
+  {
+    "name": "Designer Hoodie",
+    "price": 5400000,
+    "multiplier": 1
+  },
+  {
+    "name": "Developer Box",
+    "price": 15000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Diamond",
+    "price": 1400000,
+    "multiplier": 1
+  },
+  {
+    "name": "Digging Trophy",
+    "price": "INQUIRE",
+    "multiplier": 0
+  },
+  {
+    "name": "Dragon",
+    "price": 390000,
+    "multiplier": 2
+  },
+  {
+    "name": "Duck",
+    "price": 20000,
+    "multiplier": 25
+  },
+  {
+    "name": "Duct Tape",
+    "price": 300000,
+    "multiplier": 2
+  },
+  {
+    "name": "Ectoplasm",
+    "price": 10000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Electrifying Zing",
+    "price": 15000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Elf On The Shelf",
+    "price": 1100000,
+    "multiplier": 1
+  },
+  {
+    "name": "Empowered Fart Bottle",
+    "price": 34000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Enchanted Badosz's Card",
+    "price": "INQUIRE",
+    "multiplier": 0
+  },
+  {
+    "name": "Energy Drink",
+    "price": 7000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Engagement Ring",
+    "price": 2100000,
+    "multiplier": 1
+  },
+  {
+    "name": "Exclusive Gems Box",
+    "price": 54000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Fake ID",
+    "price": 40000,
+    "multiplier": 13
+  },
+  {
+    "name": "Fart In A Bottle",
+    "price": 7600000,
+    "multiplier": 1
+  },
+  {
+    "name": "Fertilizer Bag",
+    "price": 120000,
+    "multiplier": 5
+  },
+  {
+    "name": "Fidget Spinner",
+    "price": 280000,
+    "multiplier": 2
+  },
+  {
+    "name": "Fierce Fang Fare",
+    "price": 8800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Figure's Watch",
+    "price": 11000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Fishing Trophy",
+    "price": 11000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Fool's Notif",
+    "price": 1300000,
+    "multiplier": 1
+  },
+  {
+    "name": "Fossil",
+    "price": 150000,
+    "multiplier": 4
+  },
+  {
+    "name": "Freemium Ad",
+    "price": 700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Fresh Bread",
+    "price": 380000,
+    "multiplier": 2
+  },
+  {
+    "name": "Friend's Gift",
+    "price": 4800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Garbage",
+    "price": 60000,
+    "multiplier": 9
+  },
+  {
+    "name": "Gift Box",
+    "price": 13000000,
+    "multiplier": 1
+  },
+  {
+    "name": "God Box",
+    "price": 20000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Golden Coins",
+    "price": 600000,
+    "multiplier": 1
+  },
+  {
+    "name": "Golden Corndog",
+    "price": 810000,
+    "multiplier": 1
+  },
+  {
+    "name": "Golden Nugget",
+    "price": 340000,
+    "multiplier": 2
+  },
+  {
+    "name": "Golden Plastic Bits",
+    "price": 700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Grass",
+    "price": 14000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Gravestone",
+    "price": 240000,
+    "multiplier": 3
+  },
+  {
+    "name": "Green Screen",
+    "price": 4500000,
+    "multiplier": 1
+  },
+  {
+    "name": "Grind Pack",
+    "price": 1000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Grub Pail",
+    "price": 7000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Headphones",
+    "price": 18000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Hoe",
+    "price": 30000,
+    "multiplier": 17
+  },
+  {
+    "name": "Holiday Stocking",
+    "price": 8000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Holy Badosz's Bread",
+    "price": 45000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Holy Water",
+    "price": 50000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Hunting Rifle",
+    "price": 10000,
+    "multiplier": 50
+  },
+  {
+    "name": "Hunting Trophy",
+    "price": "INQUIRE",
+    "multiplier": 0
+  },
+  {
+    "name": "Inflated Delicacy",
+    "price": 33000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Jacky o' Lanty",
+    "price": 6000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Jar Of Singularity",
+    "price": 1600000,
+    "multiplier": 1
+  },
+  {
+    "name": "Joke Book",
+    "price": 23000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Junk",
+    "price": 120000,
+    "multiplier": 5
+  },
+  {
+    "name": "Kable's Sunglasses",
+    "price": 10000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Keyboard",
+    "price": 40000,
+    "multiplier": 13
+  },
+  {
+    "name": "Ladybug",
+    "price": 250000,
+    "multiplier": 2
+  },
+  {
+    "name": "Landmine",
+    "price": 260000,
+    "multiplier": 2
+  },
+  {
+    "name": "Laptop",
+    "price": 130000,
+    "multiplier": 4
+  },
+  {
+    "name": "Lasso",
+    "price": 300000,
+    "multiplier": 2
+  },
+  {
+    "name": "Law Degree",
+    "price": 7000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Life Saver",
+    "price": 120000,
+    "multiplier": 5
+  },
+  {
+    "name": "Like Button",
+    "price": 1400000,
+    "multiplier": 1
+  },
+  {
+    "name": "Literally Karen",
+    "price": 14000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Literally a Tree",
+    "price": 4800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Lotus Flower",
+    "price": 3000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Lotus Seeds",
+    "price": 5000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Lucky Horseshoe",
+    "price": 300000,
+    "multiplier": 2
+  },
+  {
+    "name": "Margaux's Doll",
+    "price": 7000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Melmsie's Banana",
+    "price": "INQUIRE",
+    "multiplier": 0
+  },
+  {
+    "name": "Melmsie's Beard",
+    "price": 16000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Membership Box",
+    "price": 32000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Membership Pack",
+    "price": 8000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Meme Box",
+    "price": 1100000,
+    "multiplier": 1
+  },
+  {
+    "name": "Meme pills",
+    "price": 1200000,
+    "multiplier": 1
+  },
+  {
+    "name": "Menorah",
+    "price": 3900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Meridian's Croc",
+    "price": 11000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Message In a Bottle",
+    "price": 5400000,
+    "multiplier": 1
+  },
+  {
+    "name": "Metal Pipe",
+    "price": 1300000,
+    "multiplier": 1
+  },
+  {
+    "name": "Meteorite",
+    "price": 1100000,
+    "multiplier": 1
+  },
+  {
+    "name": "Microphone",
+    "price": 3400000,
+    "multiplier": 1
+  },
+  {
+    "name": "Mistletoe",
+    "price": 2000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Mole Man",
+    "price": 250000,
+    "multiplier": 2
+  },
+  {
+    "name": "Motivational Poster",
+    "price": 14000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Mouse",
+    "price": 50000,
+    "multiplier": 10
+  },
+  {
+    "name": "Multi Colored Plastic Bits",
+    "price": 200000,
+    "multiplier": 3
+  },
+  {
+    "name": "Musical Note",
+    "price": 6000000,
+    "multiplier": 1
+  },
+  {
+    "name": "New Player Pack",
+    "price": 600000,
+    "multiplier": 1
+  },
+  {
+    "name": "New Years Popper",
+    "price": 60000,
+    "multiplier": 9
+  },
+  {
+    "name": "Normie Box",
+    "price": 1000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Odd Eye",
+    "price": 56000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Old Box",
+    "price": 9000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Old Cowboy Revolver",
+    "price": 1300000,
+    "multiplier": 1
+  },
+  {
+    "name": "Old Shell",
+    "price": 210000,
+    "multiplier": 3
+  },
+  {
+    "name": "Orange Plastic Bits",
+    "price": 140000,
+    "multiplier": 4
+  },
+  {
+    "name": "Ornament",
+    "price": 600000,
+    "multiplier": 1
+  },
+  {
+    "name": "Out West Adventure Box",
+    "price": 1800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Padlock",
+    "price": 10000,
+    "multiplier": 50
+  },
+  {
+    "name": "Pepe Box",
+    "price": 7700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Pepe Coin",
+    "price": 900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Pepe Crown",
+    "price": 28000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Pepe Medal",
+    "price": 3100000,
+    "multiplier": 1
+  },
+  {
+    "name": "Pepe Ribbon",
+    "price": "INQUIRE",
+    "multiplier": 0
+  },
+  {
+    "name": "Pepe Ring",
+    "price": 16000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Pepe Statue",
+    "price": 90000,
+    "multiplier": 6
+  },
+  {
+    "name": "Pepe Sus",
+    "price": "INQUIRE",
+    "multiplier": 0
+  },
+  {
+    "name": "Pepe Trophy",
+    "price": 9000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Pet Collar",
+    "price": 10000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Pet Feces",
+    "price": 80000,
+    "multiplier": 7
+  },
+  {
+    "name": "Pet Feeder",
+    "price": 47000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Pet Food",
+    "price": 160000,
+    "multiplier": 4
+  },
+  {
+    "name": "Pet Saddle",
+    "price": 300000,
+    "multiplier": 2
+  },
+  {
+    "name": "Pink Rubber Ducky",
+    "price": "INQUIRE",
+    "multiplier": 0
+  },
+  {
+    "name": "Pink Sludge Monster",
+    "price": 570000,
+    "multiplier": 1
+  },
+  {
+    "name": "Pirate Hat",
+    "price": 2900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Pizza Slice",
+    "price": 510000,
+    "multiplier": 1
+  },
+  {
+    "name": "Plastic Bag",
+    "price": 1700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Plastic Box",
+    "price": 6800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Police Badge",
+    "price": 1800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Postcard",
+    "price": 1300000,
+    "multiplier": 1
+  },
+  {
+    "name": "Potato",
+    "price": 40000,
+    "multiplier": 13
+  },
+  {
+    "name": "Potato Seeds",
+    "price": 40000,
+    "multiplier": 13
+  },
+  {
+    "name": "Prestige Coin",
+    "price": 1800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Prestige Pack",
+    "price": 7000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Prismatic Delight",
+    "price": 45000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Purple Plastic Bits",
+    "price": 250000,
+    "multiplier": 2
+  },
+  {
+    "name": "Puzzle Key",
+    "price": "INQUIRE",
+    "multiplier": 0
+  },
+  {
+    "name": "Rabbit",
+    "price": 10000,
+    "multiplier": 50
+  },
+  {
+    "name": "Rare Butterfly",
+    "price": 10000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Rare Pepe",
+    "price": 30000,
+    "multiplier": 17
+  },
+  {
+    "name": "Reversal Card",
+    "price": 26000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Ring Light",
+    "price": 9000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Robbers Mask",
+    "price": 6600000,
+    "multiplier": 1
+  },
+  {
+    "name": "Robbers Wishlist",
+    "price": 250000,
+    "multiplier": 2
+  },
+  {
+    "name": "Royal Scepter",
+    "price": 5100000,
+    "multiplier": 1
+  },
+  {
+    "name": "Rusty Machine",
+    "price": 47000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Samuel's Book",
+    "price": 7000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Sanic Hot Dog",
+    "price": 700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Santa's Bag",
+    "price": 8200000,
+    "multiplier": 1
+  },
+  {
+    "name": "Santa's Hat",
+    "price": 470000,
+    "multiplier": 2
+  },
+  {
+    "name": "School Urinal",
+    "price": 6000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Seaweed",
+    "price": 570000,
+    "multiplier": 1
+  },
+  {
+    "name": "Shooting Star",
+    "price": 3700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Shop Coupon",
+    "price": 1600000,
+    "multiplier": 1
+  },
+  {
+    "name": "Shovel",
+    "price": 10000,
+    "multiplier": 50
+  },
+  {
+    "name": "Shredded Cheese",
+    "price": 360000,
+    "multiplier": 2
+  },
+  {
+    "name": "Skunk",
+    "price": 10000,
+    "multiplier": 50
+  },
+  {
+    "name": "Snowball",
+    "price": 700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Snowflake",
+    "price": 240000,
+    "multiplier": 3
+  },
+  {
+    "name": "Soggy Boots",
+    "price": 510000,
+    "multiplier": 1
+  },
+  {
+    "name": "Soggy Plant Clump",
+    "price": 180000,
+    "multiplier": 3
+  },
+  {
+    "name": "Sound Card",
+    "price": 33000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Space Adventure Box",
+    "price": 1900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Spider",
+    "price": 170000,
+    "multiplier": 3
+  },
+  {
+    "name": "Spooky Mask",
+    "price": 14000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Squishy Paw",
+    "price": 4200000,
+    "multiplier": 1
+  },
+  {
+    "name": "Stack of Cash",
+    "price": 2300000,
+    "multiplier": 1
+  },
+  {
+    "name": "Star Fragment",
+    "price": 2200000,
+    "multiplier": 1
+  },
+  {
+    "name": "Stickbug",
+    "price": 30000,
+    "multiplier": 17
+  },
+  {
+    "name": "Stolen Amulet",
+    "price": 4100000,
+    "multiplier": 1
+  },
+  {
+    "name": "Stonk Coin",
+    "price": 66000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Stonk Machine",
+    "price": 13000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Strawberry Shake",
+    "price": 5900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Streak Freeze",
+    "price": 2300000,
+    "multiplier": 1
+  },
+  {
+    "name": "Sugar Skull",
+    "price": 20000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Sunbear's D20",
+    "price": 77000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Sunken Treasure",
+    "price": 1900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Tentacled Temptation",
+    "price": 20000000,
+    "multiplier": 1
+  },
+  {
+    "name": "The Letter",
+    "price": 16000000,
+    "multiplier": 1
+  },
+  {
+    "name": "The Megaphone",
+    "price": 15000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Thrym's Leash",
+    "price": "UNAVAILABLE",
+    "multiplier": 0
+  },
+  {
+    "name": "Tidepod",
+    "price": 150000,
+    "multiplier": 4
+  },
+  {
+    "name": "Tip Jar",
+    "price": 7700000,
+    "multiplier": 1
+  },
+  {
+    "name": "Toilet Paper",
+    "price": 5900000,
+    "multiplier": 1
+  },
+  {
+    "name": "Tool Box",
+    "price": 7000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Townie's Eyes",
+    "price": 14000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Trash",
+    "price": 4800000,
+    "multiplier": 1
+  },
+  {
+    "name": "Treasure Map",
+    "price": 2000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Tumbleweed",
+    "price": 300000,
+    "multiplier": 2
+  },
+  {
+    "name": "Universe Box",
+    "price": "INQUIRE",
+    "multiplier": 0
+  },
+  {
+    "name": "Used Diaper",
+    "price": 2600000,
+    "multiplier": 1
+  },
+  {
+    "name": "Vaccine",
+    "price": 8000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Voodoo Doll",
+    "price": 19000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Vote Pack",
+    "price": 720000,
+    "multiplier": 1
+  },
+  {
+    "name": "Water Bucket",
+    "price": 60000,
+    "multiplier": 9
+  },
+  {
+    "name": "Watering Can",
+    "price": 50000,
+    "multiplier": 10
+  },
+  {
+    "name": "Waterlogged Log",
+    "price": 370000,
+    "multiplier": 2
+  },
+  {
+    "name": "Watermelon",
+    "price": 360000,
+    "multiplier": 2
+  },
+  {
+    "name": "Watermelon Seeds",
+    "price": 320000,
+    "multiplier": 2
+  },
+  {
+    "name": "Wedding Gift",
+    "price": 7000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Weet's Donut",
+    "price": 6000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Winning Lottery Ticket",
+    "price": 22000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Work Box",
+    "price": 7200000,
+    "multiplier": 1
+  },
+  {
+    "name": "Worm",
+    "price": 10000,
+    "multiplier": 50
+  },
+  {
+    "name": "Zara's Pirate Sword",
+    "price": 16000000,
+    "multiplier": 1
+  },
+  {
+    "name": "Zig's Capybara",
+    "price": 300000,
+    "multiplier": 2
+  },
+  {
+    "name": "ZomB's ZomBee",
+    "price": 7000000,
+    "multiplier": 1
+  }
+]
