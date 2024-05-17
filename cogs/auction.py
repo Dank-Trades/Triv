@@ -580,7 +580,7 @@ class auction(commands.Cog):
     @insert_queue.autocomplete('items')
     async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
         
-        items = pd.read_csv('auctions.csv')
+        items = pd.read_csv('auctions.json')
 
         item_list = [item for item in items['name']]
 
