@@ -104,6 +104,7 @@ class auc_buttons(discord.ui.View):
     def __init__(self, author, client):
         self.author = author
         self.client = client
+        self.timeout = None
         super().__init__()
         self.value = None
     
