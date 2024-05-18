@@ -1,0 +1,1327 @@
+[
+  {
+    "name": "A Plus",
+    "category": "Epic Sellable",
+    "value": 9000000
+  },
+  {
+    "name": "Adventure Compass",
+    "category": "Epic Power-up",
+    "value": 3500000
+  },
+  {
+    "name": "Adventure Ticket",
+    "category": "Common Tool",
+    "value": 200000
+  },
+  {
+    "name": "Adventure Voucher",
+    "category": "Rare Collectable",
+    "value": 2450000
+  },
+  {
+    "name": "Aetheryx' Flower",
+    "category": "Rare Collectable",
+    "value": 5000000
+  },
+  {
+    "name": "Aha's Pitcher Plant",
+    "category": "Godly Collectable",
+    "value": 9000000
+  },
+  {
+    "name": "Aiphey's Gemstone",
+    "category": "Rare Collectable",
+    "value": 6970000
+  },
+  {
+    "name": "Alcohol",
+    "category": "Common Power-up",
+    "value": 175000
+  },
+  {
+    "name": "Alien Sample",
+    "category": "Uncommon Collectable",
+    "value": 1525000
+  },
+  {
+    "name": "Ammo",
+    "category": "Rare Power-up",
+    "value": 3000000
+  },
+  {
+    "name": "Ant",
+    "category": "Common Sellable",
+    "value": 54000
+  },
+  {
+    "name": "Anti-Rob Pack",
+    "category": "Rare Pack",
+    "value": 1000000
+  },
+  {
+    "name": "Apple",
+    "category": "Common Power-up",
+    "value": 19000
+  },
+  {
+    "name": "Apron",
+    "category": "Rare Collectable",
+    "value": 13595000
+  },
+  {
+    "name": "Armpit Hair",
+    "category": "Rare Collectable",
+    "value": 3000000
+  },
+  {
+    "name": "Baby",
+    "category": "Uncommon Collectable",
+    "value": 4000000
+  },
+  {
+    "name": "Badosz's Card",
+    "category": "Rare Collectable",
+    "value": 14000000
+  },
+  {
+    "name": "Bait Box",
+    "category": "Godly Loot Box",
+    "value": 16000000
+  },
+  {
+    "name": "Ban Hammer",
+    "category": "Uncommon Sellable",
+    "value": 1600000
+  },
+  {
+    "name": "Bank Note",
+    "category": "Common Power-up",
+    "value": 250000
+  },
+  {
+    "name": "Barrel of Sludge",
+    "category": "Rare Collectable",
+    "value": 1320000
+  },
+  {
+    "name": "Beaker of sus fluid",
+    "category": "Rare Sellable",
+    "value": 8266000
+  },
+  {
+    "name": "Bean",
+    "category": "Uncommon Sellable",
+    "value": 150000
+  },
+  {
+    "name": "Bean Mp3 Player",
+    "category": "Legendary Collectable",
+    "value": 79767000
+  },
+  {
+    "name": "Bean Seeds",
+    "category": "Uncommon Tool",
+    "value": 450000
+  },
+  {
+    "name": "Berries and Cream",
+    "category": "Rare Collectable",
+    "value": 10100000
+  },
+  {
+    "name": "Binary",
+    "category": "Rare Collectable",
+    "value": 10000000
+  },
+  {
+    "name": "Birthday Cake",
+    "category": "Epic Collectable",
+    "value": 1172017
+  },
+  {
+    "name": "Black Hole",
+    "category": "Uncommon Collectable",
+    "value": 650000
+  },
+  {
+    "name": "Blob",
+    "category": "Godly Collectable",
+    "value": 5000000000
+  },
+  {
+    "name": "Blue Plastic Bits",
+    "category": "Common Collectable",
+    "value": 84000
+  },
+  {
+    "name": "Blue's Plane",
+    "category": "Rare Collectable",
+    "value": 14495000
+  },
+  {
+    "name": "Boar",
+    "category": "Common Sellable",
+    "value": 44000
+  },
+  {
+    "name": "Bolt Cutters",
+    "category": "Epic Collectable",
+    "value": 88500000
+  },
+  {
+    "name": "Bottle of Whiskey",
+    "category": "Rare Power-up",
+    "value": 3000000
+  },
+  {
+    "name": "Box Box",
+    "category": "Legendary Loot Box",
+    "value": 24382000
+  },
+  {
+    "name": "Box of Sand",
+    "category": "Common Tool",
+    "value": 63000
+  },
+  {
+    "name": "Boxed Chocolates",
+    "category": "Epic Consumable",
+    "value": 65000000
+  },
+  {
+    "name": "Broccoli",
+    "category": "Rare Sellable",
+    "value": 320000
+  },
+  {
+    "name": "Broccoli Seeds",
+    "category": "Rare Tool",
+    "value": 224000
+  },
+  {
+    "name": "Bundle Box",
+    "category": "Godly Loot Box",
+    "value": 144925000
+  },
+  {
+    "name": "Cactus",
+    "category": "Rare Collectable",
+    "value": 500000
+  },
+  {
+    "name": "Caipirinha",
+    "category": "Epic Power-up",
+    "value": 30000000
+  },
+  {
+    "name": "Camera",
+    "category": "Rare Tool",
+    "value": 6200000
+  },
+  {
+    "name": "Candy",
+    "category": "Common Power-up",
+    "value": 400000
+  },
+  {
+    "name": "Candy Cane",
+    "category": "Uncommon Tool",
+    "value": 400000
+  },
+  {
+    "name": "Candy Corn",
+    "category": "Uncommon Power-up",
+    "value": 3200000
+  },
+  {
+    "name": "Carrot",
+    "category": "Uncommon Sellable",
+    "value": 180000
+  },
+  {
+    "name": "Carrot Seeds",
+    "category": "Uncommon Tool",
+    "value": 100000
+  },
+  {
+    "name": "Cell Phone",
+    "category": "Common Tool",
+    "value": 2222
+  },
+  {
+    "name": "Chads's Weights",
+    "category": "Godly Collectable",
+    "value": 10000000
+  },
+  {
+    "name": "Chet's USB",
+    "category": "Godly Collectable",
+    "value": 12000000
+  },
+  {
+    "name": "Chill Pill",
+    "category": "Common Collectable",
+    "value": 1500000
+  },
+  {
+    "name": "Chocolate Cake",
+    "category": "Epic Collectable",
+    "value": 9100000
+  },
+  {
+    "name": "Christmas Gift",
+    "category": "Rare Pack",
+    "value": 4500000
+  },
+  {
+    "name": "Christmas Tree",
+    "category": "Rare Collectable",
+    "value": 404000
+  },
+  {
+    "name": "Coin Bomb",
+    "category": "Common Tool",
+    "value": 1300000
+  },
+  {
+    "name": "Coin Voucher",
+    "category": "Rare Consumable",
+    "value": 11300000
+  },
+  {
+    "name": "Cookie",
+    "category": "Common Sellable",
+    "value": 150000
+  },
+  {
+    "name": "Corn Seeds",
+    "category": "Uncommon Tool",
+    "value": 100000
+  },
+  {
+    "name": "Corncob",
+    "category": "Uncommon Sellable",
+    "value": 120000
+  },
+  {
+    "name": "Corndog",
+    "category": "Rare Sellable",
+    "value": 124000
+  },
+  {
+    "name": "Cowboy Boots",
+    "category": "Rare Collectable",
+    "value": 15000000
+  },
+  {
+    "name": "Cowboy Hat",
+    "category": "Rare Collectable",
+    "value": 1500000
+  },
+  {
+    "name": "Credit Card",
+    "category": "Epic Power-up",
+    "value": 95000000
+  },
+  {
+    "name": "Crunchy Taco",
+    "category": "Rare Power-up",
+    "value": 28500000
+  },
+  {
+    "name": "Cupid's Big Toe",
+    "category": "Common Power-up",
+    "value": 1800000
+  },
+  {
+    "name": "Cursed Pepe",
+    "category": "Epic Collectable",
+    "value": 135000000
+  },
+  {
+    "name": "Daily Box",
+    "category": "Common Loot Box",
+    "value": 1750000
+  },
+  {
+    "name": "Dank Box",
+    "category": "Uncommon Loot Box",
+    "value": 6430000
+  },
+  {
+    "name": "Dank Memer's Hard Drive",
+    "category": "Godly Collectable",
+    "value": 1
+  },
+  {
+    "name": "Deer",
+    "category": "Common Sellable",
+    "value": 196000
+  },
+  {
+    "name": "Designer Hoodie",
+    "category": "Epic Collectable",
+    "value": 9000000
+  },
+  {
+    "name": "Developer Box",
+    "category": "Epic Loot Box",
+    "value": 28000000
+  },
+  {
+    "name": "Diamond",
+    "category": "Epic Sellable",
+    "value": 2300000
+  },
+  {
+    "name": "Digging Trophy",
+    "category": "Godly Collectable",
+    "value": 325000000
+  },
+  {
+    "name": "Dragon",
+    "category": "Uncommon Sellable",
+    "value": 650000
+  },
+  {
+    "name": "Duck",
+    "category": "Common Sellable",
+    "value": 40000
+  },
+  {
+    "name": "Duct Tape",
+    "category": "Uncommon Tool",
+    "value": 498000
+  },
+  {
+    "name": "Ectoplasm",
+    "category": "Rare Sellable",
+    "value": 18500000
+  },
+  {
+    "name": "Electrifying Zing",
+    "category": "Godly Power-up",
+    "value": 30000000
+  },
+  {
+    "name": "Elf On The Shelf",
+    "category": "Rare Power-up",
+    "value": 1800000
+  },
+  {
+    "name": "Empowered Fart Bottle",
+    "category": "Legendary Tool",
+    "value": 67250000
+  },
+  {
+    "name": "Enchanted Badosz's Card",
+    "category": "Epic Collectable",
+    "value": 495000000
+  },
+  {
+    "name": "Energy Drink",
+    "category": "Rare Power-up",
+    "value": 13000000
+  },
+  {
+    "name": "Engagement Ring",
+    "category": "Uncommon Collectable",
+    "value": 3573000
+  },
+  {
+    "name": "Exclusive Gems Box",
+    "category": "Godly Loot Box",
+    "value": 135000000
+  },
+  {
+    "name": "Fake ID",
+    "category": "Common Tool",
+    "value": 65000
+  },
+  {
+    "name": "Fart In A Bottle",
+    "category": "Rare Consumable",
+    "value": 13800000
+  },
+  {
+    "name": "Fertilizer Bag",
+    "category": "Uncommon Tool",
+    "value": 199000
+  },
+  {
+    "name": "Fidget Spinner",
+    "category": "Common Collectable",
+    "value": 469000
+  },
+  {
+    "name": "Fierce Fang Fare",
+    "category": "Godly Power-up",
+    "value": 16000000
+  },
+  {
+    "name": "Figure's Watch",
+    "category": "Godly Collectable",
+    "value": 20000000
+  },
+  {
+    "name": "Fishing Trophy",
+    "category": "Godly Collectable",
+    "value": 20000000
+  },
+  {
+    "name": "Fool's Notif",
+    "category": "Uncommon Collectable",
+    "value": 2200000
+  },
+  {
+    "name": "Fossil",
+    "category": "Rare Sellable",
+    "value": 245000
+  },
+  {
+    "name": "Freemium Ad",
+    "category": "Godly Collectable",
+    "value": 1240000
+  },
+  {
+    "name": "Fresh Bread",
+    "category": "Common Sellable",
+    "value": 625000
+  },
+  {
+    "name": "Friend's Gift",
+    "category": "Uncommon Collectable",
+    "value": 8000000
+  },
+  {
+    "name": "Garbage",
+    "category": "Common Sellable",
+    "value": 100000
+  },
+  {
+    "name": "Gift Box",
+    "category": "Rare Collectable",
+    "value": 23250000
+  },
+  {
+    "name": "God Box",
+    "category": "Rare Loot Box",
+    "value": 39347000
+  },
+  {
+    "name": "Golden Coins",
+    "category": "Legendary Collectable",
+    "value": 1000000
+  },
+  {
+    "name": "Golden Corndog",
+    "category": "Rare Collectable",
+    "value": 1345000
+  },
+  {
+    "name": "Golden Nugget",
+    "category": "Rare Sellable",
+    "value": 575000
+  },
+  {
+    "name": "Golden Plastic Bits",
+    "category": "Uncommon Collectable",
+    "value": 1200000
+  },
+  {
+    "name": "Grass",
+    "category": "Godly Collectable",
+    "value": 26000000
+  },
+  {
+    "name": "Gravestone",
+    "category": "Uncommon Collectable",
+    "value": 400000
+  },
+  {
+    "name": "Green Screen",
+    "category": "Rare Tool",
+    "value": 7500000
+  },
+  {
+    "name": "Grind Pack",
+    "category": "Rare Pack",
+    "value": 1700000
+  },
+  {
+    "name": "Grub Pail",
+    "category": "Godly Power-up",
+    "value": 13000000
+  },
+  {
+    "name": "Headphones",
+    "category": "Rare Tool",
+    "value": 35000000
+  },
+  {
+    "name": "Hoe",
+    "category": "Uncommon Tool",
+    "value": 45000
+  },
+  {
+    "name": "Holiday Stocking",
+    "category": "Epic Collectable",
+    "value": 14250000
+  },
+  {
+    "name": "Holy Badosz's Bread",
+    "category": "Godly Collectable",
+    "value": 100000000
+  },
+  {
+    "name": "Holy Water",
+    "category": "Godly Collectable",
+    "value": 125000000
+  },
+  {
+    "name": "Hunting Rifle",
+    "category": "Common Tool",
+    "value": 24000
+  },
+  {
+    "name": "Hunting Trophy",
+    "category": "Godly Collectable",
+    "value": 230000000
+  },
+  {
+    "name": "Inflated Delicacy",
+    "category": "Godly Power-up",
+    "value": 73000000
+  },
+  {
+    "name": "Jacky o' Lanty",
+    "category": "Rare Collectable",
+    "value": 10662000
+  },
+  {
+    "name": "Jar Of Singularity",
+    "category": "Uncommon Collectable",
+    "value": 2675000
+  },
+  {
+    "name": "Joke Book",
+    "category": "Godly Power-up",
+    "value": 45710000
+  },
+  {
+    "name": "Junk",
+    "category": "Common Sellable",
+    "value": 200000
+  },
+  {
+    "name": "Kable's Sunglasses",
+    "category": "Epic Collectable",
+    "value": 18000000
+  },
+  {
+    "name": "Keyboard",
+    "category": "Uncommon Tool",
+    "value": 75000
+  },
+  {
+    "name": "Ladybug",
+    "category": "Common Sellable",
+    "value": 415000
+  },
+  {
+    "name": "Landmine",
+    "category": "Common Tool",
+    "value": 430000
+  },
+  {
+    "name": "Laptop",
+    "category": "Common Collectable",
+    "value": 210000
+  },
+  {
+    "name": "Lasso",
+    "category": "Rare Sellable",
+    "value": 499000
+  },
+  {
+    "name": "Law Degree",
+    "category": "Epic Sellable",
+    "value": 11904000
+  },
+  {
+    "name": "Life Saver",
+    "category": "Common Power-up",
+    "value": 200000
+  },
+  {
+    "name": "Like Button",
+    "category": "Rare Collectable",
+    "value": 2350000
+  },
+  {
+    "name": "Literally Karen",
+    "category": "Legendary Collectable",
+    "value": 25000000
+  },
+  {
+    "name": "Literally a Tree",
+    "category": "Rare Sellable",
+    "value": 8000000
+  },
+  {
+    "name": "Lotus Flower",
+    "category": "Legendary Sellable",
+    "value": 5000000
+  },
+  {
+    "name": "Lotus Seeds",
+    "category": "Legendary Tool",
+    "value": 8350000
+  },
+  {
+    "name": "Lucky Horseshoe",
+    "category": "Common Power-up",
+    "value": 500000
+  },
+  {
+    "name": "Margaux's Doll",
+    "category": "Godly Collectable",
+    "value": 13000000
+  },
+  {
+    "name": "Melmsie's Banana",
+    "category": "Godly Collectable",
+    "value": 23000000000
+  },
+  {
+    "name": "Melmsie's Beard",
+    "category": "Rare Collectable",
+    "value": 32300000
+  },
+  {
+    "name": "Membership Box",
+    "category": "Epic Loot Box",
+    "value": 70000000
+  },
+  {
+    "name": "Membership Pack",
+    "category": "Epic Pack",
+    "value": 14000000
+  },
+  {
+    "name": "Meme Box",
+    "category": "Common Loot Box",
+    "value": 1900000
+  },
+  {
+    "name": "Meme pills",
+    "category": "Epic Sellable",
+    "value": 2000000
+  },
+  {
+    "name": "Menorah",
+    "category": "Rare Collectable",
+    "value": 6500000
+  },
+  {
+    "name": "Meridian's Croc",
+    "category": "Godly Collectable",
+    "value": 20000000
+  },
+  {
+    "name": "Message In a Bottle",
+    "category": "Godly Sellable",
+    "value": 9000000
+  },
+  {
+    "name": "Metal Pipe",
+    "category": "Godly Collectable",
+    "value": 2180000
+  },
+  {
+    "name": "Meteorite",
+    "category": "Rare Sellable",
+    "value": 1785000
+  },
+  {
+    "name": "Microphone",
+    "category": "Rare Tool",
+    "value": 5650000
+  },
+  {
+    "name": "Mistletoe",
+    "category": "Godly Consumable",
+    "value": 3250000
+  },
+  {
+    "name": "Mole Man",
+    "category": "Rare Sellable",
+    "value": 410000
+  },
+  {
+    "name": "Motivational Poster",
+    "category": "Rare Power-up",
+    "value": 25000000
+  },
+  {
+    "name": "Mouse",
+    "category": "Uncommon Tool",
+    "value": 80000
+  },
+  {
+    "name": "Multi Colored Plastic Bits",
+    "category": "Rare Collectable",
+    "value": 331000
+  },
+  {
+    "name": "Musical Note",
+    "category": "Rare Sellable",
+    "value": 10000000
+  },
+  {
+    "name": "New Player Pack",
+    "category": "Common Pack",
+    "value": 1000000
+  },
+  {
+    "name": "New Years Popper",
+    "category": "Common Collectable",
+    "value": 99000
+  },
+  {
+    "name": "Normie Box",
+    "category": "Common Loot Box",
+    "value": 1654000
+  },
+  {
+    "name": "Odd Eye",
+    "category": "Godly Collectable",
+    "value": 140859000
+  },
+  {
+    "name": "Old Box",
+    "category": "Epic Loot Box",
+    "value": 16800000
+  },
+  {
+    "name": "Old Cowboy Revolver",
+    "category": "Rare Collectable",
+    "value": 2100000
+  },
+  {
+    "name": "Old Shell",
+    "category": "Godly Sellable",
+    "value": 342000
+  },
+  {
+    "name": "Orange Plastic Bits",
+    "category": "Common Collectable",
+    "value": 239000
+  },
+  {
+    "name": "Ornament",
+    "category": "Uncommon Collectable",
+    "value": 1000000
+  },
+  {
+    "name": "Out West Adventure Box",
+    "category": "Epic Loot Box",
+    "value": 3000000
+  },
+  {
+    "name": "Padlock",
+    "category": "Common Tool",
+    "value": 20000
+  },
+  {
+    "name": "Pepe Box",
+    "category": "Epic Loot Box",
+    "value": 14000000
+  },
+  {
+    "name": "Pepe Coin",
+    "category": "Uncommon Collectable",
+    "value": 1500000
+  },
+  {
+    "name": "Pepe Crown",
+    "category": "Epic Collectable",
+    "value": 55000000
+  },
+  {
+    "name": "Pepe Medal",
+    "category": "Rare Collectable",
+    "value": 5200000
+  },
+  {
+    "name": "Pepe Ribbon",
+    "category": "Epic Collectable",
+    "value": 800000000
+  },
+  {
+    "name": "Pepe Ring",
+    "category": "Epic Collectable",
+    "value": 29250000
+  },
+  {
+    "name": "Pepe Statue",
+    "category": "Uncommon Collectable",
+    "value": 144000
+  },
+  {
+    "name": "Pepe Sus",
+    "category": "Epic Collectable",
+    "value": 775000000
+  },
+  {
+    "name": "Pepe Trophy",
+    "category": "Uncommon Collectable",
+    "value": 16375000
+  },
+  {
+    "name": "Pet Collar",
+    "category": "Rare Power-up",
+    "value": 18000000
+  },
+  {
+    "name": "Pet Feces",
+    "category": "Uncommon Collectable",
+    "value": 132000
+  },
+  {
+    "name": "Pet Feeder",
+    "category": "Godly Power-up",
+    "value": 105000000
+  },
+  {
+    "name": "Pet Food",
+    "category": "Rare Tool",
+    "value": 270000
+  },
+  {
+    "name": "Pet Saddle",
+    "category": "Rare Collectable",
+    "value": 500000
+  },
+  {
+    "name": "Pink Rubber Ducky",
+    "category": "Godly Collectable",
+    "value": 5000000000
+  },
+  {
+    "name": "Pink Sludge Monster",
+    "category": "Godly Sellable",
+    "value": 944000
+  },
+  {
+    "name": "Pirate Hat",
+    "category": "Godly Collectable",
+    "value": 4871000
+  },
+  {
+    "name": "Pizza Slice",
+    "category": "Common Power-up",
+    "value": 850000
+  },
+  {
+    "name": "Plastic Bag",
+    "category": "Rare Sellable",
+    "value": 2800000
+  },
+  {
+    "name": "Plastic Box",
+    "category": "Epic Loot Box",
+    "value": 12300000
+  },
+  {
+    "name": "Police Badge",
+    "category": "Rare Collectable",
+    "value": 3000000
+  },
+  {
+    "name": "Postcard",
+    "category": "Epic Consumable",
+    "value": 2225000
+  },
+  {
+    "name": "Potato",
+    "category": "Common Sellable",
+    "value": 69000
+  },
+  {
+    "name": "Potato Seeds",
+    "category": "Uncommon Tool",
+    "value": 59000
+  },
+  {
+    "name": "Prestige Coin",
+    "category": "Rare Power-up",
+    "value": 3000000
+  },
+  {
+    "name": "Prestige Pack",
+    "category": "Epic Pack",
+    "value": 13000000
+  },
+  {
+    "name": "Prismatic Delight",
+    "category": "Godly Power-up",
+    "value": 101000000
+  },
+  {
+    "name": "Purple Plastic Bits",
+    "category": "Common Collectable",
+    "value": 420000
+  },
+  {
+    "name": "Puzzle Key",
+    "category": "Godly Collectable",
+    "value": 5000000000
+  },
+  {
+    "name": "Rabbit",
+    "category": "Common Sellable",
+    "value": 15000
+  },
+  {
+    "name": "Rare Butterfly",
+    "category": "Legendary Collectable",
+    "value": 19000000
+  },
+  {
+    "name": "Rare Pepe",
+    "category": "Common Collectable",
+    "value": 55000
+  },
+  {
+    "name": "Reversal Card",
+    "category": "Uncommon Collectable",
+    "value": 51500000
+  },
+  {
+    "name": "Ring Light",
+    "category": "Rare Tool",
+    "value": 17000000
+  },
+  {
+    "name": "Robbers Mask",
+    "category": "Rare Power-up",
+    "value": 12000000
+  },
+  {
+    "name": "Robbers Wishlist",
+    "category": "Common Tool",
+    "value": 415000
+  },
+  {
+    "name": "Royal Scepter",
+    "category": "Epic Collectable",
+    "value": 8500000
+  },
+  {
+    "name": "Rusty Machine",
+    "category": "Legendary Tool",
+    "value": 105000000
+  },
+  {
+    "name": "Samuel's Book",
+    "category": "Godly Collectable",
+    "value": 12848000
+  },
+  {
+    "name": "Sanic Hot Dog",
+    "category": "Uncommon Collectable",
+    "value": 1200000
+  },
+  {
+    "name": "Santa's Bag",
+    "category": "Rare Loot Box",
+    "value": 15000000
+  },
+  {
+    "name": "Santa's Hat",
+    "category": "Common Collectable",
+    "value": 786000
+  },
+  {
+    "name": "School Urinal",
+    "category": "Rare Collectable",
+    "value": 11000000
+  },
+  {
+    "name": "Seaweed",
+    "category": "Common Sellable",
+    "value": 945000
+  },
+  {
+    "name": "Shooting Star",
+    "category": "Rare Collectable",
+    "value": 6100000
+  },
+  {
+    "name": "Shop Coupon",
+    "category": "Rare Power-up",
+    "value": 2700000
+  },
+  {
+    "name": "Shovel",
+    "category": "Common Tool",
+    "value": 19000
+  },
+  {
+    "name": "Shredded Cheese",
+    "category": "Common Power-up",
+    "value": 601000
+  },
+  {
+    "name": "Skunk",
+    "category": "Common Sellable",
+    "value": 20000
+  },
+  {
+    "name": "Snowball",
+    "category": "Common Tool",
+    "value": 1200000
+  },
+  {
+    "name": "Snowflake",
+    "category": "Common Collectable",
+    "value": 400000
+  },
+  {
+    "name": "Soggy Boots",
+    "category": "Godly Sellable",
+    "value": 850000
+  },
+  {
+    "name": "Soggy Plant Clump",
+    "category": "Godly Sellable",
+    "value": 293000
+  },
+  {
+    "name": "Sound Card",
+    "category": "Epic Tool",
+    "value": 65724000
+  },
+  {
+    "name": "Space Adventure Box",
+    "category": "Rare Loot Box",
+    "value": 3200000
+  },
+  {
+    "name": "Spider",
+    "category": "Uncommon Sellable",
+    "value": 278000
+  },
+  {
+    "name": "Spooky Mask",
+    "category": "Rare Power-up",
+    "value": 26000000
+  },
+  {
+    "name": "Squishy Paw",
+    "category": "Epic Collectable",
+    "value": 7000000
+  },
+  {
+    "name": "Stack of Cash",
+    "category": "Rare Collectable",
+    "value": 3864000
+  },
+  {
+    "name": "Star Fragment",
+    "category": "Rare Sellable",
+    "value": 3700000
+  },
+  {
+    "name": "Stickbug",
+    "category": "Common Sellable",
+    "value": 56000
+  },
+  {
+    "name": "Stolen Amulet",
+    "category": "Epic Power-up",
+    "value": 6800000
+  },
+  {
+    "name": "Stonk Coin",
+    "category": "Godly Collectable",
+    "value": 165000000
+  },
+  {
+    "name": "Stonk Machine",
+    "category": "Epic Tool",
+    "value": 23186000
+  },
+  {
+    "name": "Strawberry Shake",
+    "category": "Epic Sellable",
+    "value": 9800000
+  },
+  {
+    "name": "Streak Freeze",
+    "category": "Rare Power-up",
+    "value": 3800000
+  },
+  {
+    "name": "Sugar Skull",
+    "category": "Rare Consumable",
+    "value": 40000000
+  },
+  {
+    "name": "Sunbear's D20",
+    "category": "Godly Collectable",
+    "value": 191301000
+  },
+  {
+    "name": "Sunken Treasure",
+    "category": "Godly Sellable",
+    "value": 3100000
+  },
+  {
+    "name": "Tentacled Temptation",
+    "category": "Godly Power-up",
+    "value": 40995000
+  },
+  {
+    "name": "The Letter",
+    "category": "Epic Collectable",
+    "value": 31000000
+  },
+  {
+    "name": "The Megaphone",
+    "category": "Epic Collectable",
+    "value": 27000000
+  },
+  {
+    "name": "Thrym's Leash",
+    "category": "Godly Collectable",
+    "value": 1
+  },
+  {
+    "name": "Tidepod",
+    "category": "Common Collectable",
+    "value": 248000
+  },
+  {
+    "name": "Tip Jar",
+    "category": "Rare Tool",
+    "value": 14000000
+  },
+  {
+    "name": "Toilet Paper",
+    "category": "Epic Collectable",
+    "value": 9905000
+  },
+  {
+    "name": "Tool Box",
+    "category": "Godly Loot Box",
+    "value": 12500000
+  },
+  {
+    "name": "Townie's Eyes",
+    "category": "Epic Collectable",
+    "value": 25000000
+  },
+  {
+    "name": "Trash",
+    "category": "Uncommon Sellable",
+    "value": 8000000
+  },
+  {
+    "name": "Treasure Map",
+    "category": "Rare Collectable",
+    "value": 3300000
+  },
+  {
+    "name": "Tumbleweed",
+    "category": "Rare Collectable",
+    "value": 500000
+  },
+  {
+    "name": "Universe Box",
+    "category": "Godly Loot Box",
+    "value": 1100000000
+  },
+  {
+    "name": "Used Diaper",
+    "category": "Uncommon Tool",
+    "value": 4363000
+  },
+  {
+    "name": "Vaccine",
+    "category": "Epic Sellable",
+    "value": 15000000
+  },
+  {
+    "name": "Voodoo Doll",
+    "category": "Epic Tool",
+    "value": 37500000
+  },
+  {
+    "name": "Vote Pack",
+    "category": "Uncommon Pack",
+    "value": 1202000
+  },
+  {
+    "name": "Water Bucket",
+    "category": "Uncommon Tool",
+    "value": 102000
+  },
+  {
+    "name": "Watering Can",
+    "category": "Uncommon Tool",
+    "value": 80000
+  },
+  {
+    "name": "Waterlogged Log",
+    "category": "Godly Sellable",
+    "value": 610000
+  },
+  {
+    "name": "Watermelon",
+    "category": "Uncommon Sellable",
+    "value": 600000
+  },
+  {
+    "name": "Watermelon Seeds",
+    "category": "Uncommon Tool",
+    "value": 525000
+  },
+  {
+    "name": "Wedding Gift",
+    "category": "Rare Loot Box",
+    "value": 12500000
+  },
+  {
+    "name": "Weet's Donut",
+    "category": "Legendary Collectable",
+    "value": 10000000
+  },
+  {
+    "name": "Winning Lottery Ticket",
+    "category": "Epic Collectable",
+    "value": 45000000
+  },
+  {
+    "name": "Work Box",
+    "category": "Epic Loot Box",
+    "value": 13000000
+  },
+  {
+    "name": "Worm",
+    "category": "Common Sellable",
+    "value": 15000
+  },
+  {
+    "name": "Zara's Pirate Sword",
+    "category": "Godly Collectable",
+    "value": 31000000
+  },
+  {
+    "name": "Zig's Capybara",
+    "category": "Uncommon Sellable",
+    "value": 500000
+  }
+]

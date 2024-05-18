@@ -109,7 +109,16 @@ class auc_buttons(discord.ui.View):
     
     async def disable_buttons(self):
         for child in self.children:
-            child.disabled = True
+            if child.label == 'Item Value':
+                continue
+            else:
+                child.disabled = True
+    
+    async def interaction_check(self, interaction: discord.Interaction):
+        if interaction.data['custom_id'] in ['start_button', 'cancel_button']:
+            return interaction.user.id == self.author.id
+        return True
+    
 
     @discord.ui.button(label='Start')
     async def auc_start(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -127,8 +136,7 @@ class auc_buttons(discord.ui.View):
         await interaction.channel.send('Auction has started! Run `t!bid <amount><unit>` to bid. E.g. `t!bid 700k` | `t!bid 6m`.')
         await interaction.channel.send('You can bid just by saying the amount, too! E.g. `3m` | `900k`')
         
-    async def interaction_check(self, interaction: discord.Interaction):
-        return interaction.user.id == self.author.id
+    
 
     @discord.ui.button(label='Cancel', style=discord.ButtonStyle.grey)
     async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -177,9 +185,20 @@ class auc_buttons(discord.ui.View):
 
         await interaction.followup.send('Auction cancelled!')
 
-    
-    async def interaction_check(self, interaction: discord.Interaction):
-        return interaction.user.id == self.author.id
+    @discord.ui.button(label='Item Value', custom_id='value_button')
+    async def value(self, interaction : discord.Interaction, button : discord.ui.Button):
+
+        await interaction.response.defer(ephemeral=True)
+
+        data = pd.read_json('items.json')
+        item = self.client.log['item']
+        item_value = data.loc[data['name'].str.lower().str.strip().str.match('^' + re.escape(item.strip().lower()) + '$'), 'value']
+        item_value = int(item_value.values[0])
+        multiplier = self.client.log['item_amount']
+
+        item_value = item_value * multiplier
+
+        await interaction.followup.send(f'**Item**: {item.title()}\n**Item Amount**: {multiplier}\n**Value**: {format(item_value, ",")}', ephemeral=True)
 
 class pagination_buttons(discord.ui.View):
     def __init__(self, client, author):
@@ -187,7 +206,41 @@ class pagination_buttons(discord.ui.View):
         self.client = client
         self.author = author
 
-    @discord.ui.button(label='', style= discord.ButtonStyle.grey, emoji='<:leftarr:1231673812953862316>')
+    async def interaction_check(self, interaction: discord.Interaction):
+        return interaction.user.id == self.author.id
+
+    @discord.ui.button(label='', style=discord.ButtonStyle.grey, emoji='<:doubleleft:875443385308151831>')
+    async def skip_start(self, interaction : discord.Interaction, button : discord.ui.Button):
+        await interaction.response.defer()
+
+        embed_footer = interaction.message.embeds[0].footer.text.split('/')
+        auctions_queue = await self.client.db.auction_queue.find_one({'guild_id' : interaction.guild.id})
+        auctions = auctions_queue['queue']
+
+        curr_page = int(embed_footer[0])
+
+        pages = int(embed_footer[1])
+
+        if curr_page == 1:
+            return
+        
+        embed = discord.Embed(title = 'Auction Queue', color = discord.Color.from_str('0x2F3136'))
+        
+        for i in range(0, 5):
+            try:
+                auction = auctions[i]
+            except IndexError:
+                break
+            item_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["message_id"]}'
+            price_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["msg_id"]}'
+            embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}\nLinks : [Items]({item_msg_link}) | [Price]({price_msg_link})', inline = False)
+        embed.set_footer(text = f'1/{pages}')
+        await interaction.edit_original_response(embed = embed, view=self)
+        
+
+        
+
+    @discord.ui.button(label='', style= discord.ButtonStyle.grey, emoji='<:left:875443450080817172>')
     async def previous_button(self, interaction : discord.Interaction, button : discord.ui.Button):
 
         await interaction.response.defer()
@@ -223,10 +276,9 @@ class pagination_buttons(discord.ui.View):
         embed.set_footer(text = f'{curr_page-1}/{pages}')
         await interaction.edit_original_response(embed = embed, view=self)
 
-    async def interaction_check(self, interaction: discord.Interaction):
-        return interaction.user.id == self.author.id
+    
 
-    @discord.ui.button(label='', style= discord.ButtonStyle.grey, emoji='<:rightarr:1231673861091758194>')
+    @discord.ui.button(label='', style= discord.ButtonStyle.grey, emoji='<:right:875443466644095036>')
     async def next_button(self, interaction : discord.Interaction, button : discord.ui.Button):
 
         await interaction.response.defer()
@@ -258,8 +310,37 @@ class pagination_buttons(discord.ui.View):
         embed.set_footer(text = f'{curr_page+1}/{pages}')
         await interaction.edit_original_response(embed = embed, view=self)
     
-    async def interaction_check(self, interaction: discord.Interaction):
-        return interaction.user.id == self.author.id
+
+    @discord.ui.button(label='', style=discord.ButtonStyle.grey, emoji='<:doubleright:875443494259421184>')
+    async def skip_end(self, interaction : discord.Interaction, button : discord.ui.Button):
+
+        await interaction.response.defer()
+
+        embed_footer = interaction.message.embeds[0].footer.text.split('/')
+        auctions_queue = await self.client.db.auction_queue.find_one({'guild_id' : interaction.guild.id})
+        auctions = auctions_queue['queue']
+
+        curr_page = int(embed_footer[0])
+        pages = int(embed_footer[1])
+
+        if curr_page == pages:
+            return
+        
+        start = (pages * 5) - 5
+        end = start + 5
+
+        embed = discord.Embed(title = 'Auction Queue', color = discord.Color.from_str('0x2F3136'))
+
+        for i in range(start, end):
+            try:
+                auction = auctions[i]
+            except IndexError:
+                break
+            item_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["message_id"]}'
+            price_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["msg_id"]}'
+            embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}\nLinks : [Items]({item_msg_link}) | [Price]({price_msg_link})', inline = False)
+        embed.set_footer(text = f'{curr_page+1}/{pages}')
+        await interaction.edit_original_response(embed = embed, view=self)
     
 class clear_confirm(discord.ui.View):
     def __init__(self, client, author):
@@ -1025,7 +1106,7 @@ class auction(commands.Cog):
             if interaction.user.id not in users:
                 users.append(interaction.user.id)
             else :
-                return await interaction.followup.send('You already enabled tracker for {item}.')
+                return await interaction.followup.send(f'You already enabled tracker for {item}.')
 
         elif toggle == 'Disable':
             if interaction.user.id in users:
