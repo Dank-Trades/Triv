@@ -121,7 +121,7 @@ class auc_buttons(discord.ui.View):
         return True
     
 
-    @discord.ui.button(label='Start')
+    @discord.ui.button(label='Start', custom_id='start_button')
     async def auc_start(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
         auction_cog = interaction.client.get_cog('loops')
@@ -139,7 +139,7 @@ class auc_buttons(discord.ui.View):
         
     
 
-    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.grey)
+    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.grey, custom_id='cancel_button')
     async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
 
