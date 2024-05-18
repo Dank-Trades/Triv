@@ -340,7 +340,7 @@ class pagination_buttons(discord.ui.View):
             item_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["message_id"]}'
             price_msg_link = f'https://discord.com/channels/719180744311701505/782483247619112991/{auction["msg_id"]}'
             embed.add_field(name = f'{auction["item_amount"]} {auction["item"]} (index: {i + 1})', value = f'host : <@{auction["host"]}>\nstarting bid : {format(auction["starting_price"], ",")}\nLinks : [Items]({item_msg_link}) | [Price]({price_msg_link})', inline = False)
-        embed.set_footer(text = f'{curr_page+1}/{pages}')
+        embed.set_footer(text = f'{pages}/{pages}')
         await interaction.edit_original_response(embed = embed, view=self)
     
 class clear_confirm(discord.ui.View):
