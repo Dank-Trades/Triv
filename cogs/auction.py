@@ -102,10 +102,10 @@ class log_button(discord.ui.View):
         
 class auc_buttons(discord.ui.View):
     def __init__(self, author, client):
+        super().__init__()
         self.author = author
         self.client = client
         self.timeout = None
-        super().__init__()
         self.value = None
     
     async def disable_buttons(self):
