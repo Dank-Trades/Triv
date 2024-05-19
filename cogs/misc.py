@@ -382,7 +382,7 @@ class misc(commands.Cog):
         return [app_commands.Choice(name=suggestion, value=suggestion.lower()) for suggestion in options if current.lower() in suggestion.lower()]
 
     @app_commands.command(name='wlb')
-    @app_commands.checks.has_any_role(1228100188204437596)
+    @app_commands.checks.has_any_role(1228100188204437596, 1241693662354870333)
     async def weekly_lb(self, interaction : discord.Interaction, scope : str):
 
         await interaction.response.defer(ephemeral=True)

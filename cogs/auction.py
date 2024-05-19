@@ -650,7 +650,7 @@ class auction(commands.Cog):
         await interaction.response.send_message('Are you sure you want to clear the auction queue?', view=clear_confirm(client=interaction.client, author=interaction.user))
 
     @queue_group.command(name='insert')
-    @app_commands.checks.has_any_role(750117211087044679,1051128651929882695)
+    @app_commands.checks.has_any_role(1241693662354870333, 1051128651929882695)
     async def insert_queue(self, interaction : discord.Interaction, seller : discord.Member, items : str, item_amount : int, starting_price : str ):
 
         starting_price = int(self.utils.process_shorthand(starting_price))
