@@ -203,7 +203,7 @@ class auc_buttons(discord.ui.View):
 
         item_value = item_value * multiplier
 
-        await interaction.followup.send(f'**Item**: {item_value.title()}\n**Item Amount**: {multiplier}\n**Value**: {format(item_value, ",")}', ephemeral=True)
+        await interaction.followup.send(f'**Item**: {item_name}\n**Item Amount**: {multiplier}\n**Value**: {format(item_value, ",")}', ephemeral=True)
 
 class pagination_buttons(discord.ui.View):
     def __init__(self, client, author):
