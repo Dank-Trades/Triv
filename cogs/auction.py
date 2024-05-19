@@ -191,15 +191,19 @@ class auc_buttons(discord.ui.View):
 
         await interaction.response.defer(ephemeral=True)
 
+        org_msg = await interaction.original_response()
+        title = org_msg.embeds[0].title.split(' ')
+        item_name = ' '.join(title[1:-1])
+
+
         data = pd.read_json('items.json')
-        item = self.client.log['item']
-        item_value = data.loc[data['name'].str.lower().str.strip().str.match('^' + re.escape(item.strip().lower()) + '$'), 'value']
+        item_value = data.loc[data['name'].str.lower().str.strip().str.match('^' + re.escape(item_name.strip().lower()) + '$'), 'value']
         item_value = int(item_value.values[0])
         multiplier = self.client.log['item_amount']
 
         item_value = item_value * multiplier
 
-        await interaction.followup.send(f'**Item**: {item.title()}\n**Item Amount**: {multiplier}\n**Value**: {format(item_value, ",")}', ephemeral=True)
+        await interaction.followup.send(f'**Item**: {item_value.title()}\n**Item Amount**: {multiplier}\n**Value**: {format(item_value, ",")}', ephemeral=True)
 
 class pagination_buttons(discord.ui.View):
     def __init__(self, client, author):
