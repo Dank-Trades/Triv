@@ -386,7 +386,7 @@ class clear_confirm(discord.ui.View):
 class auction(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.bot_admins = [692994778136313896, 983505180739907604, 729643700455604266]
+        self.client.bot_admins = [692994778136313896, 983505180739907604, 729643700455604266]
         self.client.last_bids  = {}
         self.client.bidders = {}
         self.client.start_price = {}
