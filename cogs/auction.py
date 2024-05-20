@@ -386,6 +386,7 @@ class clear_confirm(discord.ui.View):
 class auction(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.bot_admins = [692994778136313896, 983505180739907604, 729643700455604266]
         self.client.last_bids  = {}
         self.client.bidders = {}
         self.client.start_price = {}
@@ -400,6 +401,7 @@ class auction(commands.Cog):
                 'coins' : 0
         }
         self.utils = utils(self.client)
+        
     
 
     auc_group = Group(name = 'auction', description= 'just a group for auction subcommands')
@@ -674,6 +676,7 @@ class auction(commands.Cog):
             
 
     @commands.command(name='test')
+    @commands.has_any_role(1228100188204437596)
     async def test(self, ctx):
         embed = discord.Embed(title = 'Action Confirmed', description = 'Are you sure you want to donate your items?\n\n> You will donate **1x :banknote: Bank Note**', color = discord.Color.from_str('0x2F3136'))
         view = discord.ui.View()
@@ -682,6 +685,7 @@ class auction(commands.Cog):
         await ctx.send(embed=embed, view=view)
 
     @app_commands.command(name='test')
+    @app_commands.checks.has_any_role(1228100188204437596)
     async def test_command(self, interaction : discord.Interaction):
         embed = discord.Embed(title = 'Action Confirmed', description = 'Are you sure you want to donate your items?\n\n> You will donate **10x <:dank_banknote:831787534820442112> Bank Note**', color = discord.Color.from_str('0x2F3136'))
         view = discord.ui.View()

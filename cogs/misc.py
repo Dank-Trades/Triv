@@ -189,9 +189,13 @@ class misc(commands.Cog):
 
     
     @app_commands.command(name='update_values')
-    @app_commands.checks.has_any_role(719197064193638402, 1220040168992411820)
     async def update_values(self, interaction : discord.Interaction, file : discord.Attachment):
         await interaction.response.defer(ephemeral=True)
+
+        if interaction.user.id not in self.client.bot_admins:
+
+            return await interaction.followup.send('You do not have the permission to update user stats!', ephemeral=True)
+
         if not file.filename.endswith('.csv'):
             await interaction.followup.send('Please attach a `.csv` file.')
         else :
@@ -211,7 +215,8 @@ class misc(commands.Cog):
 
         table_list = ['auction_hosted', 'total_amount_bid', 'total_amount_sold', 'auction_won', 'auction_joined', 'total_auction_requested']
 
-        if interaction.user.id not in [729643700455604266, 692994778136313896]:
+        if interaction.user.id not in self.client.bot_admins:
+
             return await interaction.followup.send('You do not have the permission to update user stats!', ephemeral=True)
         
         if table not in table_list:
@@ -249,10 +254,13 @@ class misc(commands.Cog):
         await interaction.response.send_message(embed=embed, view=view)
 
     @app_commands.command(name='auc_count')
-    @app_commands.checks.has_role(1228100188204437596)
     async def auction_count(self, interaction : discord.Interaction):
 
         await interaction.response.defer(ephemeral=True)
+
+        if interaction.user.id not in self.client.bot_admins:
+            return
+        
         
         data = await utils(self.client).get_auc_count(guild = interaction.guild)
 
@@ -260,10 +268,12 @@ class misc(commands.Cog):
 
 
     @app_commands.command(name='get_metrics')
-    @app_commands.checks.has_any_role(1228100188204437596)
     async def get_metrics(self, interaction : discord.Interaction, target : str, scope :str = 'today'):
 
         await interaction.response.defer()
+
+        if interaction.user.id not in self.client.bot_admins:
+            return
 
         data = await utils(self.client).get_user_count(guild=interaction.guild, scope=scope, target=target)
 
@@ -382,7 +392,7 @@ class misc(commands.Cog):
         return [app_commands.Choice(name=suggestion, value=suggestion.lower()) for suggestion in options if current.lower() in suggestion.lower()]
 
     @app_commands.command(name='wlb')
-    @app_commands.checks.has_any_role(1228100188204437596, 1241693662354870333)
+    @app_commands.checks.has_any_role(1241693662354870333, 719197688238964768)
     async def weekly_lb(self, interaction : discord.Interaction, scope : str):
 
         await interaction.response.defer(ephemeral=True)
