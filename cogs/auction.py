@@ -198,9 +198,9 @@ class auc_buttons(discord.ui.View):
 
 
         data = pd.read_json('items.json')
-        item_value = data.loc[data['name'].str.lower().str.strip().str.match('^' + re.escape(item_name.strip().lower()) + '$'), 'value']
+        item_value = data.loc[data['name'].str.lower().str.strip().str.match('^' + re.escape(item_name.strip().lower()) + '$'), 'price']
         item_value = int(item_value.values[0])
-        multiplier = self.client.log['item_amount']
+        multiplier = item_amount
 
         item_value = item_value * multiplier
 
