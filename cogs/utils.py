@@ -370,7 +370,7 @@ class utils(commands.Cog):
 
             for auc in auc_stats.values():
                 if auc['week'] != str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())):
-                    auc.update({'past_weekly' : auctioneer['weekly']})
+                    auc.update({'past_weekly' : auc['weekly']})
                     auc.update({'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())), 'weekly' : 0})
                     auc.update({'date' : str(dt.datetime.utcnow().date()), 'today' : 0})
 
@@ -417,7 +417,7 @@ class utils(commands.Cog):
             if auctioneer['week'] != str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())):
                 for auc in auc_stats.values():
                     if auc['week'] != str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())):
-                        auc.update({'past_weekly' : auctioneer['weekly']})
+                        auc.update({'past_weekly' : auc['weekly']})
                         auc.update({'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())), 'weekly' : 0})
                         auc.update({'date' : str(dt.datetime.utcnow().date()), 'today' : 0})
 
