@@ -193,6 +193,7 @@ class auc_buttons(discord.ui.View):
 
         org_msg = await interaction.original_response()
         title = org_msg.embeds[0].title.split(' ')
+        item_amount = int([title[0]])
         item_name = ' '.join(title[1:-1])
 
 
