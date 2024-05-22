@@ -259,7 +259,10 @@ class utils(commands.Cog):
         timestamps = []
         values = []
         avg_user_count = 0
-        
+        unique_user_count = 0
+        total_event_count = 0
+        avg_event_count = 0
+
 
         if scope == 'today':
             curr_time = dt.datetime.utcnow()
@@ -323,6 +326,19 @@ class utils(commands.Cog):
             unique_user_count = len(total_unique_users)
 
 
+        elif scope == 'event_count':
+            event_count = 0
+            auc_count_everyday = {}
+            for category in user_count.values():
+                for key, value in category.items():
+                    if key == 'today_event_count':
+                        auc_count_everyday[category] = value
+                        event_count += value
+            timestamps, values = list(auc_count_everyday.key(), list(auc_count_everyday.values()))
+            avg_event_count = statistics.mean(values)
+
+
+
 
         plt.figure(figsize=(10, 6))
         plt.style.use('dark_background')
@@ -341,7 +357,12 @@ class utils(commands.Cog):
         file = discord.File(buffer, filename='plot.png')
 
 
-        return {'file' : file, 'avg_user_count' : round(avg_user_count), 'unique_user_count' : unique_user_count, 'event_count' : event_count}
+        return {'file' : file, 
+                'avg_user_count' : round(avg_user_count),
+                'unique_user_count' : unique_user_count, 
+                'event_count' : event_count, 
+                'average_event_count' : round(avg_event_count)
+                }
     
     
     

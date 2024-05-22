@@ -281,6 +281,16 @@ class misc(commands.Cog):
             embed = discord.Embed(title='Metrics for Auctions', color= discord.Color.from_str('0x2F3136'))
         elif target == 'queue_users':
             embed = discord.Embed(title='Metrics for Queues', color= discord.Color.from_str('0x2F3136'))
+
+        if scope == 'event_count':
+            embed.set_image(url = 'attachment://plot.png')
+            embed.add_field(name='Avg_User_Count', value=data['avg_user_count'])
+            embed.add_field(name=f'Total {target[:-6].title()} Count', value=data['event_count'])
+            embed.add_field(name='Current Time', value=str(datetime.utcnow())[0:-7])
+            embed.add_field(name='Scope', value=scope.title())
+
+            return await interaction.followup.send(file=data['file'], embed = embed)
+
         
         embed.set_image(url = 'attachment://plot.png')
         embed.add_field(name='Unique_Users', value=data['unique_user_count'])
