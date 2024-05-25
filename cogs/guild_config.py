@@ -12,6 +12,7 @@ class server_config(commands.Cog):
     set_group = Group(name= 'set', description= 'just a groupd for the set subcommands')
 
     @app_commands.command(name = 'setup', description= 'To set everything up for the server')
+    @app_commands.checks.has_any_role(719197688238964768, 809471606933291019)
     async def setup(self, interaction: discord.Interaction, auction_channel : discord.TextChannel, auctioneer_role : discord.Role, ping_role : discord.Role, auction_access_role: discord.Role, tradeout_role : discord.Role, tradeout_channel : discord.TextChannel, minimum_increment : float, auction_log_channel : discord.TextChannel):
         await interaction.response.defer()
         config = {
