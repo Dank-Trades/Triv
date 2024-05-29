@@ -329,12 +329,12 @@ class utils(commands.Cog):
         elif scope == 'event_count':
             event_count = 0
             auc_count_everyday = {}
-            for category in user_count.values():
-                for key, value in category.items():
+            for category, subcategories in user_count.items():
+                for key, value in subcategories.items():
                     if key == 'today_event_count':
                         auc_count_everyday[category] = value
                         event_count += value
-            timestamps, values = list(auc_count_everyday.key(), list(auc_count_everyday.values()))
+            timestamps, values = list(auc_count_everyday.keys()), list(auc_count_everyday.values())
             avg_event_count = statistics.mean(values)
 
 
