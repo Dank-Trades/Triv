@@ -332,6 +332,7 @@ class misc(commands.Cog):
 
 
     @commands.command(name='alock')
+    @commands.cooldown(rate=1, per=60, type=commands.BucketType.guild)
     @commands.has_any_role(750117211087044679,1051128651929882695)
     async def alock(self, ctx):
         queue_channel = self.client.get_channel(782483247619112991)
@@ -344,8 +345,14 @@ class misc(commands.Cog):
         await queue_channel.send('✅ Locked down 🍯┃・auction-queue\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
         await ctx.message.reply('Queue Locked.')
 
+    @alock.error
+    async def alock_error(self, ctx, error):
+        if isinstance(error , commands.CommandOnCooldown):
+            await ctx.send(f'This command is on cooldown. Please try again in {int(error.retry_after)} seconds.')
+
     
     @commands.command(name='aunlock')
+    @commands.cooldown(rate=1, per=60, type=commands.BucketType.guild)
     @commands.has_any_role(750117211087044679,1051128651929882695)
     async def aunlock(self, ctx):
         queue_channel = self.client.get_channel(782483247619112991)
@@ -369,8 +376,14 @@ class misc(commands.Cog):
             queue_users[str(datetime.utcnow().date())].update({'today_event_count' : 1})
         await self.client.db.participants.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue_users' : queue_users}})
 
+    @aunlock.error
+    async def aunlock_error(self, ctx, error):
+        if isinstance(error , commands.CommandOnCooldown):
+            await ctx.send(f'This command is on cooldown. Please try again in {int(error.retry_after)} seconds.')
+
     
     @commands.command(name= 'aqueue')
+    @commands.cooldown(rate=1, per=60, type=commands.BucketType.guild)
     @commands.has_any_role(750117211087044679)
     async def aqueue(self, ctx):
         ping_role = ctx.guild.get_role(887405786878324767)
@@ -378,6 +391,10 @@ class misc(commands.Cog):
             return await ctx.send('You can\'t use this command here.')
         await ctx.send(f'Are you sure you want to ping {ping_role.mention} in auction queue?', allowed_mentions = discord.AllowedMentions(roles=False), view=aqueue_buttons(client=self.client, author=ctx.author))
   
+    @aqueue.error
+    async def aqueue_error(self, ctx, error):
+        if isinstance(error , commands.CommandOnCooldown):
+            await ctx.send(f'This command is on cooldown. Please try again in {int(error.retry_after)} seconds.')
 
 
     auctioneer_group = app_commands.Group(name='auc', description='command group for auctioneers')
