@@ -25,6 +25,33 @@ class mark_log(discord.ui.View):
         self.value = None
         self.client = client
 
+class aqueue_buttons(discord.ui.View):
+    def __init__(self, client, author):
+        super().__init__()
+        self.client = client
+        self.author = author
+
+    async def disable_buttons(self):
+        for child in self.children:
+            child.disabled = True
+    
+    async def interaction_check(self, interaction: discord.Interaction):
+        return interaction.user.id == self.author.id
+    
+    @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+    async def confirm_button(self, interaction : discord.Interaction, button : discord.ui.Button):
+        queue = interaction.guild.get_channel(782483247619112991)
+        ping_role = interaction.guild.get_role(887405786878324767)
+        await self.disable_buttons()
+        await queue.send(F'{ping_role.mention}: Auction queue is unlocked! (Grab the ping role in <#730829517555236864>)', allowed_mentions=discord.AllowedMentions(roles=True))
+        await interaction.response.send_message('Done.')
+
+    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.grey)
+    async def cancel_button(self, interaction : discord.Interaction, button : discord.ui.Button):
+        await self.disable_buttons()
+        await interaction.response.send_message('Aborted.')
+
+
 class misc(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -440,6 +467,15 @@ class misc(commands.Cog):
         options = ['weekly', 'past_weekly']
 
         return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in options if current.lower() in suggestion.lower()]
+    
+
+    @commands.command(name= 'aqueue')
+    @commands.has_any_role(750117211087044679)
+    async def aqueue(self, ctx):
+        ping_role = ctx.guild.get_role(887405786878324767)
+        await ctx.send(f'Are you sure you want to ping {ping_role.mention} in auction queue?', allowed_mentions = discord.AllowedMentions(roles=False), view=aqueue_buttons(client=self.client, author=ctx.author))
+
+        
     
 
 async def setup(client):
