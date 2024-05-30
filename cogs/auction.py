@@ -657,14 +657,38 @@ class auction(commands.Cog):
         await interaction.response.send_message('Are you sure you want to clear the auction queue?', view=clear_confirm(client=interaction.client, author=interaction.user))
 
     @queue_group.command(name='insert')
-    @app_commands.checks.has_any_role(1241693662354870333, 1051128651929882695)
-    async def insert_queue(self, interaction : discord.Interaction, seller : discord.Member, items : str, item_amount : int, starting_price : str ):
+    @commands.has_any_role(1051128651929882695, 750117211087044679)
+    async def insert_queue(self, interaction : discord.Interaction, seller : discord.Member, items : str, item_amount : int, starting_price : str, msg_id : str ):
 
+        await interaction.response.defer()
+
+        queue_chan = interaction.guild.get_channel(782483247619112991) 
+        try :
+            msg = await queue_chan.fetch_message(int(msg_id))
+        except :
+            return await interaction.response.send('Invalid message ID.')
         starting_price = int(self.utils.process_shorthand(starting_price))
 
-        await self.client.db.auction_queue.update_one({'guild_id' : interaction.guild.id}, {'$push' : {'queue' : {'message_id' : None, 'host' : seller.id, 'item' : items, 'item_amount' : item_amount, 'starting_price' : starting_price, 'msg_id' : None}}}, upsert = True)
-        await interaction.response.send_message('✅')
+        for react in msg.reactions:
+            if react.emoji == '✅':
+                return await interaction.followup.send('This auction is hosted already.')
+            
+        try :
+            embed = msg.embeds[0]
+            if embed.title != 'Action Confirmed' or msg.interaction.name != 'serverevents donate' or msg.interaction.user.id != seller.id: 
+                return await interaction.followup.send('Incorrect message ID.')
+        except IndexError:
+            return await interaction.followup.send('Incorrect message ID.')
+        
+        check_amount, check_item = self.utils.extract_item_and_amount(embed.description)
 
+        if item_amount != check_amount or items != check_item:
+            return await interaction.followup.send('Incorrect item name or item amount.')
+
+
+        await self.client.db.auction_queue.update_one({'guild_id' : interaction.guild.id}, {'$push' : {'queue' : {'message_id' : msg.id, 'host' : seller.id, 'item' : items, 'item_amount' : item_amount, 'starting_price' : starting_price, 'msg_id' : None}}}, upsert = True)
+        await interaction.followup.send('✅')
+        await msg.add_reaction('✅')
     
     @insert_queue.autocomplete('items')
     async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
