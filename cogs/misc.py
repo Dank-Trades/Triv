@@ -372,7 +372,7 @@ class misc(commands.Cog):
     @commands.has_any_role(750117211087044679)
     async def aqueue(self, ctx):
         ping_role = ctx.guild.get_role(887405786878324767)
-        if ctx.channe.id != 761704352792051713:
+        if ctx.channel.id != 761704352792051713:
             return await ctx.send('You can\'t use this command here.')
         await ctx.send(f'Are you sure you want to ping {ping_role.mention} in auction queue?', allowed_mentions = discord.AllowedMentions(roles=False), view=aqueue_buttons(client=self.client, author=ctx.author))
   
