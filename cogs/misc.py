@@ -335,11 +335,12 @@ class misc(commands.Cog):
         queue_channel = self.client.get_channel(782483247619112991)
         auc_access = await utils(self.client).get_auction_access(arg=ctx)
         overwrites = utils(self.client).channel_close(channel=queue_channel, role=auc_access)
-        if ctx.channel != queue_channel:
-            return await ctx.send('This is not queue channel!')
+        if ctx.channel.id != 761704352792051713:
+            return await ctx.send('You can\'t use this command here.')
 
         await queue_channel.set_permissions(auc_access ,overwrite=overwrites)
-        await ctx.send('✅ Locked down 🍯┃・auction-queue\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
+        await queue_channel.send('✅ Locked down 🍯┃・auction-queue\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
+        await ctx.message.reply('Queue Locked.')
 
     
     @commands.command(name='aunlock')
@@ -349,10 +350,11 @@ class misc(commands.Cog):
         auc_access = await utils(self.client).get_auction_access(arg=ctx)
         overwrites = utils(self.client).channel_open(channel=queue_channel, role=auc_access)
         
-        if ctx.channel != queue_channel:
-            return await ctx.send('This is not queue channel!')
+        if ctx.channel.id != 761704352792051713:
+            return await ctx.send('You can\'t use this command here.')
         await queue_channel.set_permissions(auc_access ,overwrite=overwrites)
-        await ctx.send('✅ Unlocked **🍯┃・auction-queue**\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
+        await queue_channel.send('✅ Unlocked **🍯┃・auction-queue**\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
+        await ctx.message.reply('Queue Unlocked.')
 
         queue_count = await self.client.db.participants.find_one({'guild_id' : ctx.guild.id})
         queue_users = queue_count['queue_users']
@@ -364,6 +366,16 @@ class misc(commands.Cog):
         except  KeyError:
             queue_users[str(datetime.utcnow().date())].update({'today_event_count' : 1})
         await self.client.db.participants.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue_users' : queue_users}})
+
+    
+    @commands.command(name= 'aqueue')
+    @commands.has_any_role(750117211087044679)
+    async def aqueue(self, ctx):
+        ping_role = ctx.guild.get_role(887405786878324767)
+        if ctx.channe.id != 761704352792051713:
+            return await ctx.send('You can\'t use this command here.')
+        await ctx.send(f'Are you sure you want to ping {ping_role.mention} in auction queue?', allowed_mentions = discord.AllowedMentions(roles=False), view=aqueue_buttons(client=self.client, author=ctx.author))
+  
 
 
     auctioneer_group = app_commands.Group(name='auc', description='command group for auctioneers')
@@ -469,14 +481,7 @@ class misc(commands.Cog):
         return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in options if current.lower() in suggestion.lower()]
     
 
-    @commands.command(name= 'aqueue')
-    @commands.has_any_role(750117211087044679)
-    async def aqueue(self, ctx):
-        ping_role = ctx.guild.get_role(887405786878324767)
-        await ctx.send(f'Are you sure you want to ping {ping_role.mention} in auction queue?', allowed_mentions = discord.AllowedMentions(roles=False), view=aqueue_buttons(client=self.client, author=ctx.author))
-
-        
-    
+  
 
 async def setup(client):
     await client.add_cog(misc(client))
