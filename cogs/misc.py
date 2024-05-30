@@ -43,12 +43,14 @@ class aqueue_buttons(discord.ui.View):
         queue = interaction.guild.get_channel(782483247619112991)
         ping_role = interaction.guild.get_role(887405786878324767)
         await self.disable_buttons()
+        await interaction.message.edit(view=self)
         await queue.send(F'{ping_role.mention}: Auction queue is unlocked! (Grab the ping role in <#730829517555236864>)', allowed_mentions=discord.AllowedMentions(roles=True))
         await interaction.response.send_message('Done.')
 
     @discord.ui.button(label='Cancel', style=discord.ButtonStyle.grey)
     async def cancel_button(self, interaction : discord.Interaction, button : discord.ui.Button):
         await self.disable_buttons()
+        await interaction.message.edit(view=self)
         await interaction.response.send_message('Aborted.')
 
 
