@@ -27,7 +27,7 @@ class utils(commands.Cog):
             await msg.add_reaction('⚠')
 
     def extract_item_and_amount(self, text):
-        pattern = r"(\d{1,3}(?:,\d{3})*|\d+)x\s+<a?:(?:[a-zA-Z0-9_]+):[0-9]+>\s+([^\*]+)"
+        pattern = r"(\d{1,3}(?:,\d{3})*|\d+)\s+<a?:(?:[a-zA-Z0-9_]+):[0-9]+>\s+([^\*]+)"
         match = re.search(pattern, text)
     
         if match:
