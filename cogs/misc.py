@@ -61,16 +61,46 @@ class misc(commands.Cog):
         self.client.launch_time = datetime.utcnow()
 
     @commands.command()
-    async def stats(self, ctx):
-        cpu_usage = round(self.process.cpu_percent() / psutil.cpu_count())
-        memory_usage = humanize.naturalsize(self.process.memory_full_info().uss / 1024**2)
-        available_memory = humanize.naturalsize(psutil.virtual_memory().available - (self.process.memory_full_info().uss) / 1024**2)
+    @commands.is_owner()
+    async def resource_usage(self, ctx):
+        # Get the process information for the current process
+        process = psutil.Process()
 
-        embed = discord.Embed(title = 'System Resource Usage', description = 'See CPU and memory usage of the system.')
-        embed.add_field(name = 'CPU Usage', value = f'{cpu_usage}%', inline = False)
-        embed.add_field(name = 'Memory Usage', value = f'{memory_usage}', inline = False)
-        embed.add_field(name = 'Available Memory', value = f'{available_memory}', inline = False)
-        await ctx.send(embed = embed)
+        # CPU usage
+        cpu_percent = process.cpu_percent(interval=1.0)
+
+        # Memory usage of the bot
+        memory_info = process.memory_info()
+        bot_memory_usage = memory_info.rss  # Resident Set Size (physical memory usage) in bytes
+
+        # Total and available system memory
+        virtual_memory = psutil.virtual_memory()
+        total_memory = virtual_memory.total
+        available_memory = virtual_memory.available
+
+        # Format bytes in a human-readable format
+        def format_bytes(size):
+            # 2**10 = 1024
+            power = 2**10
+            n = 0
+            power_labels = {0: '', 1: 'K', 2: 'M', 3: 'G', 4: 'T'}
+            while size > power:
+                size /= power
+                n += 1
+            return f"{size:.2f} {power_labels[n]}B"
+
+        bot_memory_usage_str = format_bytes(bot_memory_usage)
+        total_memory_str = format_bytes(total_memory)
+        available_memory_str = format_bytes(available_memory)
+
+        # Send the resource usage information
+        embed = discord.Embed(title="Resource Usage", color=discord.Color.blue())
+        embed.add_field(name="CPU Usage", value=f"{cpu_percent}%", inline=False)
+        embed.add_field(name="Bot Memory Usage", value=bot_memory_usage_str, inline=False)
+        embed.add_field(name="Total System Memory", value=total_memory_str, inline=False)
+        embed.add_field(name="Available System Memory", value=available_memory_str, inline=False)
+
+        await ctx.send(embed=embed)
 
 
     @commands.command(name='sync', hidden = True)

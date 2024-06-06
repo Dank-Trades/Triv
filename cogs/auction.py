@@ -1,7 +1,5 @@
 import discord
 import json
-import sys
-sys.path.append(r'/home/container/')
 from cogs.utils import utils
 import re
 import asyncio
@@ -17,12 +15,6 @@ MIN_BID_AMOUNT = 5e5
 class auc_link(discord.ui.View):
     def __init__(self, client):
         super().__init__()
-        self.client = client
-
-class mark_log(discord.ui.View):
-    def __init__(self, client):
-        super().__init__()
-        self.value = None
         self.client = client
 
 class log_button(discord.ui.View):
@@ -45,7 +37,7 @@ class log_button(discord.ui.View):
         
         else:
             button_url = interaction.message.components[0].children[2].url
-            view = mark_log(self.client)
+            view = auc_link(self.client)
             view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
             payout_embed.color = discord.Color.green()
             payout_embed.title = 'Auction Logs - Paid'
@@ -76,7 +68,7 @@ class log_button(discord.ui.View):
         
         else :
             button_url = interaction.message.components[0].children[2].url
-            view = mark_log(self.client)
+            view = auc_link(self.client)
             view.add_item(discord.ui.Button(label='Jump to auction', url=button_url))
             payout_embed.color = discord.Color.green()
             if payout_embed_title == 'Auction Cancelled':
