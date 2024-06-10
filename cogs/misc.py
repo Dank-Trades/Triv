@@ -432,9 +432,9 @@ class misc(commands.Cog):
     async def amessage(self, ctx, msg : str, replied_msg : str = None ):
         if ctx.channel.id != 761704352792051713:
             return await ctx.send('You can\'t use this command here.')
-        queue_channel = ctx.guild.get_channel(761704352792051713)
+        queue_channel = ctx.guild.get_channel(782483247619112991)
         
-        if not replying_msg:
+        if not replied_msg:
             return await queue_channel.send(msg)
         replying_msg = await queue_channel.fetch_message(int(replied_msg))
 
