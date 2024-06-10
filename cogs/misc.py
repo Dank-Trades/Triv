@@ -426,6 +426,19 @@ class misc(commands.Cog):
         if isinstance(error , commands.CommandOnCooldown):
             await ctx.send(f'This command is on cooldown. Please try again in {int(error.retry_after)} seconds.')
 
+    
+    @commands.command(name='amessage')
+    @commands.has_any_role(750117211087044679)
+    async def amessage(self, ctx, msg : str, replied_msg : str = None ):
+        if ctx.channel.id != 761704352792051713:
+            return await ctx.send('You can\'t use this command here.')
+        queue_channel = ctx.guild.get_channel(761704352792051713)
+        replying_msg = await queue_channel.fetch_message(int(replied_msg))
+        if not replying_msg:
+            return await queue_channel.send(msg)
+        await replying_msg.reply(msg, mention_author = True)
+
+
 
     auctioneer_group = app_commands.Group(name='auc', description='command group for auctioneers')
 

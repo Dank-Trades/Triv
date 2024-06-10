@@ -524,17 +524,7 @@ class utils(commands.Cog):
         overwrites.send_messages = set
         return overwrites
 
-    @staticmethod
-    def poll_check(channel_id, token, msg_id):
-        url = f"https://discord.com/api/v9/channels/{channel_id}/messages/{msg_id}"
-        headers = {'Authorization': f'Bot {token}'}
-        response = requests.get(url, headers=headers)
 
-        if response.status_code == 200:
-            messages = response.json()
-            return 'poll' in messages
-        else:
-            return False
 
 async def setup(client):
     await client.add_cog(utils(client))
