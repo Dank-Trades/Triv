@@ -433,11 +433,13 @@ class misc(commands.Cog):
         if ctx.channel.id != 761704352792051713:
             return await ctx.send('You can\'t use this command here.')
         queue_channel = ctx.guild.get_channel(761704352792051713)
-        replying_msg = await queue_channel.fetch_message(int(replied_msg))
-        if replying_msg.channel != queue_channel:
-            return await ctx.send('The message you\'re replying is not in the auction queue.')
+        
         if not replying_msg:
             return await queue_channel.send(msg)
+        replying_msg = await queue_channel.fetch_message(int(replied_msg))
+
+        if replying_msg.channel != queue_channel:
+            return await ctx.send('The message you\'re replying is not in the auction queue.')
         await replying_msg.reply(msg, mention_author = True)
 
 
