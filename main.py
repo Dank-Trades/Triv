@@ -39,6 +39,7 @@ class Triv(commands.Bot):
         self.db.auctioneer_stats = self.db['auctioneer_stats']
 
         self.owner_id = 692994778136313896
+        self.cog_hashes = {}
         
 
 

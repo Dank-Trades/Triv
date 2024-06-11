@@ -1,17 +1,33 @@
 import discord
 from discord.ext import commands
-import requests
 import re
 import pandas as pd
 from discord.components import Button, ButtonStyle
 import datetime as dt
 import matplotlib.pyplot as plt
 import io
+import hashlib
+import os
 import statistics
 
 class utils(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+    def compute_file_hash(self, filepath):
+        hasher = hashlib.md5()
+        with open(filepath, 'rb') as f:
+            buf = f.read()
+            hasher.update(buf)
+        return hasher.hexdigest()
+
+    def get_cogs_hashes(self):
+        hashes = {}
+        for filename in os.listdir('./cogs'):
+            if filename.endswith('.py'):
+                filepath = os.path.join('./cogs', filename)
+                hashes[filename] = self.compute_file_hash(filepath)
+        return hashes
 
     
     async def send_error_message(self, msg, error_message):

@@ -118,10 +118,35 @@ class misc(commands.Cog):
     @commands.command(name='ra', hidden = True)
     @commands.is_owner()
     async def _reload_all(self, ctx):
-        for file in os.listdir('./cogs'):
-            if file.endswith('.py'):
-                await self.client.reload_extension(f'cogs.{file[:-3]}')
-                await ctx.send(f'Cogs `{file[:-3]}` has been reloaded')
+        old_hashes = self.client.cog_hashes
+        new_hashes = utils(self.client).get_cogs_hashes()
+        updated_cogs = []
+        
+        for filename in os.listdir('./cogs'):
+            if filename.endswith('.py'):
+                cog_name = f'cogs.{filename[:-3]}'
+                filepath = os.path.join('./cogs', filename)
+                
+                try:
+                    # Attempt to reload the cog
+                    await self.client.reload_extension(cog_name)
+                except commands.ExtensionNotLoaded:
+                    # If the cog is not loaded, load it
+                    await self.client.load_extension(cog_name)
+
+                # Compute the new hash after attempting to reload or load
+                new_hash = utils(self.client).compute_file_hash(filepath)
+                
+                # Check if the hash has changed
+                if filename not in old_hashes or old_hashes[filename] != new_hash:
+                    updated_cogs.append(cog_name)
+
+        self.client.cog_hashes = new_hashes
+        if updated_cogs:
+            updated_cogs = [cog[6:] for cog in updated_cogs]
+            await ctx.send(f'Cogs updated successfully.\nUpdated cogs: `{" | ".join(updated_cogs)}`')
+        else:
+            await ctx.send('No cogs were updated.')
 
 
     @app_commands.command(name = 'ping', description= 'gives you the bot latency')
