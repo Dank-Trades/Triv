@@ -143,7 +143,7 @@ class misc(commands.Cog):
 
         self.client.cog_hashes = new_hashes
         if updated_cogs:
-            updated_cogs = [cog[6:] for cog in updated_cogs]
+            updated_cogs = [cog[5:] for cog in updated_cogs]
             await ctx.send(f'Cogs updated successfully.\nUpdated cogs: `{" | ".join(updated_cogs)}`')
         else:
             await ctx.send('No cogs were updated.')
