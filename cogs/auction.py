@@ -659,6 +659,7 @@ class auction(commands.Cog):
             queue_chan = interaction.guild.get_channel(782483247619112991) 
             msg = await queue_chan.fetch_message(int(msg_id))
 
+            starting_price = int(self.utils.process_shorthand(starting_price))
             await self.client.db.auction_queue.update_one({'guild_id' : interaction.guild.id}, {'$push' : {'queue' : {'message_id' : msg.id, 'host' : seller.id, 'item' : items, 'item_amount' : item_amount, 'starting_price' : starting_price, 'msg_id' : None}}}, upsert = True)
             await interaction.followup.send('✅')
             await msg.add_reaction('✅')
