@@ -571,6 +571,26 @@ class misc(commands.Cog):
 
         return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in options if current.lower() in suggestion.lower()]
     
+    
+    @commands.command(name='cvcr')
+    @commands.is_owner()
+    async def cvcr(self, ctx, region : str):
+        region = region.lower()
+        valid_regions = [
+        'us-west', 'us-east', 'us-central', 'us-south', 'singapore',
+        'southafrica', 'sydney', 'europe', 'japan', 'russia', 'india',
+        'brazil', 'hongkong'
+    ]
+        if region not in valid_regions:
+            return await ctx.send(f"Invalid region. Try again with one of `{valid_regions}`")
+        
+        if not ctx.author.voice:
+            return await ctx.send(f"You're not in a vc.")
+        
+        await ctx.author.voice.channel.edit(rtc_region = region)
+        await ctx.send(f"{ctx.author.voice.channel.mention}'s region set to **{region.title()}**")
+        
+        
 
   
 
