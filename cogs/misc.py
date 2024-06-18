@@ -397,6 +397,7 @@ class misc(commands.Cog):
             return await ctx.send('You can\'t use this command here.')
 
         await queue_channel.set_permissions(auc_access ,overwrite=overwrites)
+        await queue_channel.edit(slowmode_delay = 0)
         await queue_channel.send('✅ Locked down 🍯┃・auction-queue\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
         await ctx.message.reply('Queue Locked.')
 
@@ -416,6 +417,7 @@ class misc(commands.Cog):
         
         if ctx.channel.id != 761704352792051713:
             return await ctx.send('You can\'t use this command here.')
+        await queue_channel.edit(slowmode_delay = 3600)
         await queue_channel.set_permissions(auc_access ,overwrite=overwrites)
         await queue_channel.send('✅ Unlocked **🍯┃・auction-queue**\nBefore requesting an auction please read <#730829517555236864>, violations of these conditions will result in a blacklist from auctions.')
         await ctx.message.reply('Queue Unlocked.')
