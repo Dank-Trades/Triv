@@ -501,6 +501,8 @@ class misc(commands.Cog):
 
         auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
 
+        role = await utils(self.client).get_auctioneer_role(arg=interaction)
+
         auctioneer_ids = [user_id.id for user_id in interaction.guild.members if role in user_id.roles]
 
         embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.title()}]')
