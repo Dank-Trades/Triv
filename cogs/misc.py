@@ -501,6 +501,8 @@ class misc(commands.Cog):
 
         auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
 
+        auctioneer_ids = [user_id.id for user_id in interaction.guild.members if role in user_id.roles]
+
         embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.title()}]')
 
         curr_rank = next((rank + 1 for rank, (user_id, _) in enumerate(auctioneers.items()) if user_id == str(interaction.user.id)), "Unranked")
@@ -510,10 +512,13 @@ class misc(commands.Cog):
 
         for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
 
+            if int(user_id) not in auctioneer_ids:
+                continue
+
             if rank == 16:
                 break
 
-            user = interaction.guild.get_member(int(user_id))
+            user = interaction.client.get_user(int(user_id))
             
             embed.add_field(
                 name=f"#{rank} {user.display_name}",
@@ -555,7 +560,7 @@ class misc(commands.Cog):
 
             else :
                 
-                user = interaction.guild.get_member(int(user_id))
+                user = interaction.client.get_user(int(user_id))
             
                 embed.add_field(
                     name=f"#{rank} {user.display_name}",
