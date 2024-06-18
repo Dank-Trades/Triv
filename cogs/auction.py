@@ -120,14 +120,19 @@ class auc_buttons(discord.ui.View):
         channel = await utils(interaction.client).get_auction_channel(interaction)
         role = await utils(interaction.client).get_auction_access(interaction)
         await self.disable_buttons()
+        msg = await interaction.original_response()
+        users = []
+        async for user in msg.reactions[0].users():
+            users.append(user.mention)
+
         await interaction.message.edit(view=self)
         auction_cog.auc_count.start()
         await channel.set_permissions(role, overwrite = utils.channel_open(channel, role))
         await self.client.db.profile.update_one({'user_id' : interaction.user.id, 'guild_id' : interaction.guild.id}, {'$inc' : {'auction_hosted' : 1}}, upsert = True)
         await self.client.db.auc_count.update_one({'guild_id' : interaction.guild.id, 'year' : datetime.utcnow().year, 'month' : datetime.utcnow().month, 'day' : datetime.utcnow().day}, {'$inc' : {'auc_count' : 1}}, upsert = True)
-        await interaction.followup.send('Auction Started!')
-        await interaction.channel.send('Auction has started! Run `t!bid <amount><unit>` to bid. E.g. `t!bid 700k` | `t!bid 6m`.')
-        await interaction.channel.send('You can bid just by saying the amount, too! E.g. `3m` | `900k`')
+        await interaction.followup.send('Auction has started!')
+        await interaction.channel.send('You can bid just by saying the amount! E.g. `3m` | `900k`')
+        await interaction.channel.send(f'Hi{" ".join(users)}! The auction you had reacted to has started.', delete_after=5)
         
     
 
