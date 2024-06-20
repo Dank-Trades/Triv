@@ -141,6 +141,7 @@ class games(commands.Cog):
 
 
     @play_group.command(name='ttt', description='tic tac toe')
+    @app_commands.checks.has_any_role(750117211087044679, 775950201940606976)
     async def ttt(self, interaction: discord.Interaction, user: discord.Member):
         if interaction.user.id in self.client.curr_players:
             return await interaction.response.send_message(f"You're already in a game!", ephemeral=True)
