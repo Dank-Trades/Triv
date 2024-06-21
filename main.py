@@ -7,6 +7,7 @@ from discord import app_commands
 from discord.ext import commands
 from asyncpg.pool import create_pool
 import motor.motor_asyncio
+import datetime as dt
 
 class Triv(commands.Bot):
     def __init__(self):
@@ -40,6 +41,7 @@ class Triv(commands.Bot):
 
         self.owner_id = 692994778136313896
         self.cog_hashes = {}
+        self.launch_time = dt.datetime.utcnow()
         
 
 

@@ -58,7 +58,6 @@ class misc(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.process = psutil.Process()
-        self.client.launch_time = datetime.utcnow()
 
     @commands.command()
     @commands.is_owner()
