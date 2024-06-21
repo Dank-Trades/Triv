@@ -228,11 +228,6 @@ class loops(commands.Cog):
 
                 msg0 = await auction_channel.send(embed=end_embed)
 
-                view = mark_log(client=self.client)
-
-                view.add_item(discord.ui.Button(label='Jump to auction', url=msg0.jump_url))
-                view.add_item(discord.ui.Button(label='Confirm Payout', style=discord.ButtonStyle.green, custom_id='confirm_payout'))
-
                 embed_msg = await auction_log.send(embed=payout_log, view=log_button(self.client).add_item(discord.ui.Button(label='Jump to auction', url=msg0.jump_url)))
                 msg = await auction_log.send(f"/serverevents payout user:{self.client.log['seller'].id} quantity:{self.client.log['item_amount']} item:{self.client.log['item']}")
 

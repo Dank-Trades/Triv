@@ -150,7 +150,7 @@ class auc_buttons(discord.ui.View):
         await self.disable_buttons()
         await interaction.message.edit(view=self)
 
-        payout_log = discord.Embed(color=discord.Color.red(), title='Auction Logs - Cancelled')
+        payout_log = discord.Embed(color=discord.Color.red(), title='Auction Cancelled')
         payout_log.description = (
                             f"Buyer : \n"
                             f"Seller : {interaction.client.log['seller'].mention}\n"
