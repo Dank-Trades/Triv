@@ -63,22 +63,10 @@ class log_button(discord.ui.View):
                 payout_embed.title = 'Auction Cancelled'
             else :
                 payout_embed.title = 'Auction Logs - Cancelled'
-            payout_embed.title = 'Auction Logs - Cancelled'
             await interaction.message.edit(embed=payout_embed, view=view)
             for messages in self.client.payout_msgs[interaction.message.id]:
                 await messages.delete()
             del self.client.payout_msgs[interaction.message.id]
-            if payout_embed.title != 'Auction Cancelled':
-                auction_queue = await self.client.db.auction_queue.find_one({'guild_id': interaction.guild.id})
-                auction_queue = auction_queue['queue']
-                index = next((index for index, auction in enumerate(auction_queue) if auction.get('queue_message_id') == interaction.message.id), None)
-                if index == None:
-                    print('WARNING : Request in queue not found.')
-                else:
-                    auction_queue.pop(index)
-                    await self.client.db.auction_queue.update_one({'guild_id': interaction.guild.id}, {'$set': {'queue': auction_queue}})
-            else:
-                return
 
 class queue_button(discord.ui.View):
     def __init__(self, client):
