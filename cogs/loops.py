@@ -72,6 +72,7 @@ class queue_button(discord.ui.View):
     def __init__(self, client):
         super().__init__()
         self.client = client
+        self.timeout = None
 
     @discord.ui.button(label='Upcoming Auctions')
     async def queue(self, interaction : discord.Interaction, button : discord.ui.Button):

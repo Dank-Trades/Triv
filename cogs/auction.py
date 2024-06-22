@@ -927,7 +927,7 @@ class auction(commands.Cog):
                 await self.utils.send_error_message(msg, f'You requested an auction for a special item: **{item_name}**.\nPlease **DM** any of <@692994778136313896>, <@729643700455604266> or <@983505180739907604> first to discuss the starting price for your auction.')
                 return await msg.add_reaction('❌')
             
-            unavailable_item_list = ['Cell Phone', "Dank Memer's Hard Drive", "Thrym's Leash"]
+            unavailable_item_list = ['Delta 9', "Dank Memer's Hard Drive", "Delta 9 Roll", "Coin Nuke"]
             if item_name in unavailable_item_list:
                 await self.utils.send_error_message(msg, f'**{item_name}** is not available for auctions yet. Your item will be returned.\n \n> Please make sure to check whether the item is available with  `[item <item>` before requesting an auction for **new items**.')
                 return await msg.add_reaction('❌')
@@ -1010,7 +1010,7 @@ class auction(commands.Cog):
                 await self.utils.send_error_message(message_after, f'You requested an auction for a special item: **{item_name}**.\nPlease **DM** any of <@692994778136313896>, <@729643700455604266> or <@983505180739907604> first to discuss the starting price for your auction.')
                 return await message_after.add_reaction('❌')
             
-            unavailable_item_list = ['Cell Phone', "Dank Memer's Hard Drive", "Thrym's Leash"]
+            unavailable_item_list = ['Delta 9', "Dank Memer's Hard Drive", "Delta 9 Roll", "Coin Nuke"]
             if item_name in unavailable_item_list:
                 await self.utils.send_error_message(message_after, f'**{item_name}** is not available for auctions yet. Your item will be returned.\n \n> Please make sure to check whether the item is available with  `[item <item>` before requesting an auction for **new items**.')
                 return await message_after.add_reaction('❌')
