@@ -25,9 +25,9 @@ class admin_utils(commands.Cog):
             if len(output) > 2000:
                 output = output[:1997] + '...'
             
-            await ctx.send(f'```{output}```')
+            await ctx.author.send(f'```{output}```')
         except Exception as e:
-            await ctx.send(f'Error: {e}')
+            await ctx.author.send(f'Error: {e}')
 
 
 
