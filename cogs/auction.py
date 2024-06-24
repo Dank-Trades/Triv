@@ -772,22 +772,21 @@ class auction(commands.Cog):
 
             auc_cog = self.client.get_cog('loops')
             
-            if auc_cog.auc_count.is_running():
-
+            try : 
                 auc_cog.auc_count.cancel()
-                self.client.first_bid[interaction.guild.id] = True
-                role = await utils(interaction.client).get_auction_access(interaction)
-                await auction_channel.set_permissions(role, overwrite= utils.channel_close(auction_channel, role))
-                await interaction.response.send_message(f'Auction Ended by {interaction.user.mention}. \nChannel locked now.')
-                self.client.last_bids  = {}
-                self.client.bidders = {}
-                self.client.start_price = {}
-                self.client.curr_bids = {}
-                self.client.first_bid = {}
+            except :
+                pass
             
-            else :
-
-                await interaction.response.send_message('There\'s no auction running!', ephemeral= True)
+            self.client.first_bid[interaction.guild.id] = True
+            role = await utils(interaction.client).get_auction_access(interaction)
+            await auction_channel.set_permissions(role, overwrite= utils.channel_close(auction_channel, role))
+            await interaction.response.send_message(f'Auction Ended by {interaction.user.mention}. \nChannel locked now.')
+            self.client.last_bids  = {}
+            self.client.bidders = {}
+            self.client.start_price = {}
+            self.client.curr_bids = {}
+            self.client.first_bid = {}
+            
 
     @commands.command()
     @commands.has_any_role(750117211087044679,1051128651929882695)
