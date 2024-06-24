@@ -14,7 +14,7 @@ class admin_utils(commands.Cog):
     
     @commands.command()
     @commands.is_owner()  # Restrict command to bot owner
-    async def exec(ctx, *, command):
+    async def exec(self, ctx, *, command):
         """Execute a terminal command."""
         try:
             # Run the command and capture the output
