@@ -6,12 +6,13 @@ from discord.app_commands import Group, command
 
 
 class confirm_button(discord.ui.View):
-    def __init__(self, client, author, opponent):
+    def __init__(self, client, author, opponent, interaction):
         super().__init__()
         self.client = client
         self.author = author
         self.opponent = opponent
         self.timeout = 10
+        self.interaction = interaction
 
     def disable_buttons(self):
         for child in self.children:
@@ -32,7 +33,7 @@ class confirm_button(discord.ui.View):
         self.disable_buttons()
         await interaction.message.edit(view=self)
         self.client.curr_players[interaction.message.id].append(self.opponent.id)
-        await interaction.channel.send(f'{self.author.mention} is playing Tic-Tac-Toe with {self.opponent.mention}.\n{self.author.mention}\'s turn.', view=TicTacToeView(interaction.client, self.author, self.opponent))
+        await interaction.channel.send(f'{self.author.mention} is playing Tic-Tac-Toe with {self.opponent.mention}.\n{self.author.mention}\'s turn.', view=TicTacToeView(interaction.client, self.author, self.opponent, interaction))
 
     
     @discord.ui.button(label='Cancel', style = discord.ButtonStyle.danger)
@@ -104,13 +105,14 @@ class TicTacToeButton(discord.ui.Button):
 
 
 class TicTacToeView(discord.ui.View):
-    def __init__(self, client, player1, player2):
+    def __init__(self, client, player1, player2, interaction):
         super().__init__()
         self.client = client
         self.timeout = 30
         self.current_player = player1
         self.player1 = player1
         self.player2 = player2
+        self.interaction = interaction
         self.player1_moves = []
         self.player2_moves = []
         self.board = [['' for _ in range(3)] for _ in range(3)]
@@ -166,7 +168,7 @@ class games(commands.Cog):
                 return await interaction.response.send_message(f"You're not free yet!", ephemeral=True)
             if user.id in self.client.curr_players:
                 return await interaction.response.send_message(f"They're not free yet!", ephemeral=True)
-        msg = await interaction.response.send_message(f"{user.mention}, {interaction.user.mention} is challenging you to a tic-tac-toe game.", view=confirm_button(client=self.client, author=interaction.user, opponent=user))
+        msg = await interaction.response.send_message(f"{user.mention}, {interaction.user.mention} is challenging you to a tic-tac-toe game.", view=confirm_button(client=self.client, author=interaction.user, opponent=user, interaction=interaction))
         self.client.curr_players.update({msg.id : [interaction.user.id]})
 
 
