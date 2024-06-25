@@ -163,9 +163,9 @@ class games(commands.Cog):
                 return await interaction.response.send_message(f"You're not free yet!", ephemeral=True)
             if user.id in self.client.curr_players:
                 return await interaction.response.send_message(f"They're not free yet!", ephemeral=True)
-        
-        await interaction.response.send_message(f"{user.mention}, {interaction.user.mention} is challenging you to a tic-tac-toe game.", view=confirm_button(client=self.client, author=interaction.user, opponent=user))
         self.client.curr_players.update({interaction.message.id : [interaction.user.id]})
+        await interaction.response.send_message(f"{user.mention}, {interaction.user.mention} is challenging you to a tic-tac-toe game.", view=confirm_button(client=self.client, author=interaction.user, opponent=user))
+        
 
 
 
