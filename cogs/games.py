@@ -31,8 +31,8 @@ class confirm_button(discord.ui.View):
     @discord.ui.button(label='Confirm', style = discord.ButtonStyle.success)
     async def confirm_but(self, interaction : discord.Interaction, button: discord.ui.Button):
         self.disable_buttons()
-        await interaction.message.edit(view=self)
         self.client.curr_players[interaction.message.id].append(self.opponent.id)
+        await interaction.message.edit(view=self)
         await interaction.channel.send(f'{self.author.mention} is playing Tic-Tac-Toe with {self.opponent.mention}.\n{self.author.mention}\'s turn.', view=TicTacToeView(interaction.client, self.author, self.opponent, interaction))
 
     
