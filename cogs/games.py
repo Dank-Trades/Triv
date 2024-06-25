@@ -24,22 +24,23 @@ class confirm_button(discord.ui.View):
     async def on_timeout(self) -> None:
         self.disable_buttons()
         await self.interaction.edit_original_response(view=self)
-        self.client.curr_players.pop(self.interaction.response.id)
+        self.client.curr_players.pop(self.interaction.message.id)
         await self.interaction.message.reply("They didn't respond in time.")
 
     
     @discord.ui.button(label='Confirm', style = discord.ButtonStyle.success)
     async def confirm_but(self, interaction : discord.Interaction, button: discord.ui.Button):
         self.disable_buttons()
+        await interaction.response.defer()
         self.client.curr_players[interaction.message.id].append(self.opponent.id)
-        await interaction.message.edit(view=self)
+        await interaction.edit_original_response(view=self)
         await interaction.channel.send(f'{self.author.mention} is playing Tic-Tac-Toe with {self.opponent.mention}.\n{self.author.mention}\'s turn.', view=TicTacToeView(interaction.client, self.author, self.opponent, interaction))
 
     
     @discord.ui.button(label='Cancel', style = discord.ButtonStyle.danger)
     async def cancel_but(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.disable_buttons()
-        await interaction.message.edit(view=self)
+        await interaction.edit_original_response(view=self)
         self.client.curr_players.pop(interaction.message.id)
         await interaction.response.send_message('Cancelled.')
 
