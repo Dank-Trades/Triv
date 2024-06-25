@@ -21,17 +21,19 @@ class ConfirmButton(discord.ui.View):
     
     async def on_timeout(self) -> None:
         self.disable_buttons()
+        msg = await self.interaction.original_response()
         await self.interaction.edit_original_response(view=self)
-        self.client.curr_players.pop(self.interaction.message.id, None)
+        self.client.curr_players.pop(msg.id)
         await self.interaction.followup.send("They didn't respond in time.", ephemeral=True)
 
     @discord.ui.button(label='Confirm', style=discord.ButtonStyle.success)
     async def confirm_but(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.disable_buttons()
         await interaction.response.defer()
-        self.client.curr_players.setdefault(interaction.message.id, []).append(self.opponent.id)
+        await interaction.
+        self.client.curr_players[interaction.message.id].append(self.opponent.id)
         await interaction.edit_original_response(view=self)
-        await interaction.followup.send(f'{self.author.mention} is playing Tic-Tac-Toe with {self.opponent.mention}.\n{self.author.mention}\'s turn.', view=TicTacToeView(self.client, self.author, self.opponent))
+        await interaction.followup.send(f'{self.author.mention} is playing Tic-Tac-Toe with {self.opponent.mention}.\n{self.author.mention}\'s turn.', view=TicTacToeView(self.client, self.author, self.opponent, interaction))
 
     @discord.ui.button(label='Cancel', style=discord.ButtonStyle.danger)
     async def cancel_but(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -99,9 +101,10 @@ class TicTacToeButton(discord.ui.Button):
 
 
 class TicTacToeView(discord.ui.View):
-    def __init__(self, client, player1, player2):
-        super().__init__(timeout=30)
+    def __init__(self, client, player1, player2, interaction):
+        super().__init__(timeout=20)
         self.client = client
+        self.interaction = interaction
         self.current_player = player1
         self.player1 = player1
         self.player2 = player2
@@ -135,6 +138,7 @@ class TicTacToeView(discord.ui.View):
         for child in self.children:
             child.disabled = True
         
+
         winner = self.player1 if self.player1 != self.current_player else self.player2
         await self.interaction.edit_original_response(content=f'{self.current_player.mention} left the game. {winner.mention} wins!', view=self)
         self.client.curr_players.pop(self.interaction.message.id, None)
@@ -150,13 +154,14 @@ class Games(commands.Cog):
     @play_group.command(name='ttt', description='Tic Tac Toe')
     @app_commands.checks.has_any_role(750117211087044679, 775950201940606976, 809471606787145767)
     async def ttt(self, interaction: discord.Interaction, user: discord.Member):
+        await interaction.response.defer()
         if interaction.user.id in self.client.curr_players.values():
-            return await interaction.response.send_message(f"You're already in a game!", ephemeral=True)
+            return await interaction.followup.send(f"You're already in a game!", ephemeral=True)
         if user.id in self.client.curr_players.values():
-            return await interaction.response.send_message(f"They're already in a game!", ephemeral=True)
+            return await interaction.followup.send(f"They're already in a game!", ephemeral=True)
         
-        msg = await interaction.response.send_message(f"{user.mention}, {interaction.user.mention} is challenging you to a tic-tac-toe game.", view=ConfirmButton(client=self.client, author=interaction.user, opponent=user, interaction=interaction))
-        self.client.curr_players[msg.id] = [interaction.user.id]
+        msg = await interaction.followup.send(f"{user.mention}, {interaction.user.mention} is challenging you to a tic-tac-toe game.", view=ConfirmButton(client=self.client, author=interaction.user, opponent=user, interaction=interaction))
+        self.client.curr_players.update({msg.id : [interaction.user.id]})
 
 
 async def setup(client):
