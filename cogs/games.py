@@ -21,10 +21,10 @@ class confirm_button(discord.ui.View):
         return interaction.user == self.opponent
     
     async def on_timeout(self) -> None:
-        for child in self.children:
-            child.disabled = True
-            self.client.curr_players.pop(self.message.id)
-        await self.message.reply("They didn't respond in time.")
+        self.disable_buttons()
+        await self.interaction.edit_original_response(view=self)
+        self.client.curr_players.pop(self.interaction.response.id)
+        await self.interaction.message.reply("They didn't respond in time.")
 
     
     @discord.ui.button(label='Confirm', style = discord.ButtonStyle.success)
@@ -140,6 +140,9 @@ class TicTacToeView(discord.ui.View):
     async def on_timeout(self) -> None:
         for child in self.children:
             child.disabled = True
+        
+        winner = self.player1 if self.player1 != self.current_player else self.player2
+        await self.interaction.edit_original_response(content= f'{self.current_player.mention}left the game. {winner.mention} wins!',view=self)
         self.client.curr_players.remove(self.player1.id)
         self.client.curr_players.remove(self.player2.id)
 
