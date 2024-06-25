@@ -29,7 +29,7 @@ class ConfirmButton(discord.ui.View):
     async def confirm_but(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.disable_buttons()
         await interaction.response.defer()
-        self.client.curr_players[interaction.message.id].append(self.opponent.id)
+        self.client.curr_players.setdefault(interaction.message.id, []).append(self.opponent.id)
         await interaction.edit_original_response(view=self)
         await interaction.followup.send(f'{self.author.mention} is playing Tic-Tac-Toe with {self.opponent.mention}.\n{self.author.mention}\'s turn.', view=TicTacToeView(self.client, self.author, self.opponent))
 
@@ -78,9 +78,18 @@ class TicTacToeButton(discord.ui.Button):
             for child in view.children:
                 child.disabled = True
             await interaction.response.edit_message(content=f'Game over! Winner: {view.current_player.mention}' if winner else 'Game over! It\'s a tie!', view=view)
-            self.client.curr_players.pop(view.interaction.message.id, None)
+            interaction.client.curr_players.remove(view.player1.id)
+            interaction.client.curr_players.remove(view.player2.id)
         else:
             view.current_player = view.player2 if view.current_player == view.player1 else view.player1
+            if view.current_player == view.player1 and len(view.player1_moves) == 3:
+                first_move = view.player1_moves[0]
+                first_move.style = discord.ButtonStyle.secondary
+
+            elif view.current_player == view.player2 and len(view.player2_moves) == 3:
+                first_move = view.player2_moves[0]
+                first_move.style = discord.ButtonStyle.secondary
+
             await interaction.response.edit_message(content=f'{view.current_player.mention}\'s turn', view=view)
 
     def reset_button(self):
@@ -141,9 +150,9 @@ class Games(commands.Cog):
     @play_group.command(name='ttt', description='Tic Tac Toe')
     @app_commands.checks.has_any_role(750117211087044679, 775950201940606976, 809471606787145767)
     async def ttt(self, interaction: discord.Interaction, user: discord.Member):
-        if interaction.user.id in self.client.curr_players:
+        if interaction.user.id in self.client.curr_players.values():
             return await interaction.response.send_message(f"You're already in a game!", ephemeral=True)
-        if user.id in self.client.curr_players:
+        if user.id in self.client.curr_players.values():
             return await interaction.response.send_message(f"They're already in a game!", ephemeral=True)
         
         msg = await interaction.response.send_message(f"{user.mention}, {interaction.user.mention} is challenging you to a tic-tac-toe game.", view=ConfirmButton(client=self.client, author=interaction.user, opponent=user, interaction=interaction))
