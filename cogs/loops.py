@@ -173,6 +173,8 @@ class loops(commands.Cog):
                 await auction_channel.send('Sold!')
                 msg = await auction_channel.send(embed=winner_embed, view=queue_button(self.client))
                 await tradeout_channel.set_permissions(winner, overwrite=utils.tradeout_access(tradeout_channel, winner, set=True))
+                await tradeout_channel.send(f'{winner.mention}, Congrats on winning the auction! You can copy and run the following command.', allowed_mentions= discord.AllowedMentions(users=True))
+                await tradeout_channel.send(f"`/serverevents donate quantity:{int(self.client.log['coins'])}`")
                 await self.client.db.profile.update_one({'user_id': winner.id, 'guild_id': guild.id}, {'$inc': {'auction_won': 1, 'total_amount_bid': self.client.curr_bids[channel_id]}}, upsert=True)
                 await self.client.db.profile.update_one({'user_id': self.client.log['seller'].id, 'guild_id': guild.id}, {'$inc': {'total_amount_sold': self.client.curr_bids[channel_id], 'total_auction_requested': 1}}, upsert=True)                
                 payout_log = discord.Embed(color=discord.Color.blue(), title='Auction Logs')
