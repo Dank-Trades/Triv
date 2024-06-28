@@ -514,6 +514,7 @@ class misc(commands.Cog):
         for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
 
             if int(user_id) not in auctioneer_ids:
+                rank -= 1
                 continue
 
             if rank == 16:
