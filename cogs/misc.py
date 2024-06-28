@@ -509,7 +509,7 @@ class misc(commands.Cog):
         rank = 1
     
         for user_id, activity in auctioneers.items():
-            if int(user_id) not in auctioneer_ids:
+            if int(user_id) not in auctioneer_ids and scope != 'total':
                 continue
     
             if rank > 15:
@@ -529,12 +529,12 @@ class misc(commands.Cog):
     
         await interaction.followup.send(embed=embed)
     
-        @auc_lb.autocomplete('scope')
-        async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
+    @auc_lb.autocomplete('scope')
+    async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
     
-            options = ['Today', 'Weekly', 'Total']
+        options = ['Today', 'Weekly', 'Total']
     
-            return [app_commands.Choice(name=suggestion, value=suggestion.lower()) for suggestion in options if current.lower() in suggestion.lower()]
+        return [app_commands.Choice(name=suggestion, value=suggestion.lower()) for suggestion in options if current.lower() in suggestion.lower()]
     
     @app_commands.command(name='wlb')
     @app_commands.checks.has_any_role(1241693662354870333, 719197688238964768)
