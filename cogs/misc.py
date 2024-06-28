@@ -493,43 +493,41 @@ class misc(commands.Cog):
     
 
     
-    @auctioneer_group.command(name='lb')
-    @app_commands.checks.has_any_role(750117211087044679,1051128651929882695)
-    async def auc_lb(self, interaction : discord.Interaction, scope: str):
-        await interaction.response.defer()
+@auctioneer_group.command(name='lb')
+@app_commands.checks.has_any_role(750117211087044679, 1051128651929882695)
+async def auc_lb(self, interaction: discord.Interaction, scope: str):
+    await interaction.response.defer()
 
-        auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
+    auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
+    role = await utils(self.client).get_auctioneer_role(arg=interaction)
+    auctioneer_ids = [user_id.id for user_id in interaction.guild.members if role in user_id.roles]
 
-        role = await utils(self.client).get_auctioneer_role(arg=interaction)
+    curr_rank = next((rank + 1 for rank, (user_id, _) in enumerate(auctioneers.items()) if user_id == str(interaction.user.id)), "Unranked")
+    curr_activity = auctioneers.get(str(interaction.user.id), 0)
 
-        auctioneer_ids = [user_id.id for user_id in interaction.guild.members if role in user_id.roles]
+    embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.title()}]')
+    rank = 1
 
-        embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.title()}]')
+    for user_id, activity in auctioneers.items():
+        if int(user_id) not in auctioneer_ids:
+            continue
 
-        curr_rank = next((rank + 1 for rank, (user_id, _) in enumerate(auctioneers.items()) if user_id == str(interaction.user.id)), "Unranked")
+        if rank > 15:
+            break
 
-        curr_activity = auctioneers.get(str(interaction.user.id), 0)
+        user = interaction.client.get_user(int(user_id))
+        embed.add_field(
+            name=f"#{rank} {user.display_name}",
+            value=f"Auctions: `{activity}`",
+            inline=False
+        )
+        rank += 1
 
+    # Add the user's current rank if not in the top 15
+    if curr_rank > 15 or curr_rank == "Unranked":
+        embed.add_field(name=f'Your rank: #{curr_rank}', value=f'Auctions: `{curr_activity}`', inline=False)
 
-        for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
-
-            if int(user_id) not in auctioneer_ids:
-                rank -= 1
-                continue
-
-            if rank == 16:
-                break
-            else: 
-                user = interaction.client.get_user(int(user_id))
-            
-                embed.add_field(
-                    name=f"#{rank} {user.display_name}",
-                    value=f"Auctions: `{activity}`",
-                    inline=False
-                )
-
-        embed.add_field(name=f'Your rank : #{curr_rank}', value=f'Auctions: `{curr_activity}`')
-
+    await interaction.followup.send(embed=embed)
 
         await interaction.followup.send(embed=embed)
 
