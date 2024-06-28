@@ -529,8 +529,6 @@ async def auc_lb(self, interaction: discord.Interaction, scope: str):
 
     await interaction.followup.send(embed=embed)
 
-        await interaction.followup.send(embed=embed)
-
     @auc_lb.autocomplete('scope')
     async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
 
