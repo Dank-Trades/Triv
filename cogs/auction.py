@@ -513,7 +513,7 @@ class auction(commands.Cog):
 
 
                 await interaction.followup.send(embed=embed, view=auc_buttons(interaction.user, self.client))
-                await interaction.channel.send(content=f'{ping_role.mention} {item_amount} {items}', allowed_mentions = discord.AllowedMentions(roles=True))
+                await interaction.channel.send(content=f'{ping_role.mention} {item_amount} {items} auction', allowed_mentions = discord.AllowedMentions(roles=True))
                 await msg.add_reaction('⭐')
 
                 view = auc_link(client=self.client)
