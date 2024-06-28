@@ -536,37 +536,37 @@ class misc(commands.Cog):
     
             return [app_commands.Choice(name=suggestion, value=suggestion.lower()) for suggestion in options if current.lower() in suggestion.lower()]
     
-        @app_commands.command(name='wlb')
-        @app_commands.checks.has_any_role(1241693662354870333, 719197688238964768)
-        async def weekly_lb(self, interaction : discord.Interaction, scope : str):
+    @app_commands.command(name='wlb')
+    @app_commands.checks.has_any_role(1241693662354870333, 719197688238964768)
+    async def weekly_lb(self, interaction : discord.Interaction, scope : str):
     
-            await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer(ephemeral=True)
     
-            auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
+        auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
     
-            embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.upper()}]')
+        embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.upper()}]')
     
-            role = await utils(self.client).get_auctioneer_role(arg=interaction)
+        role = await utils(self.client).get_auctioneer_role(arg=interaction)
     
-            auctioneer_ids = [user_id.id for user_id in interaction.guild.members if role in user_id.roles]
+        auctioneer_ids = [user_id.id for user_id in interaction.guild.members if role in user_id.roles]
     
-            for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
+        for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
     
-                if int(user_id) not in auctioneer_ids:
+            if int(user_id) not in auctioneer_ids:
     
-                    continue
+                continue
     
-                else :
+            else :
                     
-                    user = interaction.client.get_user(int(user_id))
+                user = interaction.client.get_user(int(user_id))
                 
-                    embed.add_field(
-                        name=f"#{rank} {user.display_name}",
-                        value=f"Auctions: `{activity}`",
-                        inline=False
-                    )
+                embed.add_field(
+                    name=f"#{rank} {user.display_name}",
+                    value=f"Auctions: `{activity}`",
+                    inline=False
+                )
     
-            await interaction.followup.send(embed=embed, ephemeral=True)
+        await interaction.followup.send(embed=embed, ephemeral=True)
     
     
     @weekly_lb.autocomplete('scope')
