@@ -519,14 +519,14 @@ class misc(commands.Cog):
 
             if rank == 16:
                 break
-
-            user = interaction.client.get_user(int(user_id))
+            else: 
+                user = interaction.client.get_user(int(user_id))
             
-            embed.add_field(
-                name=f"#{rank} {user.display_name}",
-                value=f"Auctions: `{activity}`",
-                inline=False
-            )
+                embed.add_field(
+                    name=f"#{rank} {user.display_name}",
+                    value=f"Auctions: `{activity}`",
+                    inline=False
+                )
 
         embed.add_field(name=f'Your rank : #{curr_rank}', value=f'Auctions: `{curr_activity}`')
 
