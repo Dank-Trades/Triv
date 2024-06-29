@@ -43,6 +43,8 @@ class Triv(commands.Bot):
         self.cog_hashes = {}
         self.launch_time = dt.datetime.utcnow()
         
+        self.bot_mods = [692994778136313896, 729643700455604266]
+        
 
 
 with open('config.json', 'r') as f:
