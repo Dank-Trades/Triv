@@ -28,12 +28,13 @@ class ConfirmButton(discord.ui.View):
 
     @discord.ui.button(label='Confirm', style=discord.ButtonStyle.success)
     async def confirm_but(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
         self.disable_buttons()
         self.stop()
         self.client.curr_players[interaction.message.id].append(self.opponent.id)
-        await interaction.edit_original_response(view=self)
+        await interaction.message.edit(view=self)
         view = TicTacToeView(self.client, self.author, self.opponent, interaction)
-        msg = await interaction.response.send_message(f'{self.author.mention} is playing Tic-Tac-Toe with {self.opponent.mention}.\n{self.author.mention}\'s turn.', view=view)
+        msg = await interaction.followup.send(f'{self.author.mention} is playing Tic-Tac-Toe with {self.opponent.mention}.\n{self.author.mention}\'s turn.', view=view)
         view.response = msg
 
     @discord.ui.button(label='Cancel', style=discord.ButtonStyle.danger)
@@ -160,13 +161,14 @@ class Games(commands.Cog):
     @play_group.command(name='ttt', description='Tic Tac Toe')
     @app_commands.checks.has_any_role(750117211087044679, 775950201940606976, 809471606787145767)
     async def ttt(self, interaction: discord.Interaction, user: discord.Member):
+        await interaction.response.defer()
         if interaction.user.id in [ids for sublist in self.client.curr_players.values() for ids in sublist]:
             return await interaction.followup.send(f"You're already in a game!", ephemeral=True)
         if user.id in [ids for sublist in self.client.curr_players.values() for ids in sublist]:
             return await interaction.followup.send(f"They're already in a game!", ephemeral=True)
 
         view = ConfirmButton(client=self.client, author=interaction.user, opponent=user, interaction=interaction)
-        msg = await interaction.response.send_message(f"{user.mention}, {interaction.user.mention} is challenging you to a tic-tac-toe game.", view=view)
+        msg = await interaction.followup.send(f"{user.mention}, {interaction.user.mention} is challenging you to a tic-tac-toe game.", view=view, allowed_mentions = discord.AllowedMentions(users=True))
         self.client.curr_players.update({msg.id : [interaction.user.id]})
         view.response = msg
 

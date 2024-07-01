@@ -545,28 +545,40 @@ class misc(commands.Cog):
         auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
     
         embed = discord.Embed(title=f'Auctioneer Leaderboard [{scope.upper()}]')
+        embed2 = discord.Embed(title=f'Auctioneer Leaderboard [{scope.upper()}]')
     
         role = await utils(self.client).get_auctioneer_role(arg=interaction)
     
         auctioneer_ids = [user_id.id for user_id in interaction.guild.members if role in user_id.roles]
     
-        for rank, (user_id, activity) in enumerate(auctioneers.items(), start=1):
+        rank = 1
     
-            if int(user_id) not in auctioneer_ids:
-    
+        for user_id, activity in auctioneers.items():
+            if int(user_id) not in auctioneer_ids and scope != 'total':
                 continue
     
-            else :
-                    
+            if rank > 15:
                 user = interaction.client.get_user(int(user_id))
-                
+                embed2.add_field(
+                    name=f"#{rank} {user.display_name}",
+                    value=f"Auctions: `{activity}`",
+                    inline=False
+                )
+                rank += 1
+
+            else :
+                user = interaction.client.get_user(int(user_id))
                 embed.add_field(
                     name=f"#{rank} {user.display_name}",
                     value=f"Auctions: `{activity}`",
                     inline=False
                 )
+                rank += 1
     
-        await interaction.followup.send(embed=embed, ephemeral=True)
+    
+        msg = await interaction.followup.send(embed=embed, ephemeral=True)
+        if rank > 15:
+            await interaction.followup.send(embed = embed2, ephemeral=True)
     
     
     @weekly_lb.autocomplete('scope')
