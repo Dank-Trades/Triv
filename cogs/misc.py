@@ -497,6 +497,10 @@ class misc(commands.Cog):
     @app_commands.checks.has_any_role(750117211087044679, 1051128651929882695)
     async def auc_lb(self, interaction: discord.Interaction, scope: str):
         await interaction.response.defer()
+
+        if scope == 'monthly' or scope == 'past_monthly' or scope == 'past_weekly': 
+            if interaction.user.id not in [692994778136313896, 729643700455604266]:
+                return await interaction.followup.send('Only managers can check monthly leaderboard.')
     
         auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
         role = await utils(self.client).get_auctioneer_role(arg=interaction)
@@ -536,11 +540,15 @@ class misc(commands.Cog):
     
         return [app_commands.Choice(name=suggestion, value=suggestion.lower()) for suggestion in options if current.lower() in suggestion.lower()]
     
-    @app_commands.command(name='wlb')
+    @app_commands.command(name='lb')
     @app_commands.checks.has_any_role(1241693662354870333, 719197688238964768)
-    async def weekly_lb(self, interaction : discord.Interaction, scope : str):
+    async def _lb(self, interaction : discord.Interaction, scope : str):
     
         await interaction.response.defer(ephemeral=True)
+
+        if scope == 'monthly' or scope == 'past_monthly':
+            if interaction.user.id not in [692994778136313896, 729643700455604266]:
+                return await interaction.followup.send('Only managers can check monthly leaderboard.')
     
         auctioneers = await utils(self.client).get_leaderboard(guild=interaction.guild, scope=scope)
     
@@ -581,7 +589,7 @@ class misc(commands.Cog):
             await interaction.followup.send(embed = embed2, ephemeral=True)
     
     
-    @weekly_lb.autocomplete('scope')
+    @_lb.autocomplete('scope')
     async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
 
         options = ['weekly', 'past_weekly']

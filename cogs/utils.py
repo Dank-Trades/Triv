@@ -396,10 +396,13 @@ class utils(commands.Cog):
             auc_stats.update({str(user.id) : {
                 'today' : 0,
                 'weekly' : 0,
-                'past_weekly' : 0, 
+                'monthly': 0,
+                'past_weekly' : 0,
+                'past_monthly' : 0, 
                 'total' : 0,
                 'date' : str(dt.datetime.utcnow().date()),
-                'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday()))
+                'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())),
+                'month' : str(dt.date.month)
             }})
             auctioneer = auc_stats[str(user.id)]
 
@@ -417,12 +420,22 @@ class utils(commands.Cog):
             for auc in auc_stats.values():
                 if auc['date'] != str(dt.datetime.utcnow().date()):
                     auc.update({'date' : str(dt.datetime.utcnow().date()), 'today' : 0})
+
+        if auctioneer['month'] != str(dt.date.month):
+            for auc in auc_stats.values():
+                if auc['month'] != str(dt.date.month):
+                    auc.update({
+                        'past_monthly' : auc['monthly'],
+                        'monthly' : 0,
+                        'month' : str(dt.date.month)
+                    })
         
         auctioneer = auc_stats[str(user.id)]
 
         
         auctioneer['today'] += 1
         auctioneer['weekly'] += 1
+        auctioneer['monthly'] += 1
         auctioneer['total'] += 1
 
         auc_stats[str(user.id)] = auctioneer
@@ -444,10 +457,13 @@ class utils(commands.Cog):
             auc_stats.update({str(user.id) : {
                 'today' : 0,
                 'weekly' : 0,
-                'past_weekly' : 0, 
+                'monthly' : 0,
+                'past_weekly' : 0,
+                'past_monthly' : 0, 
                 'total' : 0,
                 'date' : str(dt.datetime.utcnow().date()),
-                'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday()))
+                'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())),
+                'month' : str(dt.date.month)
             }})
             auctioneer = auc_stats[str(user.id)]
             
@@ -465,7 +481,7 @@ class utils(commands.Cog):
 
             auctioneer = auc_stats[str(user.id)]
 
-        return {'today' : auctioneer['today'], 'weekly' : auctioneer['weekly'], 'total' : auctioneer['total'], 'past_weekly' : auctioneer['past_weekly']}
+        return {'today' : auctioneer['today'], 'weekly' : auctioneer['weekly'], 'total' : auctioneer['total'], 'past_weekly' : auctioneer['past_weekly'], 'monthly' : auctioneer['monthly'], 'past_monthly' : auctioneer['past_monthly']}
     
 
 
