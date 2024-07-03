@@ -592,7 +592,7 @@ class misc(commands.Cog):
     @_lb.autocomplete('scope')
     async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
 
-        options = ['weekly', 'past_weekly']
+        options = ['weekly', 'past_weekly', 'monthly', 'past_monthly']
 
         return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in options if current.lower() in suggestion.lower()]
     
