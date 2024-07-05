@@ -5,6 +5,7 @@ import io
 import os
 import sys
 import humanize
+import math
 sys.path.append(r'/home/container/')
 from cogs.utils import utils
 import datetime as dt
@@ -619,7 +620,7 @@ class misc(commands.Cog):
     
     
     @auctioneer_group.command(name='break')
-    @commands.checks.has_any_role(1241693662354870333, 719197688238964768)
+    @app_commands.checks.has_any_role(1241693662354870333, 719197688238964768)
     async def _break(self, interaction: discord.Interaction, days: int, reason: str = None):
         await interaction.response.defer(ephemeral=True)
         auctioneer_role = await utils(interaction.client).get_auctioneer_role(interaction)
@@ -627,15 +628,15 @@ class misc(commands.Cog):
         await interaction.user.remove_roles(auctioneer_role, accountant_role)
 
         auc_stats = await self.client.db.auctioneer_stats.find_one({'guild_id' : interaction.guild.id})
-        date = dt.datetime.utcnow().date() + dt.timedelta(days=days)
+        date = dt.datetime.utcnow() + dt.timedelta(days=days)
         breaks = auc_stats['breaks']
-        data = {'auctioneer' : interaction.user.id, 'break_until' : str(date), 'reason' : reason}
+        data = {'auctioneer' : interaction.user.id, 'break_until' : date.isoformat(), 'reason' : reason}
         breaks.append(data)
         
         await interaction.followup.send('Have a nice break!', ephemeral=True)
 
         log_channel = interaction.guild.get_channel(1233090168647319663)
-        embed = discord.Embed(title='Break', description=f'auctioneer: {interaction.user.mention}({interaction.user.id})\ntime: {days}(until <t:{dt.datetime.timestamp(date)}:d>)d\nreason: {reason}', timestamp=dt.datetime.now(), color=discord.Color.dark_grey())
+        embed = discord.Embed(title='Break', description=f'auctioneer: {interaction.user.mention}({interaction.user.id})\ntime: {days}(until <t:{math.trunc(dt.datetime.timestamp(date))}:d>)d\nreason: {reason}', timestamp=dt.datetime.now(), color=discord.Color.dark_grey())
         await log_channel.send(f'<@692994778136313896> <@729643700455604266>', embed=embed, allowed_mentions=discord.AllowedMentions(users=True))
 
     @commands.command(name='aclaim')
