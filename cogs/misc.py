@@ -7,7 +7,7 @@ import sys
 import humanize
 sys.path.append(r'/home/container/')
 from cogs.utils import utils
-from datetime import datetime
+import datetime as dt
 from discord.ext import commands
 from discord import app_commands
 from discord.ext import tasks, commands
@@ -157,14 +157,14 @@ class misc(commands.Cog):
     @app_commands.command(name = 'dm-rey')
     async def dm_rey(self, interaction: discord.Interaction, content : str):
         rey = self.client.get_user(692994778136313896)
-        embed = discord.Embed(title = interaction.user, description = f'>>> {content}', timestamp = datetime.now(), color = discord.Color.from_str('0x2F3136'))
+        embed = discord.Embed(title = interaction.user, description = f'>>> {content}', timestamp = dt.datetime.now(), color = discord.Color.from_str('0x2F3136'))
         await rey.send(embed = embed)
         await interaction.response.send_message('sent to rey', ephemeral = True)
 
     @commands.command(name = 'uptime')
     @commands.is_owner()
     async def uptime(self, ctx):
-        delta_uptime = datetime.utcnow() - self.client.launch_time
+        delta_uptime = dt.datetime.utcnow() - self.client.launch_time
         hours, remainder = divmod(int(delta_uptime.total_seconds()), 3600)
         minutes, seconds = divmod(remainder, 60)
         days, hours = divmod(hours, 24)
@@ -369,7 +369,7 @@ class misc(commands.Cog):
             embed.set_image(url = 'attachment://plot.png')
             embed.add_field(name='Avg_User_Count', value=data['avg_user_count'])
             embed.add_field(name=f'Total {target[:-6].title()} Count', value=data['event_count'])
-            embed.add_field(name='Current Time', value=str(datetime.utcnow())[0:-7])
+            embed.add_field(name='Current Time', value=str(dt.datetime.utcnow())[0:-7])
             embed.add_field(name='Scope', value=scope.title())
 
             return await interaction.followup.send(file=data['file'], embed = embed)
@@ -379,7 +379,7 @@ class misc(commands.Cog):
         embed.add_field(name='Unique_Users', value=data['unique_user_count'])
         embed.add_field(name='Avg_User_Count', value=data['avg_user_count'])
         embed.add_field(name=f'{target[:-6].title()} Count', value=data['event_count'])
-        embed.add_field(name='Current Time', value=str(datetime.utcnow())[0:-7])
+        embed.add_field(name='Current Time', value=str(dt.datetime.utcnow())[0:-7])
         embed.add_field(name='Scope', value=scope.title())
 
         await interaction.followup.send(file=data['file'], embed = embed)
@@ -423,13 +423,13 @@ class misc(commands.Cog):
 
         queue_count = await self.client.db.participants.find_one({'guild_id' : ctx.guild.id})
         queue_users = queue_count['queue_users']
-        currn_date = queue_users.get(str(datetime.utcnow().date()), None)
+        currn_date = queue_users.get(str(dt.datetime.utcnow().date()), None)
         if not currn_date:
-            queue_users.update({str(datetime.utcnow().date()) : {}})
+            queue_users.update({str(dt.datetime.utcnow().date()) : {}})
         try:
-            queue_users[str(datetime.utcnow().date())]['today_event_count'] += 1
+            queue_users[str(dt.datetime.utcnow().date())]['today_event_count'] += 1
         except  KeyError:
-            queue_users[str(datetime.utcnow().date())].update({'today_event_count' : 1})
+            queue_users[str(dt.datetime.utcnow().date())].update({'today_event_count' : 1})
         await self.client.db.participants.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'queue_users' : queue_users}})
 
     @aunlock.error
@@ -486,7 +486,7 @@ class misc(commands.Cog):
         embed.add_field(name='Today Logs', value= data['today'], inline=False)
         embed.add_field(name='Weekly Logs', value= data['weekly'], inline=False)
         embed.add_field(name='Total Logs', value= data['total'], inline=False)
-        embed.set_footer(text=datetime.utcnow())
+        embed.set_footer(text=dt.datetime.utcnow())
 
         await interaction.followup.send(embed=embed, ephemeral=True)
 
@@ -614,8 +614,72 @@ class misc(commands.Cog):
         
         await ctx.author.voice.channel.edit(rtc_region = region)
         await ctx.send(f"{ctx.author.voice.channel.mention}'s region set to **{region.title()}**")
+
+    
+    
+    
+    @auctioneer_group.command(name='break')
+    @commands.checks.has_any_role(1241693662354870333, 719197688238964768)
+    async def _break(self, interaction: discord.Interaction, days: int, reason: str = None):
+        await interaction.response.defer(ephemeral=True)
+        auctioneer_role = await utils(interaction.client).get_auctioneer_role(interaction)
+        accountant_role = interaction.guild.get_role(1044130057037299822)
+        await interaction.user.remove_roles(auctioneer_role, accountant_role)
+
+        auc_stats = await self.client.db.auctioneer_stats.find_one({'guild_id' : interaction.guild.id})
+        date = dt.datetime.utcnow().date() + dt.timedelta(days=days)
+        breaks = auc_stats['breaks']
+        data = {'auctioneer' : interaction.user.id, 'break_until' : str(date), 'reason' : reason}
+        breaks.append(data)
         
+        await interaction.followup.send('Have a nice break!', ephemeral=True)
+
+        log_channel = interaction.guild.get_channel(1233090168647319663)
+        embed = discord.Embed(title='Break', description=f'auctioneer: {interaction.user.mention}({interaction.user.id})\ntime: {days}(until <t:{dt.datetime.timestamp(date)}:d>)d\nreason: {reason}', timestamp=dt.datetime.now(), color=discord.Color.dark_grey())
+        await log_channel.send(f'<@692994778136313896> <@729643700455604266>', embed=embed, allowed_mentions=discord.AllowedMentions(users=True))
+
+    @commands.command(name='aclaim')
+    @commands.has_any_role(1241693662354870333, 719197688238964768)
+    async def aclaim(self, ctx):
+        auc_stats = await self.client.db.auctioneer_stats.find_one({'guild_id' : ctx.guild.id})
+        breaks = auc_stats['breaks']
+        for index, _break in enumerate(breaks):
+            if _break['auctioneer'] == ctx.author.id:
+                auctioneer_role = await utils(self.client).get_auctioneer_role(ctx)
+                accountant_role = ctx.guild.get_role(1044130057037299822)
+                auctioneer_chat = ctx.guild.get_channel(761704352792051713)
+                breaks.pop(index)
+                await ctx.author.add_roles(auctioneer_role, accountant_role)
+                await auctioneer_chat.send(f'Welcome back from your break {ctx.author.mention}!')
+                await self.client.db.auctioneer_stats.update_one({'guild_id' : ctx.guild.id}, {'$set' : {'breaks' : breaks }})
+                return await ctx.message.add_reaction('✅')
+        await ctx.message.add_reaction('❌')
+
+                
+    
+    @tasks.loop(hours=6)
+    async def check_breaks(self):
+        guild = self.client.get_guild(719180744311701505)
+        breaks = await self.client.db.auctioneer_stats.find_one({'guild_id' : guild.id})
+        breaks = breaks['breaks']
+        auctioneer_chat = guild.get_channel(761704352792051713)
+
+        for _break in breaks:
+            if dt.datetime.utcnow() > dt.datetime.fromisoformat(_break['break_until']):
+                try :
+                    auctioneer = guild.get_member(_break['auctioneer'])
+                except Exception:
+                    continue
+                
+                auctioneer_role = guild.get_role(750117211087044679)
+                accountant_role = guild.get_role(1044130057037299822)
+
+                await auctioneer.add_roles(auctioneer_role, accountant_role)
+                await auctioneer_chat.send(f'Welcome back from break {auctioneer.metnion}!')
+
+
         
+
 
   
 
