@@ -421,13 +421,13 @@ class utils(commands.Cog):
                 if auc['date'] != str(dt.datetime.utcnow().date()):
                     auc.update({'date' : str(dt.datetime.utcnow().date()), 'today' : 0})
 
-        if auctioneer['month'] != str(dt.date.month):
+        if auctioneer['month'] != str(dt.datetime.utcnow().month()):
             for auc in auc_stats.values():
-                if auc['month'] != str(dt.date.month):
+                if auc['month'] != str(dt.datetime.utcnow().month()):
                     auc.update({
                         'past_monthly' : auc['monthly'],
                         'monthly' : 0,
-                        'month' : str(dt.date.month)
+                        'month' : str(dt.datetime.utcnow().month())
                     })
         
         auctioneer = auc_stats[str(user.id)]
@@ -463,7 +463,7 @@ class utils(commands.Cog):
                 'total' : 0,
                 'date' : str(dt.datetime.utcnow().date()),
                 'week' : str(dt.date.today() - dt.timedelta(days = dt.date.today().weekday())),
-                'month' : str(dt.date.month)
+                'month' : str(dt.datetime.utcnow().month())
             }})
             auctioneer = auc_stats[str(user.id)]
             
