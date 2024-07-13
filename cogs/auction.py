@@ -480,8 +480,11 @@ class auction(commands.Cog):
                 view.add_item(discord.ui.Button(label='Jump to auction', url=msg.jump_url))
 
                 for tracker in trackers:
-                    user = interaction.guild.get_member(tracker)
-                    await user.send(f'Hi! There is a **{items}** auction going on right now!\n \n> If you don\'t want to get notified for this item anymore, use `/auction tracker (toggle: Disable)`', view=view)
+                    try :
+                        user = interaction.guild.get_member(tracker)
+                        await user.send(f'Hi! There is a **{items}** auction going on right now!\n \n> If you don\'t want to get notified for this item anymore, use `/auction tracker (toggle: Disable)`', view=view)
+                    except Exception:
+                        continue
 
                 await self.utils.update_auc_stats(guild=interaction.guild, user=interaction.user)
             
