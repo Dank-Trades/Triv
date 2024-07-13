@@ -392,47 +392,6 @@ class auction(commands.Cog):
 
     auc_group = Group(name = 'auction', description= 'just a group for auction subcommands')
 
-    # @auc_group.command(name = 'host', description = 'Host an auction' )
-    # async def auction_host(self, interaction : discord.Interaction, member : discord. Member, items : str, item_amount : int,  starting_price : str):
-
-        # await interaction.response.defer()
-
-        # full_int = self.utils.process_shorthand(starting_price)
-        # full_int = int(full_int)
-  
-        # embed = discord.Embed(title = f'{item_amount} {items} auction', description= f'starting bid : {format(full_int, ",")} \nseller : {member.mention}', color = discord.Color.from_str('0x2F3136'))
-        # embed.set_footer(text= 'auction will start when there\'s 3 reacts')
-
-        # ping_role = await utils(interaction.client).get_auction_ping(interaction)
-        # auction_channel = await utils(interaction.client).get_auction_channel(interaction)
-
-        # if interaction.channel != auction_channel:
-
-        #     await interaction.followup.send('This is not your configured auction channel.', ephemeral= True)
-
-        # else:
-
-        #     self.client.start_price[interaction.channel.id] = full_int
-        #     self.client.first_bid[interaction.guild.id] = True
-        #     self.client.last_bids[interaction.channel.id] = []
-        #     self.client.bidders[interaction.channel.id] = []
-        #     self.client.curr_bids[interaction.channel.id] = []
-
-        #     msg = await interaction.original_response()
-
-        #     self.client.log.update({ 
-        #         'auction_id' : msg.id,
-        #         'auctioneer' : interaction.user,
-        #         'item' : items,
-        #         'item_amount' : item_amount,
-        #         'seller' : member
-        #     })
-
-
-        #     await interaction.followup.send(embed=embed, view=auc_buttons(interaction.user))
-        #     await interaction.channel.send(content=f'{ping_role.mention}', allowed_mentions = discord.AllowedMentions(roles=True))
-        #     await msg.add_reaction('⭐')
-
     # we want to change it so that it only take in index for the host
     @auc_group.command(name = 'host', description = 'Host an auction')
     async def auction_host(self, interaction : discord.Interaction, index : str):
@@ -526,14 +485,6 @@ class auction(commands.Cog):
 
                 await self.utils.update_auc_stats(guild=interaction.guild, user=interaction.user)
             
-    # @auction_host.autocomplete('items')
-    # async def autocomplete_callback(self, interaction : discord.Interaction, current : str):
-        
-    #     items = pd.read_csv('auctions.csv')
-
-    #     item_list = [item for item in items['name']]
-
-    #     return [app_commands.Choice(name=suggestion, value=suggestion) for suggestion in item_list if current.lower() in suggestion.lower()]
 
     @commands.command(name='bid', aliases = ['b'])
     async def auction_bid(self, ctx, bid : str):
@@ -568,19 +519,6 @@ class auction(commands.Cog):
         if not auction_queue:
             await self.client.db.auction_queue.insert_one({'guild_id' : interaction.guild.id, 'queue' : []})
             return await interaction.followup.send('No auctions in queue.', ephemeral=True)
-
-        # schema = {
-        #     'guild_id' : ctx.guild.id,
-        #     'queue' : []
-        # }
-
-        # the queue is = {
-        #     message_id : str,
-        #     host : str,
-        #     item : str,
-        #     item_amount : int,
-        #     starting_price : int
-        # }
 
         # process the page, if it is invalid = 1 if it is out of range = 1
 
@@ -841,14 +779,9 @@ class auction(commands.Cog):
  
     @commands.Cog.listener()
     async def on_message(self, msg):
-        # if msg.content == 'e':
-        #     return await msg.channel.send('<@729643700455604266>')
-        # elif msg.content == 'r':
-        #     return await msg.channel.send('<@692994778136313896>')
 
         queue = 782483247619112991
         command_name = 'serverevents donate'
-        validate_title = 'Action Confirmed'
 
         if msg.channel.id != queue or msg.author.bot:
             return
@@ -887,7 +820,7 @@ class auction(commands.Cog):
             except IndexError:
                 if auctioneer_role in msg.author.roles:
                     return
-                await self.utils.send_error_message(msg, 'You have replied to the **WRONG MESSAGE**.\n\n> Please make sure to reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) from the item YOU sent to the pool in order to set a starting price.')
+                await self.utils.send_error_message(msg, 'You have replied to the **WRONG MESSAGE**.\n\n> Please make sure to reply to the ["Successfully donated" embed](https://imgur.com/a/tsVh6tr) from the item YOU sent to the pool in order to set a starting price.')
                 return await msg.add_reaction('❌')
 
             amount, item_name = self.utils.extract_item_and_amount(embed.description)
@@ -898,7 +831,7 @@ class auction(commands.Cog):
             if replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != msg.author.id:
                 if auctioneer_role in msg.author.roles:
                     return
-                await self.utils.send_error_message(msg, 'You have replied to the **WRONG MESSAGE**.\n\n> Please make sure to reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) from the item YOU sent to the pool in order to set a starting price.')
+                await self.utils.send_error_message(msg, 'You have replied to the **WRONG MESSAGE**.\n\n> Please make sure to reply to the ["Successfully donated" embed](https://imgur.com/a/tsVh6tr) from the item YOU sent to the pool in order to set a starting price.')
                 return await msg.add_reaction('❌')
             
             if bid_amount < MIN_BID_AMOUNT:
@@ -911,7 +844,7 @@ class auction(commands.Cog):
             
             inquire_item_list = ['Blob', 'Digging Trophy', "Enchanted Badosz's Card", 'Hunting Trophy', "Melmsie's Banana", 'Pepe Ribbon', 'Pepe Sus', 'Pink Rubber Ducky', 'Puzzle Key', 'Universe Box']
             if item_name in inquire_item_list:
-                await self.utils.send_error_message(msg, f'You requested an auction for a special item: **{item_name}**.\nPlease **DM** any of <@692994778136313896>, <@729643700455604266> or <@983505180739907604> first to discuss the starting price for your auction.')
+                await self.utils.send_error_message(msg, f'You requested an auction for a special item: **{item_name}**.\nPlease **DM** any of the auctioneers first to discuss the starting price for your auction.')
                 return await msg.add_reaction('❌')
             
             unavailable_item_list = ['Delta 9', "Dank Memer's Hard Drive", "Delta 9 Roll", "Coin Nuke"]
@@ -924,7 +857,7 @@ class auction(commands.Cog):
                 await self.utils.send_error_message(msg, f"Your starting price is **TOO HIGH**.\nThe maximum starting price for this item is **{format(int(min_start_price), ',')}**\n\n> The starting price for all auctions must also be **below 200 mil**.\n> Please edit your message to change the starting price.")
                 return await msg.add_reaction('❌')
 
-            if embed.title != validate_title:
+            if 'Successfully donated' not in embed.description:
                 await self.utils.send_error_message(msg, "Remember to click the confirm button on the embed to ensure the item has been sent to server pool.\n\n> Please edit your message to set the starting price again.")
                 return await msg.add_reaction('❌')
 
@@ -936,14 +869,13 @@ class auction(commands.Cog):
         else:
             if auctioneer_role in msg.author.roles:
                 return
-            await self.utils.send_error_message(msg, 'You have replied to the **WRONG MESSAGE**.\n\n> Please make sure to reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) from the item YOU sent to the pool in order to set a starting price.')
+            await self.utils.send_error_message(msg, 'You have replied to the **WRONG MESSAGE**.\n\n> Please make sure to reply to the ["Successfully donated" embed](https://imgur.com/a/tsVh6tr) from the item YOU sent to the pool in order to set a starting price.')
             return await msg.add_reaction('❌')
 
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
         queue = 782483247619112991
         command_name = 'serverevents donate'
-        validate_title = 'Action Confirmed'
 
         if message_after.channel.id != queue or message_after.author.bot:
             return
@@ -981,7 +913,7 @@ class auction(commands.Cog):
             #     return await message_after.add_reaction('❌')
 
             if replied_to_message.interaction is None or replied_to_message.interaction.name != command_name or replied_to_message.interaction.user.id != message_after.author.id:
-                await self.utils.send_error_message(message_after, 'You have replied to the **WRONG MESSAGE**.\n\n> Please make sure to reply to the ["Action Confirmed" embed](https://cdn.discordapp.com/attachments/1226130635849203782/1229758241840562216/IMG_9001.png?ex=6630d89c&is=661e639c&hm=f3b1531faad5c4b1eb0be928ff3347ebba4027ad86790b4af2e4906a1bbcf64c&) from the item YOU sent to the pool in order to set a starting price.')
+                await self.utils.send_error_message(message_after, 'You have replied to the **WRONG MESSAGE**.\n\n> Please make sure to reply to the ["Action Confirmed" embed](https://imgur.com/a/tsVh6tr) from the item YOU sent to the pool in order to set a starting price.')
                 return await message_after.add_reaction('❌')
 
             if bid_amount < MIN_BID_AMOUNT:
@@ -994,7 +926,7 @@ class auction(commands.Cog):
 
             inquire_item_list = ['Blob', 'Digging Trophy', "Enchanted Badosz's Card", 'Hunting Trophy', "Melmsie's Banana", 'Pepe Ribbon', 'Pepe Sus', 'Pink Rubber Ducky', 'Puzzle Key', 'Universe Box']
             if item_name in inquire_item_list:
-                await self.utils.send_error_message(message_after, f'You requested an auction for a special item: **{item_name}**.\nPlease **DM** any of <@692994778136313896>, <@729643700455604266> or <@983505180739907604> first to discuss the starting price for your auction.')
+                await self.utils.send_error_message(message_after, f'You requested an auction for a special item: **{item_name}**.\nPlease **DM** any of the auctioneers first to discuss the starting price for your auction.')
                 return await message_after.add_reaction('❌')
             
             unavailable_item_list = ['Delta 9', "Dank Memer's Hard Drive", "Delta 9 Roll", "Coin Nuke"]
@@ -1007,7 +939,7 @@ class auction(commands.Cog):
                 await self.utils.send_error_message(message_after, f"Your starting price is **TOO HIGH**.\nThe maximum starting price for this item is **{format(int(min_start_price), ',')}**\n\n> The starting price for all auctions must also be **below 200 mil**.\n> Please edit your message to change the starting price.")
                 return await message_after.add_reaction('❌')
             
-            if embed.title != validate_title:
+            if 'Successfully donated' not in embed.description:
                 await self.utils.send_error_message(message_after, "Remember to click the confirm button on the embed to ensure the item has been sent to server pool.\n\n> Please edit your message to set the starting price again.")
                 return await message_after.add_reaction('❌')
             
