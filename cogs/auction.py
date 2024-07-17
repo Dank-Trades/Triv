@@ -613,7 +613,7 @@ class auction(commands.Cog):
                 
             try :
                 embed = msg.embeds[0]
-                if embed.title != 'Action Confirmed' or msg.interaction.name != 'serverevents donate' or msg.interaction.user.id != seller.id: 
+                if 'Successfully donated' not in embed.description or msg.interaction.name != 'serverevents donate' or msg.interaction.user.id != seller.id: 
                     return await interaction.followup.send('Incorrect message ID.')
             except IndexError:
                 return await interaction.followup.send('Incorrect message ID.')
